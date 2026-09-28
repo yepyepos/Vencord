@@ -6,6 +6,7 @@
 
 import { useSettings } from "@api/Settings";
 import ErrorBoundary from "@components/ErrorBoundary";
+import { t } from "@i18n";
 import { IS_MAC } from "@utils/constants";
 import { Margins } from "@utils/margins";
 import { identity } from "@utils/misc";
@@ -18,10 +19,10 @@ export function MacOSVibrancySettings() {
 
     return (
         <ErrorBoundary noop>
-            <Forms.FormTitle tag="h5">MacOS Window vibrancy style (requires restart)</Forms.FormTitle>
+            <Forms.FormTitle tag="h5">{t("ui.vencord.macVibrancy.heading", "MacOS Window vibrancy style (requires restart)")}</Forms.FormTitle>
             <Select
                 className={Margins.bottom20}
-                placeholder="Window vibrancy style"
+                placeholder={t("ui.vencord.macVibrancy.placeholder", "Window vibrancy style")}
                 options={[
                     // Sorted from most opaque to most transparent
                     {

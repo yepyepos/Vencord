@@ -19,6 +19,7 @@
 import * as DataStore from "@api/DataStore";
 import { Settings } from "@api/Settings";
 import { openNotificationSettingsModal } from "@components/settings/tabs/vencord/NotificationSettings";
+import { t } from "@i18n";
 import { classNameFactory } from "@utils/css";
 import { useAwaiter } from "@utils/react";
 import { RenderModalProps } from "@vencord/discord-types";
@@ -139,7 +140,7 @@ export function NotificationLog({ log, pending }: { log: PersistentNotificationD
             <div>
                 <div className={cl("empty")} />
                 <Forms.FormText style={{ textAlign: "center" }}>
-                    No notifications yet
+                    {t("ui.notificationLog.empty", "No notifications yet")}
                 </Forms.FormText>
             </div>
         );
@@ -163,24 +164,24 @@ function LogModal(props: RenderModalProps) {
         <Modal
             {...props}
             size="xl"
-            title="Notification Log"
+            title={t("ui.notificationLog.title", "Notification Log")}
             actions={[
                 {
-                    text: "Notification Settings",
+                    text: t("ui.notifications.openSettings", "Notification Settings"),
                     variant: "primary",
                     onClick: openNotificationSettingsModal
                 },
                 {
-                    text: "Clear Notification Log",
+                    text: t("ui.notificationLog.clear", "Clear Notification Log"),
                     variant: "critical-primary",
                     disabled: !log.length,
                     onClick() {
                         openModal(props =>
                             <ConfirmModal
                                 {...props}
-                                title="Are you sure?"
-                                subtitle={`This will permanently remove ${log.length} notification${log.length === 1 ? "" : "s"}. This action cannot be undone.`}
-                                confirmText="Do it!"
+                                title={t("ui.common.areYouSure", "Are you sure?")}
+                                subtitle={t("ui.notificationLog.clearConfirm", "This will permanently remove {count} notifications. This action cannot be undone.", { count: log.length })}
+                                confirmText={t("ui.notificationLog.doIt", "Do it!")}
                                 onConfirm={async () => {
                                     await DataStore.set(KEY, []);
                                     signals.forEach(x => x());

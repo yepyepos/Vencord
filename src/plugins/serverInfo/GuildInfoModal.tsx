@@ -6,6 +6,7 @@
 
 import "./styles.css";
 
+import { t } from "@i18n";
 import { classNameFactory } from "@utils/css";
 import { getGuildAcronym, openImageModal, openUserProfile } from "@utils/discord";
 import { classes } from "@utils/misc";
@@ -122,25 +123,25 @@ function GuildInfoModal({ guild, modalProps }: GuildProps & { modalProps: Render
                     className={cl("tab", { selected: currentTab === Tabs.ServerInfo })}
                     id={Tabs.ServerInfo}
                 >
-                    Server Info
+                    {t("plugin.ServerInfo.modal.tab.serverInfo", "Server Info")}
                 </TabBar.Item>
                 <TabBar.Item
                     className={cl("tab", { selected: currentTab === Tabs.Friends })}
                     id={Tabs.Friends}
                 >
-                    Friends{friendCount !== undefined ? ` (${friendCount})` : ""}
+                    {t("plugin.ServerInfo.modal.tab.friends", "Friends")}{friendCount !== undefined ? ` (${friendCount})` : ""}
                 </TabBar.Item>
                 <TabBar.Item
                     className={cl("tab", { selected: currentTab === Tabs.BlockedUsers })}
                     id={Tabs.BlockedUsers}
                 >
-                    Blocked Users{blockedCount !== undefined ? ` (${blockedCount})` : ""}
+                    {t("plugin.ServerInfo.modal.tab.blockedUsers", "Blocked Users")}{blockedCount !== undefined ? ` (${blockedCount})` : ""}
                 </TabBar.Item>
                 <TabBar.Item
                     className={cl("tab", { selected: currentTab === Tabs.IgnoredUsers })}
                     id={Tabs.IgnoredUsers}
                 >
-                    Ignored Users{ignoredCount !== undefined ? ` (${ignoredCount})` : ""}
+                    {t("plugin.ServerInfo.modal.tab.ignoredUsers", "Ignored Users")}{ignoredCount !== undefined ? ` (${ignoredCount})` : ""}
                 </TabBar.Item>
             </TabBar>
 
@@ -191,15 +192,15 @@ function ServerInfoTab({ guild }: GuildProps) {
     });
 
     const Fields = {
-        "Server Owner": owner ? Owner(guild.id, owner) : "Loading...",
-        "Created At": renderTimestamp(SnowflakeUtils.extractTimestamp(guild.id)),
-        "Joined At": guild.joinedAt ? renderTimestamp(guild.joinedAt.getTime()) : "-", // Not available in lurked guild
-        "Vanity Link": guild.vanityURLCode ? (<a>{`discord.gg/${guild.vanityURLCode}`}</a>) : "-", // Making the anchor href valid would cause Discord to reload
-        "Preferred Locale": guild.preferredLocale || "-",
-        "Verification Level": ["None", "Low", "Medium", "High", "Highest"][guild.verificationLevel] || "?",
-        "Server Boosts": `${guild.premiumSubscriberCount ?? 0} (Level ${guild.premiumTier ?? 0})`,
-        "Channels": GuildChannelStore.getChannels(guild.id)?.count - 1 || "?", // - null category
-        "Roles": GuildRoleStore.getSortedRoles(guild.id).length - 1, // - @everyone
+        [t("plugin.ServerInfo.fields.serverOwner", "Server Owner")]: owner ? Owner(guild.id, owner) : t("ui.common.loading", "Loading..."),
+        [t("plugin.ServerInfo.fields.createdAt", "Created At")]: renderTimestamp(SnowflakeUtils.extractTimestamp(guild.id)),
+        [t("plugin.ServerInfo.fields.joinedAt", "Joined At")]: guild.joinedAt ? renderTimestamp(guild.joinedAt.getTime()) : "-", // Not available in lurked guild
+        [t("plugin.ServerInfo.fields.vanityLink", "Vanity Link")]: guild.vanityURLCode ? (<a>{`discord.gg/${guild.vanityURLCode}`}</a>) : "-", // Making the anchor href valid would cause Discord to reload
+        [t("plugin.ServerInfo.fields.preferredLocale", "Preferred Locale")]: guild.preferredLocale || "-",
+        [t("plugin.ServerInfo.fields.verificationLevel", "Verification Level")]: [t("plugin.ServerInfo.verification.none", "None"), t("plugin.ServerInfo.verification.low", "Low"), t("plugin.ServerInfo.verification.medium", "Medium"), t("plugin.ServerInfo.verification.high", "High"), t("plugin.ServerInfo.verification.highest", "Highest")][guild.verificationLevel] || "?",
+        [t("plugin.ServerInfo.fields.serverBoosts", "Server Boosts")]: `${guild.premiumSubscriberCount ?? 0} (Level ${guild.premiumTier ?? 0})`,
+        [t("plugin.ServerInfo.fields.channels", "Channels")]: GuildChannelStore.getChannels(guild.id)?.count - 1 || "?", // - null category
+        [t("plugin.ServerInfo.fields.roles", "Roles")]: GuildRoleStore.getSortedRoles(guild.id).length - 1, // - @everyone
     };
 
     return (

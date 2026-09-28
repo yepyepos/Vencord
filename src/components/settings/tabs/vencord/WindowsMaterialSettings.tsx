@@ -9,6 +9,7 @@ import ErrorBoundary from "@components/ErrorBoundary";
 import { Heading } from "@components/Heading";
 import { Margins } from "@components/margins";
 import { Paragraph } from "@components/Paragraph";
+import { t } from "@i18n";
 import { IS_WINDOWS } from "@utils/constants";
 import { Select } from "@webpack/common";
 
@@ -19,29 +20,29 @@ export function WindowsMaterialSettings() {
 
     return (
         <ErrorBoundary noop>
-            <Heading tag="h5">Background Material</Heading>
+            <Heading tag="h5">{t("ui.vencord.backgroundMaterial.heading", "Background Material")}</Heading>
             <Paragraph className={Margins.bottom8}>
-                Windows transparent background effects. You need a theme that supports transparency or this will do nothing. A restart is required after changing this setting.
+                {t("ui.vencord.backgroundMaterial.description", "Windows transparent background effects. You need a theme that supports transparency or this will do nothing. A restart is required after changing this setting.")}
             </Paragraph>
 
             <Select
-                placeholder="None"
+                placeholder={t("ui.vencord.backgroundMaterial.none", "None")}
                 options={[
                     {
-                        label: "None",
+                        label: t("ui.vencord.backgroundMaterial.none", "None"),
                         value: "none",
                         default: true
                     },
                     {
-                        label: "Mica (incorporates system theme + desktop wallpaper to paint the background)",
+                        label: t("ui.vencord.backgroundMaterial.mica", "Mica (incorporates system theme + desktop wallpaper to paint the background)"),
                         value: "mica"
                     },
                     {
-                        label: "Tabbed (variant of Mica with stronger background tinting)",
+                        label: t("ui.vencord.backgroundMaterial.tabbed", "Tabbed (variant of Mica with stronger background tinting)"),
                         value: "tabbed"
                     },
                     {
-                        label: "Acrylic (blurs the window behind Vesktop for a translucent background)",
+                        label: t("ui.vencord.backgroundMaterial.acrylic", "Acrylic (blurs the window behind Vesktop for a translucent background)"),
                         value: "acrylic"
                     }
                 ]}

@@ -14,6 +14,7 @@ import { Card } from "@components/Card";
 import { PlaceholderIcon } from "@components/Icons";
 import { Paragraph } from "@components/Paragraph";
 import { Switch } from "@components/Switch";
+import { t } from "@i18n";
 import { classNameFactory } from "@utils/css";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
@@ -94,17 +95,17 @@ function UIElementsModal(props: RenderModalProps) {
     const { uiElements } = useSettings(["uiElements.*"]);
 
     return (
-        <Modal {...props} size="md" title="Manage plugin UI elements">
+        <Modal {...props} size="md" title={t("ui.plugins.uiElements.title", "Manage plugin UI elements")}>
             <div className={cl("modal-content")}>
                 <Section
-                    title="Chatbar Buttons"
-                    description="These are the buttons on the right side of the chat input bar"
+                    title={t("ui.plugins.uiElements.chatbarButtons", "Chatbar Buttons")}
+                    description={t("ui.plugins.uiElements.chatbarButtons.description", "These are the buttons on the right side of the chat input bar")}
                     buttonMap={ChatBarButtonMap}
                     settings={uiElements.chatBarButtons}
                 />
                 <Section
-                    title="Message Popover Buttons"
-                    description="These are the floating buttons on the right when you hover over a message"
+                    title={t("ui.plugins.uiElements.popoverButtons", "Message Popover Buttons")}
+                    description={t("ui.plugins.uiElements.popoverButtons.description", "These are the floating buttons on the right when you hover over a message")}
                     buttonMap={MessagePopoverButtonMap}
                     settings={uiElements.messagePopoverButtons}
                 />

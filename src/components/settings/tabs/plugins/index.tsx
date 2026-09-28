@@ -346,7 +346,7 @@ function PluginSettings() {
             <div className={cl("grid")}>
                 {requiredPlugins.length
                     ? requiredPlugins
-                    : <Paragraph>No plugins meet the search criteria.</Paragraph>
+                    : <Paragraph>{t("ui.plugins.noResults", "No plugins meet the search criteria.")}</Paragraph>
                 }
             </div>
         </SettingsTab >

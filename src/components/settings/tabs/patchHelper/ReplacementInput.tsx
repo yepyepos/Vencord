@@ -53,7 +53,7 @@ export function ReplacementInput({ replacement, setReplacement, replacementError
     return (
         <>
             {/* FormTitle adds a class if className is not set, so we set it to an empty string to prevent that */}
-            <Forms.FormTitle className="">Replacement</Forms.FormTitle>
+            <Forms.FormTitle className="">{t("ui.patchHelper.replacement", "Replacement")}</Forms.FormTitle>
             <TextInput
                 value={replacement?.toString()}
                 onChange={onChange}
@@ -61,7 +61,7 @@ export function ReplacementInput({ replacement, setReplacement, replacementError
             />
             {!isFunc && (
                 <div>
-                    <Forms.FormTitle className={Margins.top8}>Cheat Sheet</Forms.FormTitle>
+                    <Forms.FormTitle className={Margins.top8}>{t("ui.patchHelper.cheatSheet", "Cheat Sheet")}</Forms.FormTitle>
 
                     {Object.entries(RegexGuide).map(([placeholder, desc]) => (
                         <Forms.FormText key={placeholder}>

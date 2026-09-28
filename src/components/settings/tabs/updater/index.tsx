@@ -46,7 +46,7 @@ function VesktopSection() {
     return (
         <Flex className={Margins.bottom20} flexDirection="column" gap="1em">
             <Card variant="info">
-                <HeadingSecondary>Vesktop & Vencord</HeadingSecondary>
+                <HeadingSecondary>{t("ui.updater.vesktopHeading", "Vesktop & Vencord")}</HeadingSecondary>
                 <Paragraph>{t("ui.updater.vesktopInfo", "Vesktop and Vencord are two separate things. This updater is for Vencord.")}</Paragraph>
                 <Paragraph className={Margins.top8}>
                     {t("ui.updater.vesktopPopups.prefix", "You receive separate popups for Vesktop updates. You can also manually update by installing the ")}<Link href="https://vesktop.dev/install">{t("ui.updater.vesktopPopups.link", "latest version")}</Link>.
@@ -102,13 +102,13 @@ function Updater() {
                 />
             </div>
 
-            <Forms.FormTitle tag="h5" className={Margins.top20}>Repo</Forms.FormTitle>
+            <Forms.FormTitle tag="h5" className={Margins.top20}>{t("ui.updater.repo", "Repo")}</Forms.FormTitle>
 
             <Forms.FormText>
                 {repoPending
                     ? repo
                     : err
-                        ? "Failed to retrieve - check console"
+                        ? t("ui.updater.retrieveFailed", "Failed to retrieve - check console")
                         : (
                             <Link href={repo}>
                                 {repo.split("/").slice(-2).join("/")}
@@ -121,7 +121,7 @@ function Updater() {
 
             <Divider className={classes(Margins.top16, Margins.bottom16)} />
 
-            <Forms.FormTitle tag="h5">Updates</Forms.FormTitle>
+            <Forms.FormTitle tag="h5">{t("ui.updater.updates", "Updates")}</Forms.FormTitle>
 
             {isNewer
                 ? <Newer {...commonProps} />

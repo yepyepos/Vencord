@@ -74,10 +74,9 @@ function CloudSetupSection() {
             <SectionHeading text={t("ui.cloud.integrations.heading", "Cloud Integrations")} />
 
             <Paragraph size="md" className={Margins.bottom20}>
-                Vencord comes with a cloud integration that adds goodies like settings sync across devices.
-                It <Link href="https://vencord.dev/cloud/privacy">respects your privacy</Link>, and
-                the <Link href="https://github.com/Vencord/Backend">source code</Link> is AGPL 3.0 licensed so you
-                can host it yourself.
+                {t("ui.cloud.intro.prefix", "Vencord comes with a cloud integration that adds goodies like settings sync across devices. It ")}
+                <Link href="https://vencord.dev/cloud/privacy">{t("ui.cloud.intro.privacyLink", "respects your privacy")}</Link>{t("ui.cloud.intro.middle", ", and the ")}
+                <Link href="https://github.com/Vencord/Backend">{t("ui.cloud.intro.sourceLink", "source code")}</Link>{t("ui.cloud.intro.suffix", " is AGPL 3.0 licensed so you can host it yourself.")}
             </Paragraph>
             <FormSwitch
                 key="backend"
@@ -91,9 +90,9 @@ function CloudSetupSection() {
                         cloud.authenticated = v;
                 }}
             />
-            <Heading tag="h5" className={Margins.top16}>Backend URL</Heading>
+            <Heading tag="h5" className={Margins.top16}>{t("ui.cloud.backendUrl.heading", "Backend URL")}</Heading>
             <Paragraph className={Margins.bottom8}>
-                Which backend to use when using cloud integrations.
+                {t("ui.cloud.backendUrl.description", "Which backend to use when using cloud integrations.")}
             </Paragraph>
             <CheckedTextInput
                 key="backendUrl"
@@ -145,11 +144,10 @@ function SettingsSyncSection() {
 
                 <div>
                     <Heading tag="h5">
-                        Sync Rules for This Device
+                        {t("ui.cloud.syncRules.heading", "Sync Rules for This Device")}
                     </Heading>
                     <Paragraph className={Margins.bottom8}>
-                        This setting controls how settings move between <strong>this device</strong> and the cloud.
-                        You can let changes flow both ways, or choose one place to be the main source of truth.
+                        {t("ui.cloud.syncRules.prefix", "This setting controls how settings move between ")}<strong>{t("ui.cloud.syncRules.thisDevice", "this device")}</strong>{t("ui.cloud.syncRules.suffix", " and the cloud. You can let changes flow both ways, or choose one place to be the main source of truth.")}
                     </Paragraph>
                     <Select
                         options={[
