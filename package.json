@@ -32,7 +32,9 @@
         "lint:fix": "pnpm lint --fix",
         "test": "pnpm buildStandalone && pnpm testTsc && pnpm lint && pnpm lint-styles && pnpm generatePluginJson",
         "testWeb": "pnpm lint && pnpm buildWeb && pnpm testTsc",
-        "testTsc": "tsc --noEmit"
+        "testTsc": "tsc --noEmit",
+        "testI18n": "tsx scripts/test-i18n.ts",
+        "checkI18n": "tsx scripts/check-i18n.ts"
     },
     "dependencies": {
         "@intrnl/xxhash64": "^0.1.2",
