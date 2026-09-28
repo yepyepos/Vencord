@@ -694,6 +694,157 @@ const translations = {
     "plugin.MusicRichPresence.settings.showLogo.description": "在专辑封面旁显示记录服务的图标",
     "plugin.MusicRichPresence.settings.showAlbumCover.displayName": "显示专辑封面",
     "plugin.MusicRichPresence.settings.showAlbumCover.description": "显示专辑封面。禁用后将显示占位图。适合音乐封面不雅的情况",
+
+    // ---- batch 04: N-Q ----
+    "plugin.NoBlockedMessages.name": "屏蔽被封锁消息",
+    "plugin.NoBlockedMessages.description": "完全隐藏聊天中的被屏蔽 / 被忽略消息",
+    "plugin.NoBlockedMessages.settings.ignoreMessages.displayName": "忽略被屏蔽用户消息",
+    "plugin.NoBlockedMessages.settings.ignoreMessages.description": "完全忽略来自被屏蔽用户（及被忽略用户，若启用）的新消息",
+    "plugin.NoBlockedMessages.settings.applyToIgnoredUsers.displayName": "同时应用于被忽略用户",
+    "plugin.NoBlockedMessages.settings.applyToIgnoredUsers.description": "额外应用于“被忽略”的用户",
+
+    "plugin.NoDevtoolsWarning.name": "禁用开发者工具警告",
+    "plugin.NoDevtoolsWarning.description": "禁用控制台中的“HOLD UP”横幅。副作用是 Discord 也不再隐藏你的令牌，从而避免随机登出。",
+
+    "plugin.NoF1.name": "禁用 F1 帮助",
+    "plugin.NoF1.description": "禁用 F1 帮助快捷键。",
+
+    "plugin.NoMaskedUrlPaste.name": "粘贴链接不掩码",
+    "plugin.NoMaskedUrlPaste.description": "选中文本时粘贴链接将不再粘贴为掩码 URL",
+
+    "plugin.NoMiddleClickPaste.name": "禁用中键粘贴",
+    "plugin.NoMiddleClickPaste.description": "禁用 Linux 的鼠标中键粘贴 —— 仅限 Linux",
+
+    "plugin.NoMosaic.name": "移除图片九宫格",
+    "plugin.NoMosaic.description": "移除 Discord 的图片九宫格布局",
+    "plugin.NoMosaic.settings.inlineVideo.displayName": "内联播放视频",
+    "plugin.NoMosaic.settings.inlineVideo.description": "不经过轮播弹窗直接播放视频",
+
+    "plugin.NoOnboardingDelay.name": "跳过引导延迟",
+    "plugin.NoOnboardingDelay.description": "跳过缓慢烦人的新手引导延迟",
+
+    "plugin.NoPendingCount.name": "隐藏待处理计数",
+    "plugin.NoPendingCount.description": "移除好友请求、私信请求和 Nitro 优惠的未读角标数。",
+    "plugin.NoPendingCount.settings.hideFriendRequestsCount.displayName": "隐藏好友请求数",
+    "plugin.NoPendingCount.settings.hideFriendRequestsCount.description": "隐藏收到的好友请求数量",
+    "plugin.NoPendingCount.settings.hideMessageRequestsCount.displayName": "隐藏私信请求数",
+    "plugin.NoPendingCount.settings.hideMessageRequestsCount.description": "隐藏收到的私信请求数量",
+
+    "plugin.NoReplyMention.name": "回复不提及",
+    "plugin.NoReplyMention.description": "默认关闭回复时的 @ 提及",
+    "plugin.NoReplyMention.settings.userList.displayName": "用户列表",
+    "plugin.NoReplyMention.settings.userList.description": "允许或豁免提及的用户 ID 列表（逗号或空格分隔）",
+    "plugin.NoReplyMention.settings.roleList.displayName": "身份组列表",
+    "plugin.NoReplyMention.settings.roleList.description": "允许或豁免提及的身份组 ID 列表（逗号或空格分隔）",
+    "plugin.NoReplyMention.settings.shouldPingListed.displayName": "行为",
+    "plugin.NoReplyMention.settings.shouldPingListed.description": "列表用户 / 身份组的提及行为",
+    "plugin.NoReplyMention.settings.shouldPingListed.option.false": "不提及列表中的用户 / 身份组",
+    "plugin.NoReplyMention.settings.shouldPingListed.option.true": "仅提及列表中的用户 / 身份组",
+    "plugin.NoReplyMention.settings.inverseShiftReply.displayName": "反转 Shift 回复行为",
+    "plugin.NoReplyMention.settings.inverseShiftReply.description": "反转 Discord 的 Shift 回复行为（启用后 Shift + 回复会提及用户）",
+
+    "plugin.NoServerEmojis.name": "隐藏服务器表情",
+    "plugin.NoServerEmojis.description": "不在自动补全菜单中显示服务器表情。",
+    "plugin.NoServerEmojis.settings.shownEmojis.displayName": "显示的表情类型",
+    "plugin.NoServerEmojis.settings.shownEmojis.description": "自动补全菜单中显示的表情类型。",
+    "plugin.NoServerEmojis.settings.shownEmojis.option.onlyUnicode": "仅 Unicode 表情",
+    "plugin.NoServerEmojis.settings.shownEmojis.option.currentServer": "Unicode 表情和当前服务器的表情",
+    "plugin.NoServerEmojis.settings.shownEmojis.option.all": "Unicode 表情和所有服务器表情（Discord 默认）",
+
+    "plugin.NoSystemBadge.name": "禁用系统角标",
+    "plugin.NoSystemBadge.description": "禁用任务栏和系统托盘的未读计数角标。",
+
+    "plugin.NoTypingAnimation.name": "禁用输入动画",
+    "plugin.NoTypingAnimation.description": "禁用消耗 CPU 的输入指示点动画",
+
+    "plugin.NoUnblockToJump.name": "跳转不解除屏蔽",
+    "plugin.NoUnblockToJump.description": "允许直接跳转到被屏蔽 / 被忽略用户和疑似垃圾信息发送者的消息，无需先解除屏蔽",
+
+    "plugin.NotificationVolume.name": "通知音量",
+    "plugin.NotificationVolume.description": "保护你的耳朵：为通知和应用内声音设置独立音量",
+    "plugin.NotificationVolume.settings.notificationVolume.displayName": "通知音量",
+    "plugin.NotificationVolume.settings.notificationVolume.description": "通知音量",
+
+    "plugin.OnePingPerDM.name": "私信单次提示音",
+    "plugin.OnePingPerDM.description": "如果同一用户在私信中多次发送未读消息，你只会收到一次提示音。阅读消息以重置限制",
+    "plugin.OnePingPerDM.settings.channelToAffect.displayName": "生效范围",
+    "plugin.OnePingPerDM.settings.channelToAffect.description": "选择插件影响的私信类型",
+    "plugin.OnePingPerDM.settings.channelToAffect.option.both_dms": "全部",
+    "plugin.OnePingPerDM.settings.channelToAffect.option.user_dm": "用户私信",
+    "plugin.OnePingPerDM.settings.channelToAffect.option.group_dm": "群聊私信",
+    "plugin.OnePingPerDM.settings.allowMentions.displayName": "允许提及提示音",
+    "plugin.OnePingPerDM.settings.allowMentions.description": "收到 @ 提及时播放提示音",
+    "plugin.OnePingPerDM.settings.allowEveryone.displayName": "允许 @everyone 提示音",
+    "plugin.OnePingPerDM.settings.allowEveryone.description": "在群聊私信中收到 @everyone 和 @here 时播放提示音",
+
+    "plugin.OpenInApp.name": "应用内打开",
+    "plugin.OpenInApp.description": "在对应的应用中打开链接，而不是浏览器",
+
+    "plugin.OverrideForumDefaults.name": "覆盖论坛默认设置",
+    "plugin.OverrideForumDefaults.description": "允许覆盖论坛的默认布局 / 排序方式。你仍可以在单个频道中自行更改",
+    "plugin.OverrideForumDefaults.settings.defaultLayout.displayName": "默认布局",
+    "plugin.OverrideForumDefaults.settings.defaultLayout.description": "使用的默认布局",
+    "plugin.OverrideForumDefaults.settings.defaultLayout.option.1": "列表",
+    "plugin.OverrideForumDefaults.settings.defaultLayout.option.2": "图库",
+    "plugin.OverrideForumDefaults.settings.defaultSortOrder.displayName": "默认排序",
+    "plugin.OverrideForumDefaults.settings.defaultSortOrder.description": "使用的默认排序方式",
+    "plugin.OverrideForumDefaults.settings.defaultSortOrder.option.0": "最近活跃",
+    "plugin.OverrideForumDefaults.settings.defaultSortOrder.option.1": "发布日期",
+
+    "plugin.PauseInvitesForever.name": "永久暂停邀请",
+    "plugin.PauseInvitesForever.description": "找回被 Discord 移除的“无限期暂停邀请”选项。",
+
+    "plugin.PermissionFreeWill.name": "权限自由意志",
+    "plugin.PermissionFreeWill.description": "解除频道权限管理的客户端限制。",
+    "plugin.PermissionFreeWill.settings.lockout.displayName": "绕过锁定保护",
+    "plugin.PermissionFreeWill.settings.lockout.description": "绕过权限锁定保护（“你真的确定要这样做吗”）",
+    "plugin.PermissionFreeWill.settings.onboarding.displayName": "绕过引导要求",
+    "plugin.PermissionFreeWill.settings.onboarding.description": "绕过新手引导要求（“进行此更改将使你的服务器不兼容 [...]”）",
+
+    "plugin.PermissionsViewer.name": "权限查看器",
+    "plugin.PermissionsViewer.description": "查看用户或频道拥有的权限，以及服务器的身份组",
+    "plugin.PermissionsViewer.settings.permissionsSortOrder.displayName": "排序方式",
+    "plugin.PermissionsViewer.settings.permissionsSortOrder.description": "判定某个身份组授予用户某项权限时的排序方法",
+    "plugin.PermissionsViewer.settings.permissionsSortOrder.option.0": "最高身份组",
+    "plugin.PermissionsViewer.settings.permissionsSortOrder.option.1": "最低身份组",
+
+    "plugin.PictureInPicture.name": "画中画",
+    "plugin.PictureInPicture.description": "为视频添加画中画功能（在下载按钮旁）",
+    "plugin.PictureInPicture.settings.loop.displayName": "循环播放",
+    "plugin.PictureInPicture.settings.loop.description": "是否让画中画视频循环播放",
+
+    "plugin.PinDMs.name": "置顶私信",
+    "plugin.PinDMs.description": "允许将私信频道置顶到私信列表顶部。右键点击私信即可置顶 / 取消置顶或排序",
+    "plugin.PinDMs.settings.pinOrder.displayName": "置顶排序",
+    "plugin.PinDMs.settings.pinOrder.description": "置顶的私信以什么顺序显示？",
+    "plugin.PinDMs.settings.pinOrder.option.0": "最近消息",
+    "plugin.PinDMs.settings.pinOrder.option.1": "自定义（右键点击频道排序）",
+    "plugin.PinDMs.settings.canCollapseDmSection.displayName": "可折叠私信分区",
+    "plugin.PinDMs.settings.canCollapseDmSection.description": "允许折叠未分类的私信分区",
+
+    "plugin.PlatformIndicators.name": "平台标识",
+    "plugin.PlatformIndicators.description": "为用户添加平台标识（桌面端、移动端、网页端……）",
+    "plugin.PlatformIndicators.settings.list.description": "在成员列表中显示平台标识",
+    "plugin.PlatformIndicators.settings.badges.description": "在用户资料中以徽章形式显示平台标识",
+    "plugin.PlatformIndicators.settings.messages.description": "在消息内显示平台标识",
+    "plugin.PlatformIndicators.settings.colorMobileIndicator.displayName": "移动端标识跟随状态色",
+    "plugin.PlatformIndicators.settings.colorMobileIndicator.description": "是否让移动端标识使用用户状态的颜色。",
+
+    "plugin.PreviewMessage.name": "发送前预览",
+    "plugin.PreviewMessage.description": "让你在发送前预览消息。",
+
+    "plugin.QuickMention.name": "快速提及",
+    "plugin.QuickMention.description": "在消息操作栏中添加快速提及按钮",
+
+    "plugin.QuickReply.name": "快速回复",
+    "plugin.QuickReply.description": "通过快捷键回复（Ctrl + ↑/↓）和编辑（Ctrl + Shift + ↑/↓）消息",
+    "plugin.QuickReply.settings.shouldMention.displayName": "默认提及",
+    "plugin.QuickReply.settings.shouldMention.description": "回复时默认是否 @ 对方",
+    "plugin.QuickReply.settings.shouldMention.option.2": "跟随 NoReplyMention 插件（如果启用）",
+    "plugin.QuickReply.settings.shouldMention.option.1": "启用",
+    "plugin.QuickReply.settings.shouldMention.option.0": "禁用",
+    "plugin.QuickReply.settings.ignoreBlockedAndIgnored.displayName": "忽略被屏蔽用户",
+    "plugin.QuickReply.settings.ignoreBlockedAndIgnored.description": "切换目标时忽略被屏蔽 / 被忽略用户的消息",
 } satisfies Record<string, string>;
 
 export default translations;
