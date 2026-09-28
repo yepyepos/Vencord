@@ -88,6 +88,38 @@ function pluginContainsOptionValue(folder: string, settingKey: string, value: st
     return false;
 }
 
+// helper: extract the {placeholder} variables used in a source string
+function extractTemplateVars(s: string): Set<string> {
+    return new Set([...s.matchAll(/\{(\w+)\}/g)].map(m => m[1]));
+}
+
+// helper: find the source `description` string of a settings key inside its
+// plugin folder and compare {placeholder} variables with the translation
+function settingDescriptionVarsMatch(folder: string, settingKey: string, translation: string, key: string): boolean | "unknown" {
+    const dir = join(PLUGINS_DIR, folder);
+    for (const file of readdirSync(dir)) {
+        const p = join(dir, file);
+        if (!statSync(p).isFile() || !/\.(ts|tsx)$/.test(file)) continue;
+        const code = readFileSync(p, "utf8");
+        const entryRe = new RegExp(`(^|[,{\\r\\n])\\s*${settingKey}\\s*:\\s*\\{`, "g");
+        let m: RegExpExecArray | null;
+        while ((m = entryRe.exec(code))) {
+            const entry = code.slice(m.index, m.index + 4000);
+            const descM = entry.match(/\bdescription\s*:\s*("((?:\\.|[^"\\])*)"|'((?:\\.|[^'\\])*)')/);
+            if (!descM) continue;
+            const source = descM[2] ?? descM[3] ?? "";
+            const sourceVars = extractTemplateVars(source);
+            const translatedVars = extractTemplateVars(translation);
+            for (const v of sourceVars)
+                if (!translatedVars.has(v)) { error(`template variable {${v}} missing in translation: ${key}`); return false; }
+            for (const v of translatedVars)
+                if (!sourceVars.has(v)) { error(`template variable {${v}} not present in source: ${key}`); return false; }
+            return true;
+        }
+    }
+    return "unknown";
+}
+
 // ---- collect real tag list from @utils/types ----
 const typesSource = readFileSync(join(ROOT, "src", "utils", "types.ts"), "utf8");
 const pluginTagsBlock = typesSource.match(/export const PluginTags = \[([^\]]*)\]/)?.[1] ?? "";
@@ -131,12 +163,16 @@ for (const [key, value] of Object.entries(table)) {
     }
 
     if ((match = key.match(SETTING_KEY_RE))) {
-        const [, pluginName, settingKey] = match;
+        const [, pluginName, settingKey, field] = match;
         const folder = pluginNames.get(pluginName);
         if (!folder) {
             error(`plugin not found for ${key}`);
         } else if (!pluginDefinesSetting(folder, settingKey)) {
             error(`settings key "${settingKey}" not found in plugin ${pluginName} (${key})`);
+        } else if (field === "description") {
+            // template variable consistency: translation must use exactly the
+            // {placeholders} the source description uses
+            settingDescriptionVarsMatch(folder, settingKey, value, key);
         }
         continue;
     }

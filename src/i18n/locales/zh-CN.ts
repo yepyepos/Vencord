@@ -935,7 +935,7 @@ const translations = {
     "plugin.SecretRingToneEnabler.settings.onlySnow.description": "仅播放 Snow Halation 主题曲",
 
     "plugin.SendTimestamps.name": "发送时间戳",
-    "plugin.SendTimestamps.description": "通过聊天框按钮和文本快捷方式轻松发送时间戳。详见扩展描述！",
+    "plugin.SendTimestamps.description": "通过聊天框按钮和文本快捷方式轻松发送时间戳。详见完整描述！",
     "plugin.SendTimestamps.settings.replaceMessageContents.displayName": "替换消息中的时间戳",
     "plugin.SendTimestamps.settings.replaceMessageContents.description": "替换消息内容中的时间戳",
 
@@ -1067,7 +1067,7 @@ const translations = {
     "plugin.StickerPaste.name": "贴纸粘贴",
     "plugin.StickerPaste.description": "让贴纸选择器中选中的贴纸插入输入框，而不是立即发送",
 
-    "plugin.StreamerModeOnStream.name": "直播时开启直播模式",
+    "plugin.StreamerModeOnStream.name": "串流时自动启用直播模式",
     "plugin.StreamerModeOnStream.description": "当你在 Discord 中开始串流时自动启用直播模式",
 
     "plugin.SuperReactionTweaks.name": "超级反应调整",
