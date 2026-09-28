@@ -1618,6 +1618,18 @@ const translations = {
     "plugin.StartupTimings.section.title": "启动计时",
     "plugin.StartupTimings.page.title": "启动计时",
     "plugin.StartupTimings.page.serverTrace": "服务器追踪",
+    // ---- Phase 4: dynamic ui, final sweep ----
+    "plugin.VcNarrator.ui.playExampleSounds": "播放示例音效",
+    "plugin.VcNarrator.ui.selectVoice": "选择语音",
+    "plugin.VcNarrator.ui.selectLanguage": "选择语言",
+    "plugin.VcNarrator.ui.noVoicesFound": "未找到可用语音。",
+    "plugin.UserVoiceShow.ui.inVoiceChat": "语音通话中",
+    "plugin.RelationshipNotifier.notification.title": "好友关系通知",
+    "plugin.FakeNitro.modal.holdOn": "请注意！",
+    "plugin.ChatInputButtonAPI.badges.options": "徽章操作",
+    "plugin.ChatInputButtonAPI.badges.copyName": "复制徽章名称",
+    "plugin.ChatInputButtonAPI.badges.copyImageLink": "复制徽章图片链接",
+    "plugin.ChatInputButtonAPI.badges.refetched": "徽章刷新成功！",
 } satisfies Record<string, string>;
 
 export default translations;

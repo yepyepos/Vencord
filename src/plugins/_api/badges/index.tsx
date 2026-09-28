@@ -25,6 +25,7 @@ import { Heart } from "@components/Heart";
 import { CopyIcon, LinkIcon } from "@components/Icons";
 import DonateButton from "@components/settings/DonateButton";
 import { openContributorModal } from "@components/settings/tabs";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import { copyWithToast } from "@utils/discord";
 import { Logger } from "@utils/Logger";
@@ -62,12 +63,12 @@ function BadgeContextMenu({ badge }: { badge: Omit<ProfileBadge, "id"> & BadgeUs
         <Menu.Menu
             navId="vc-badge-context"
             onClose={ContextMenuApi.closeContextMenu}
-            aria-label="Badge Options"
+            aria-label={t("plugin.ChatInputButtonAPI.badges.options", "Badge Options")}
         >
             {badge.description && (
                 <Menu.MenuItem
                     id="vc-badge-copy-name"
-                    label="Copy Badge Name"
+                    label={t("plugin.ChatInputButtonAPI.badges.copyName", "Copy Badge Name")}
                     action={() => copyWithToast(badge.description!)}
                     leadingAccessory={{ type: "icon", icon: CopyIcon }}
                 />
@@ -75,7 +76,7 @@ function BadgeContextMenu({ badge }: { badge: Omit<ProfileBadge, "id"> & BadgeUs
             {badge.iconSrc && (
                 <Menu.MenuItem
                     id="vc-badge-copy-link"
-                    label="Copy Badge Image Link"
+                    label={t("plugin.ChatInputButtonAPI.badges.copyImageLink", "Copy Badge Image Link")}
                     action={() => copyWithToast(badge.iconSrc!)}
                     leadingAccessory={{ type: "icon", icon: LinkIcon }}
                 />
@@ -133,7 +134,7 @@ export default definePlugin({
             await loadBadges(true);
             Toasts.show({
                 id: Toasts.genId(),
-                message: "Successfully refetched badges!",
+                message: t("plugin.ChatInputButtonAPI.badges.refetched", "Successfully refetched badges!"),
                 type: Toasts.Type.SUCCESS
             });
         }

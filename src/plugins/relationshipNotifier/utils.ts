@@ -19,6 +19,7 @@
 import * as DataStore from "@api/DataStore";
 import { popNotice, showNotice } from "@api/Notices";
 import { showNotification } from "@api/Notifications";
+import { t } from "@i18n";
 import { getUniqueUsername, openUserProfile } from "@utils/discord";
 import { FluxStore } from "@vencord/discord-types";
 import { ChannelType, RelationshipType } from "@vencord/discord-types/enums";
@@ -115,7 +116,7 @@ export function notify(text: string, icon?: string, onClick?: () => void) {
         showNotice(text, "OK", () => popNotice());
 
     showNotification({
-        title: "Relationship Notifier",
+        title: t("plugin.RelationshipNotifier.notification.title", "Relationship Notifier"),
         body: text,
         icon,
         onClick

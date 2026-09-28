@@ -17,6 +17,7 @@
 */
 
 import { ErrorCard } from "@components/ErrorCard";
+import { t } from "@i18n";
 import { Devs, IS_LINUX } from "@utils/constants";
 import { Logger } from "@utils/Logger";
 import { Margins } from "@utils/margins";
@@ -256,7 +257,7 @@ export default definePlugin({
                 </Forms.FormText>
                 {hasEnglishVoices && (
                     <>
-                        <Forms.FormTitle className={Margins.top20} tag="h3">Play Example Sounds</Forms.FormTitle>
+                        <Forms.FormTitle className={Margins.top20} tag="h3">{t("plugin.VcNarrator.ui.playExampleSounds", "Play Example Sounds")}</Forms.FormTitle>
                         <div
                             style={{
                                 display: "grid",

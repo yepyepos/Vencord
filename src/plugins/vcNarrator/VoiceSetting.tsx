@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import { t } from "@i18n";
 import { Forms, SearchableSelect, useMemo, useState } from "@webpack/common";
 
 import { getCurrentVoice, settings } from "./settings";
@@ -33,7 +34,7 @@ function SimplePicker({ voice, voices }: PickerProps) {
 
     return (
         <SearchableSelect
-            placeholder="Select a voice"
+            placeholder={t("plugin.VcNarrator.ui.selectVoice", "Select a voice")}
             maxVisibleItems={5}
             options={options}
             value={options.find(o => o.value === voice)?.value}
@@ -85,7 +86,7 @@ function ComplexPicker({ voice, voices }: PickerProps) {
         <>
             <Forms.FormTitle>Language</Forms.FormTitle>
             <SearchableSelect
-                placeholder="Select a language"
+                placeholder={t("plugin.VcNarrator.ui.selectLanguage", "Select a language")}
                 options={languageOptions}
                 value={languageOptions.find(l => l.value === selectedLanguage)?.value}
                 onChange={v => setSelectedLanguage(v)}
@@ -107,7 +108,7 @@ function VoiceSetting() {
     const { voice } = settings.use(["voice"]);
 
     if (!voices.length)
-        return <Forms.FormText>No voices found.</Forms.FormText>;
+        return <Forms.FormText>{t("plugin.VcNarrator.ui.noVoicesFound", "No voices found.")}</Forms.FormText>;
 
     // espeak on Linux has a ridiculous amount of voices (26k for me).
     // If there are more than 20 voices, we split it up into two pickers, one for language, then one with only the voices for that language.

@@ -18,6 +18,7 @@
 
 import { addMessagePreEditListener, addMessagePreSendListener, removeMessagePreEditListener, removeMessagePreSendListener } from "@api/MessageEvents";
 import { definePluginSettings } from "@api/Settings";
+import { t } from "@i18n";
 import { ApngBlendOp, ApngDisposeOp, parseAPNG } from "@utils/apng";
 import { Devs } from "@utils/constants";
 import { getCurrentGuild } from "@utils/discord";
@@ -172,7 +173,7 @@ function CannotEmbedNoticeModal({ modalProps, resolve }: { modalProps: RenderMod
     return (
         <ConfirmModal
             {...modalProps}
-            title="Hold on!"
+            title={t("plugin.FakeNitro.modal.holdOn", "Hold on!")}
             subtitle="You are trying to send/edit a message that contains a FakeNitro emoji or sticker, however you do not have permissions to embed links in the current channel. Are you sure you want to send this message? Your FakeNitro items will appear as a link only."
             confirmText="Send Anyway"
             cancelText="Cancel"
@@ -800,7 +801,7 @@ export default definePlugin({
                         openModal(props => (
                             <ConfirmModal
                                 {...props}
-                                title="Hold on!"
+                                title={t("plugin.FakeNitro.modal.holdOn", "Hold on!")}
                                 confirmText="OK"
                                 variant="primary"
                             >

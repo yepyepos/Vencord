@@ -6,6 +6,7 @@
 
 import { isPluginEnabled } from "@api/PluginManager";
 import ErrorBoundary from "@components/ErrorBoundary";
+import { t } from "@i18n";
 import ShowHiddenChannelsPlugin from "@plugins/showHiddenChannels";
 import { classNameFactory } from "@utils/css";
 import { classes } from "@utils/misc";
@@ -98,7 +99,7 @@ function VoiceChannelTooltip({ channel, isLocked }: VoiceChannelTooltipProps) {
     const Icon = isLocked ? LockedSpeakerIcon : SpeakerIcon;
     return (
         <>
-            <Text variant="text-sm/bold">In Voice Chat</Text>
+            <Text variant="text-sm/bold">{t("plugin.UserVoiceShow.ui.inVoiceChat", "In Voice Chat")}</Text>
             <Text variant="text-sm/bold">{Parser.parse(`<#${channel.id}>`)}</Text>
             <div className={cl("vc-members")}>
                 <Icon size={18} />
