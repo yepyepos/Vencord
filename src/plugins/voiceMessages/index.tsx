@@ -23,6 +23,7 @@ import { Card } from "@components/Card";
 import { Microphone } from "@components/Icons";
 import { Link } from "@components/Link";
 import { Paragraph } from "@components/Paragraph";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import { classNameFactory } from "@utils/css";
 import { Margins } from "@utils/margins";
@@ -67,7 +68,7 @@ const ctxMenuPatch: NavContextMenuPatchCallback = (children, props) => {
                 type: "icon",
                 icon: Microphone
             }}
-            label="Send Voice Message"
+            label={t("plugin.VoiceMessages.menu.send", "Send Voice Message")}
             action={() => openModal(modalProps => <VoiceMessageModal modalProps={modalProps} />)}
         />
     );
@@ -209,7 +210,7 @@ function VoiceMessageModal({ modalProps }: { modalProps: RenderModalProps; }) {
     return (
         <Modal
             {...modalProps}
-            title="Record Voice Message"
+            title={t("plugin.VoiceMessages.modal.record", "Record Voice Message")}
             actions={[{
                 text: "Send",
                 variant: "primary",

@@ -20,6 +20,7 @@ import "./style.css";
 
 import { definePluginSettings } from "@api/Settings";
 import ErrorBoundary from "@components/ErrorBoundary";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import { classNameFactory } from "@utils/css";
 import { classes } from "@utils/misc";
@@ -571,7 +572,7 @@ export default definePlugin({
     ), { noop: true }),
 
     HiddenChannelIcon: ErrorBoundary.wrap(() => (
-        <Tooltip text="Hidden Channel">
+        <Tooltip text={t("plugin.ShowHiddenChannels.tooltip.hidden", "Hidden Channel")}>
             {({ onMouseLeave, onMouseEnter }) => (
                 <svg
                     onMouseLeave={onMouseLeave}

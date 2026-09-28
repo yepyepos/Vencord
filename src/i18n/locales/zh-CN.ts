@@ -121,6 +121,8 @@ const translations = {
     "plugin.VoiceMessages.settings.noiseSuppression.description": "噪声抑制",
     "plugin.VoiceMessages.settings.echoCancellation.displayName": "回声消除",
     "plugin.VoiceMessages.settings.echoCancellation.description": "回声消除",
+    "plugin.VoiceMessages.menu.send": "发送语音消息",
+    "plugin.VoiceMessages.modal.record": "录制语音消息",
 
     // ---- ImageZoom (many settings + context menu + dynamic overlay UI) ----
     "plugin.ImageZoom.name": "图片缩放",
@@ -640,6 +642,9 @@ const translations = {
     "plugin.MessageLogger.settings.ignoreChannels.description": "要忽略的频道 ID 列表（逗号分隔）",
     "plugin.MessageLogger.settings.ignoreGuilds.displayName": "忽略的服务器",
     "plugin.MessageLogger.settings.ignoreGuilds.description": "要忽略的服务器 ID 列表（逗号分隔）",
+    "plugin.MessageLogger.menu.toggleHighlight": "切换删除高亮",
+    "plugin.MessageLogger.menu.removeHistory": "移除消息历史",
+    "plugin.MessageLogger.menu.clearLog": "清空消息日志",
 
     "plugin.MoreQuickReactions.name": "更多快捷反应",
     "plugin.MoreQuickReactions.description": "增加快捷反应悬浮菜单中可用的反应数量",
@@ -993,6 +998,7 @@ const translations = {
     "plugin.ShowHiddenChannels.settings.showMode.option.1": "静音样式，右侧带隐藏之眼图标",
     "plugin.ShowHiddenChannels.settings.defaultAllowedUsersAndRolesDropdownState.displayName": "默认展开允许列表",
     "plugin.ShowHiddenChannels.settings.defaultAllowedUsersAndRolesDropdownState.description": "隐藏频道上的允许用户和身份组下拉框是否默认展开",
+    "plugin.ShowHiddenChannels.tooltip.hidden": "隐藏频道",
 
     "plugin.ShowHiddenThings.name": "显示隐藏内容",
     "plugin.ShowHiddenThings.description": "无视权限显示各种隐藏和管理员专属内容。",
