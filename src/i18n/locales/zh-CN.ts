@@ -723,12 +723,23 @@ const translations = {
     "plugin.NoOnboardingDelay.name": "跳过引导延迟",
     "plugin.NoOnboardingDelay.description": "跳过缓慢烦人的新手引导延迟",
 
+    "plugin.MutualGroupDMs.name": "共同群聊显示",
+    "plugin.MutualGroupDMs.description": "在个人资料中显示你们的共同群聊",
+
+    "plugin.NoProfileThemes.name": "隐藏 Nitro 资料主题",
+    "plugin.NoProfileThemes.description": "除你自己之外，完全移除所有人的 Nitro 资料主题",
+
+    "plugin.oneko.name": "oneko",
+    "plugin.oneko.description": "让小猫跟随鼠标（真的）",
+
     "plugin.NoPendingCount.name": "隐藏待处理计数",
     "plugin.NoPendingCount.description": "移除好友请求、私信请求和 Nitro 优惠的未读角标数。",
     "plugin.NoPendingCount.settings.hideFriendRequestsCount.displayName": "隐藏好友请求数",
     "plugin.NoPendingCount.settings.hideFriendRequestsCount.description": "隐藏收到的好友请求数量",
     "plugin.NoPendingCount.settings.hideMessageRequestsCount.displayName": "隐藏私信请求数",
     "plugin.NoPendingCount.settings.hideMessageRequestsCount.description": "隐藏收到的私信请求数量",
+    "plugin.NoPendingCount.settings.hidePremiumOffersCount.displayName": "隐藏 Nitro 优惠数",
+    "plugin.NoPendingCount.settings.hidePremiumOffersCount.description": "隐藏收到的 Nitro 优惠数量",
 
     "plugin.NoReplyMention.name": "回复不提及",
     "plugin.NoReplyMention.description": "默认关闭回复时的 @ 提及",
