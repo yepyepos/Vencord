@@ -66,7 +66,8 @@ function pluginDefinesSetting(folder: string, settingKey: string): boolean {
         const p = join(dir, file);
         if (!statSync(p).isFile() || !/\.(ts|tsx)$/.test(file)) continue;
         const code = readFileSync(p, "utf8");
-        if (new RegExp(`(\\{|,)\\s*${settingKey}\\s*:\\s*\\{`).test(code))
+        // setting keys appear at the start of a line, or after { or ,
+        if (new RegExp(`(^|[,{\\r\\n])\\s*${settingKey}\\s*:\\s*\\{`).test(code))
             return true;
     }
     return false;
