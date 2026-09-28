@@ -860,3 +860,59 @@ NoTrack 的 mock HTTP 响应体 ×2、_core deprecated customSections 的动态�
 - Desktop：`pnpm inject` 注入后按 `docs/GUI_TEST_CHECKLIST.md` 完整执行（用户侧）
 - 两项都通过后，RC zh.2 方可升级为 Stable Release 并创建 GitHub Release
 
+---
+
+# 21. Phase 5.2 — Desktop 实机 QA 修复与 Core Settings 审计（2026-09-29）
+
+> 背景：Desktop dev 注入（Discord Stable 1.0.9259，`VENCORD_DEV_INSTALL=1` 模式，直接加载仓库 dist）
+> 后的实机测试发现四处漏译。根因与 Phase 5.1 相同且更深：**`src/components/settings/tabs/**`
+> 从未作为独立审计域**——部分组件被零散覆盖（Cloud 按钮/主题说明），部分整页从未进入扫描范围
+> （Backup & Restore、Patch Helper、Notification Log），部分核心设置组件（Background Material、
+> Server Info 模态）完全不在清单上。
+
+## 21.1 发现 → 修复对照
+
+| 区域 | 发现 | 修复 |
+| --- | --- | --- |
+| 云同步（Cloud） | 页首长说明（含 privacy/source 两个内嵌链接）、"Backend URL" 区、"Sync Rules for This Device" 区未汉化 | 6 处（链接结构分段保留） |
+| 通知日志（Notification Log） | **整页英文**：标题、空状态（"No notifications yet"）、"Notification Settings"/"Clear Notification Log" 按钮、清空确认框（{count} 模板）、"Do it!" | 7 处（复用 `ui.notifications.openSettings`，新增通用 key `ui.common.areYouSure`/`ui.common.loading`） |
+| 背景材质（Background Material） | 标题、三行描述、"None" 占位符与选项、Mica/Tabbed/Acrylic 选项全部英文 | 7 处（value 原样，label 全译）；同页 macOS 鲜活度 13 个选项 label 一并补齐 |
+| 服务器信息（Server Info） | 模态 4 个 Tab、全部 9 个字段 label（含 Vanity Link/Preferred Locale/Verification Level/Server Boosts/Channels/Roles）、验证等级 5 档值、"Loading..." 均英文 | 20 处（字段 label 改为 computed key + t()） |
+| Notification Log 通知组件 | 关闭通知 svg title 英文 | 1 处 |
+
+## 21.2 Core Settings 系统性审计（本阶段核心交付）
+
+- 新文档 `docs/CORE_SETTINGS_AUDIT_ZH_CN.md`：全部 9 大页 + 3 子设置区的逐页台账（DONE/DISCORD-I18N/
+  KEEP-ENGLISH 状态与保留原因）
+- **qaI18n 新增 core settings coverage 检查（fail 级）**：扫描全部 `tabs/**/*.tsx` 与
+  notificationLog，任何含用户可见字符串的文件必须包含 `t()` 用法，否则 QA 失败
+  （豁免：LocalThemesTab 品牌链接标签）。该检查在首次运行时即抓到 MacVibrancy 13 个
+  未包装选项 label 与必需插件分区的第 3 处空状态文案——证明"扫描盲区→自动化守护"闭环有效
+- checkI18n 语义命名空间白名单扩充至 19 个段（menu/modal/player/fields/verification 等），
+  消除 Phase 4 起的 ~90 条 WARN 噪音
+- Core 扫描残余一并修复：UIElements 管理弹窗（5 处）、Patch Helper Replacement/Cheat Sheet 标题、
+  Updater Repo/Updates/Oops/错误消息、通知关闭 svg title
+
+## 21.3 数据与质量
+
+- 新增 key：**71**（ui 206 → 259、plugin 1192 → 1210，总计 1419 → **1490**，checkI18n 对账一致）
+- 术语：0 漂移；"验证等级" 档位（无/低/中/高/最高）与 Discord 官方一致
+- 九项门禁全绿：checkI18n / checkI18nTerms / qaI18n（含新 core 检查）/ testI18n / testTsc / lint /
+  build / buildWeb / test
+- 过程问题：MacVibrancy 选项包装两处丢尾逗号（tsc/esbuild 捕获）、locale 内 `\n` 被 heredoc
+  展开为真实换行（checkI18n 捕获）——均即时修复
+
+## 21.4 RC 版本更新（zh.2 → zh.3）
+
+- zh.3 构建 commit `9edcf50b`，产物 SHA256 已更新至 `docs/RELEASE_CHECKSUMS.md`
+  （zh.1/zh.2 弃用记录保留）
+- 产物内容验证：全部产物含 zh.3 新增 key
+- 已知 Release 限制（记录，非 i18n 问题）：Fork 构建的"检查更新"没有对应官方更新源，无法使用
+
+## 21.5 待人工复验（发布 Stable 的前置条件）
+
+1. Desktop：重启 Discord（dev 注入自动加载 zh.3 dist），复验 Cloud / Notification Log /
+   Background Material / Server Info / Themes / Backup & Restore / Patch Helper + 语言往返
+2. Chrome：重新加载 zh.3 扩展，复验 §21.1 四项 + 语言往返
+3. 两项通过 → 按 `docs/GUI_TEST_CHECKLIST.md` 命令发布 `v1.15.7-zh.3` Stable
+

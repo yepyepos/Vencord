@@ -49,6 +49,8 @@
 ## 统计
 
 - Core Settings 页面：**9 大页 + 3 子设置区**，全部 DONE
-- Phase 5.1 + 5.2 新增包装：**~120 处**
-- 新增 ui.* key：145 → **285**（总 key 1419 → **1494**，以 checkI18n 为准）
-- 自动化守护：qaI18n core settings coverage（fail 级）
+- Phase 5.1 + 5.2 新增包装：**~180 处**（5.1 四页 62 处；5.2 Desktop 实机发现 ~55 处 +
+  Core 扫描残余 ~25 处 + Mac 活跃度 13 选项）
+- 新增 ui.* key：145 → **259**（总 key 1419 → **1490**，checkI18n 最终对账：ui=259 + tag=21 + plugin=1210）
+- 自动化守护：qaI18n core settings coverage（fail 级）+ checkI18n 语义命名空间白名单（menu/modal/
+  player/fields/verification 等 19 个段，消除 Phase 4 key 的告警噪音）

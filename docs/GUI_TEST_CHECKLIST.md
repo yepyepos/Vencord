@@ -97,12 +97,12 @@
 git remote -v
 
 # 2. 打 tag 并推送
-git tag -a v1.15.7-zh.1 -m "Vencord zh-CN v1.15.7-zh.1"
+git tag -a v1.15.7-zh.3 -m "Vencord zh-CN v1.15.7-zh.3"
 git push origin zh-CN
-git push origin v1.15.7-zh.1
+git push origin v1.15.7-zh.3
 
 # 3. 创建 GitHub Release（gh CLI）
-gh release create v1.15.7-zh.1 \
+gh release create v1.15.7-zh.3 \
   --repo yepyepos/Vencord \
   --title "Vencord 1.15.7 — 简体中文本地化版" \
   --notes-file docs/RELEASE_NOTES_ZH.md \
