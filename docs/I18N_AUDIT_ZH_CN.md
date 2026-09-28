@@ -744,3 +744,80 @@ total = 1187 = ui 145 + tag 21 + plugin 1021
 ② 32 项单元测试锁定 fallback/插值/不可变性；③ 本节数据级实测（搜索/结构回归）。
 真实客户端点击级验证仍建议在发布前由人工执行（清单：插件列表→详情→设置→搜索→标签→Modal→右键菜单→Tooltip→语言往返）。
 
+---
+
+# 19. Phase 4 — Dynamic UI 全量本地化（2026-09-28）
+
+> 本章为第四阶段（Dynamic UI 全量处理）结果。工作清单来自 `docs/DYNAMIC_UI_AUDIT_ZH_CN.md`
+> （Phase 3.5 建立的 161 条逐项清单），按 P0→P1→P2/P3 顺序分 5 个批次完成。
+
+## 19.1 Git 提交
+
+| Commit | 内容 |
+| --- | --- |
+| `d916d0ee` feat(i18n): localize dynamic ui batch 01 (P0 part 1) | 8 插件 42 处 |
+| `40919351` feat(i18n): localize dynamic ui batch 02 (P0 part 2) | 13 文件 34 处（含清单漏项 ClientTheme Reset Theme Color） |
+| `6e72ae76` feat(i18n): localize dynamic ui batch 03 (P1) | 61 处（含 CustomRPC 全表单 25 标签） |
+| `f3d73eea` fix(i18n): use ui.* namespace ... for CustomRPC labels | checkI18n 抓获的命名空间错误修正 |
+| `cadb16c1` feat(i18n): localize dynamic ui batch 04 (P2/P3 + REVIEW) | 30 处 + REVIEW 判定 |
+| `68ff85f3` feat(i18n): localize dynamic ui batch 05 (final sweep) | 重扫捕获的 11 处漏项 |
+| `a6afc026` fix(i18n): deduplicate ... | key 去重 |
+| `4b008701` docs: regenerate dynamic ui audit | 终版清单 |
+
+## 19.2 最终覆盖率（重扫实测）
+
+| 分类 | 数量 |
+| --- | --- |
+| 扫描命中 | 407 |
+| **DONE（t() 包装，中文生效）** | **210**（Phase 2/3/3.5/4 累计；Phase 4 新增 ≈143） |
+| CENTRAL（中央覆盖层） | 81 |
+| KEEP-ENGLISH | 116（其中 6 条为 Phase 4 记录的有据保留） |
+| **Remaining（真正未翻译）** | **0** |
+| REVIEW | 0（22 条全部判定：20 翻译、2 归 KEEP-ENGLISH） |
+
+**优先级完成情况**：P0 91/91（DONE 口径）、P1 全部、P2 全部、P3 完成 4 条 ChatInputButtonAPI +
+2 条 SupportHelper/StartupTimings，其余为有据 KEEP-ENGLISH。
+
+**KEEP-ENGLISH 有据保留（6 条）**：Experiments 的 patch find 匹配器、WebPWA 的 PWA manifest 元数据、
+NoTrack 的 mock HTTP 响应体 ×2、_core deprecated customSections 的动态第三方标题 ×2。
+
+## 19.3 过程中发现并处理的问题
+
+1. **清单漏项按流程处理**：ClientTheme "Reset Theme Color" 不在清单中——记录→判定为 Dynamic UI→纳入同批处理。
+2. **checkI18n 拦截命名空间错误**：CustomRPC 的自定义设置表单标签误用 `settings.*` 命名空间（21 个 key 报错），
+   修正为 `ui.*` 并以真实持久化 settingsKey 命名（type/appID/detailsURL…），与稳定 key 规则一致。
+3. **两处脚本中断被重扫捕获**：批次 04 的 Python 脚本在 webRichPresence 路径错误处中断，跳过了
+   ChatInputButtonAPI 4 处包装；批次 02 漏掉 FakeNitro 2 处——均被批次 05 前的重新扫描捕获并补齐。
+   验证了"每批后重扫对账"流程的必要性。
+4. **动态模板串限制**：MessageLatency 的时钟偏差文案为运行时模板字面量（含 `${d.delta}`），按"最小改动"原则
+   仅包装两个静态句式并留注释记录；完整模板化留待上游配合。
+
+## 19.4 rebase 风险实测（P0/P1 完成后执行）
+
+模拟 upstream 对 4 个已包装插件文件（pinDms 菜单、TranslateIcon、viewIcons、reviewDB 按钮）的
+真实风格改动，从 zh-CN（30 提交）rebase：
+
+| 指标 | 结果 |
+| --- | --- |
+| 冲突文件 | 4（全部为 t() 包装点） |
+| 冲突 hunk | 4（每文件 1 个） |
+| 解决方式 | 保留 t() 包装、吸收上游新文案进 fallback（key 不变） |
+| 解决耗时 | ≈10 分钟 |
+| locale 数据 | **0 冲突** |
+| rebase 后验证 | checkI18n / tsc / lint / build 全绿 |
+
+## 19.5 最终回归
+
+| 检查 | 结果 |
+| --- | --- |
+| `pnpm checkI18n` | ✅ 1358 keys（ui=145 + tag=21 + plugin=1192） |
+| `pnpm checkI18nTerms` | ✅ 0 漂移 |
+| `pnpm qaI18n` | ✅ 结构回归/模板变量/URL 完整性全过 |
+| `pnpm testI18n` | ✅ 32/32 |
+| `pnpm testTsc` / `pnpm lint` | ✅ 0 错误 |
+| `pnpm build` / `pnpm buildWeb` | ✅ / ✅ |
+| `pnpm test` | ✅ exit 0 |
+| `git diff --check` | ✅ 干净；无业务逻辑/option value/command ID/URL/正则改动 |
+
+**运行时验证限制**：本环境无法启动 Discord，点击级语言切换验证仍需发布前人工执行（Phase 3.5 §18.8 清单）。
+
