@@ -20,6 +20,7 @@ import "./styles.css";
 
 import { ChatBarButton, ChatBarButtonFactory } from "@api/ChatButtons";
 import { definePluginSettings } from "@api/Settings";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import { classNameFactory } from "@utils/css";
 import { getTheme, insertTextIntoChatInputBox, Theme } from "@utils/discord";
@@ -68,7 +69,7 @@ function PickerModal(props: RenderModalProps) {
     return (
         <Modal
             {...props}
-            title="Timestamp Picker"
+            title={t("plugin.SendTimestamps.modal.title", "Timestamp Picker")}
             actions={[{
                 text: "Insert",
                 variant: "primary",
@@ -88,7 +89,7 @@ function PickerModal(props: RenderModalProps) {
                 }}
             />
 
-            <Forms.FormTitle>Timestamp Format</Forms.FormTitle>
+            <Forms.FormTitle>{t("plugin.SendTimestamps.modal.format", "Timestamp Format")}</Forms.FormTitle>
             <div className={cl("format-select")}>
                 <Select
                     options={
@@ -141,7 +142,7 @@ const SendTimestampButton: ChatBarButtonFactory = ({ isAnyChat }) => {
 
     return (
         <ChatBarButton
-            tooltip="Insert Timestamp"
+            tooltip={t("plugin.SendTimestamps.tooltip.insert", "Insert Timestamp")}
             onClick={() => openModal(props => <PickerModal {...props} />)}
             buttonProps={{ "aria-haspopup": "dialog" }}
         >

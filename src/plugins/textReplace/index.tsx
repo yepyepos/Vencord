@@ -26,6 +26,7 @@ import { HeadingSecondary } from "@components/Heading";
 import { Paragraph } from "@components/Paragraph";
 import { Span } from "@components/Span";
 import { TooltipContainer } from "@components/TooltipContainer";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import { classNameFactory } from "@utils/css";
 import { Logger } from "@utils/Logger";
@@ -240,7 +241,7 @@ function TextReplace({ title, description, rulesArray, isRegex = false }: TextRe
                 <Paragraph>{description}</Paragraph>
                 <div className={cl("search-input")}>
                     <TextInput
-                        placeholder="Search for a rule..."
+                        placeholder={t("plugin.TextReplace.ui.searchPlaceholder", "Search for a rule...")}
                         value={searchQuery}
                         onChange={setSearchQuery}
                     />
@@ -248,7 +249,7 @@ function TextReplace({ title, description, rulesArray, isRegex = false }: TextRe
             </div>
             <Flex flexDirection="column" style={{ gap: "0.5em", paddingBottom: "1.25em" }}>
                 {!filteredRules.length && searchQuery && (
-                    <Paragraph>No rules match your search criteria.</Paragraph>
+                    <Paragraph>{t("plugin.TextReplace.ui.noRulesMatch", "No rules match your search criteria.")}</Paragraph>
                 )}
                 {filteredRules.map(({ rule, index }) =>
                     <div
@@ -286,7 +287,7 @@ function TextReplace({ title, description, rulesArray, isRegex = false }: TextRe
                                             onChange={e => onChange(e, index, "replace")}
                                         />
                                         <TextRow
-                                            label="Only if includes"
+                                            label={t("plugin.TextReplace.ui.onlyIfIncludes", "Only if includes")}
                                             description="Optionally, only apply this rule if the message includes this text."
                                             value={rule.onlyIfIncludes}
                                             onChange={e => onChange(e, index, "onlyIfIncludes")}
@@ -346,10 +347,10 @@ function TextReplaceTesting() {
 
     return (
         <div>
-            <HeadingSecondary>Rule Tester</HeadingSecondary>
+            <HeadingSecondary>{t("plugin.TextReplace.ui.ruleTester", "Rule Tester")}</HeadingSecondary>
             <Flex flexDirection="column" gap={6}>
-                <TextInput placeholder="Type a message to test rules on" onChange={setValue} />
-                <TextInput placeholder="Message with rules applied" editable={false} value={applyRules(value)} style={{ opacity: 0.7 }} />
+                <TextInput placeholder={t("plugin.TextReplace.ui.testInput", "Type a message to test rules on")} onChange={setValue} />
+                <TextInput placeholder={t("plugin.TextReplace.ui.testOutput", "Message with rules applied")} editable={false} value={applyRules(value)} style={{ opacity: 0.7 }} />
             </Flex>
         </div>
     );

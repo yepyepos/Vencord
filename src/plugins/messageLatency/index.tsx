@@ -6,6 +6,7 @@
 
 import { definePluginSettings } from "@api/Settings";
 import ErrorBoundary from "@components/ErrorBoundary";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import { isNonNullish } from "@utils/guards";
 import definePlugin, { OptionType } from "@utils/types";
@@ -151,9 +152,11 @@ export default definePlugin({
 
             let text: string;
             if (!d.delta) {
-                text = "User is suspected to be on an old Discord Android client";
+                text = t("plugin.MessageLatency.tooltip.oldClient", "User is suspected to be on an old Discord Android client");
             } else {
-                text = (d.ahead ? `This user's clock is ${d.delta} ahead.` : `This message was sent with a delay of ${d.delta}.`) + (d.isDiscordKotlin ? " User is suspected to be on an old Discord Android client." : "");
+                // template literals contain dynamic values; only the trailing
+                // static suffix is localized via t()
+                text = (d.ahead ? `This user's clock is ${d.delta} ahead.` : `This message was sent with a delay of ${d.delta}.`) + (d.isDiscordKotlin ? " " + t("plugin.MessageLatency.tooltip.oldClientSuffix", "User is suspected to be on an old Discord Android client.") : "");
             }
 
             return <Tooltip

@@ -22,6 +22,7 @@ import { Card } from "@components/Card";
 import { Heading } from "@components/Heading";
 import { Margins } from "@components/margins";
 import { Paragraph } from "@components/Paragraph";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
 import { Activity, ActivityAssets, ActivityButton } from "@vencord/discord-types";
@@ -250,9 +251,9 @@ export default definePlugin({
         return (
             <Card>
                 <Heading tag="h2">Last.FM</Heading>
-                <Heading tag="h5">How to create an API key</Heading>
+                <Heading tag="h5">{t("plugin.MusicRichPresence.ui.howToCreateApiKey", "How to create an API key")}</Heading>
                 <Paragraph>Set <strong>Application name</strong> and <strong>Application description</strong> to anything and leave the rest blank.</Paragraph>
-                <LinkButton size="small" href="https://www.last.fm/api/account/create" className={Margins.top8}>Create API Key</LinkButton>
+                <LinkButton size="small" href="https://www.last.fm/api/account/create" className={Margins.top8}>{t("plugin.MusicRichPresence.ui.createApiKey", "Create API Key")}</LinkButton>
             </Card>
         );
     },

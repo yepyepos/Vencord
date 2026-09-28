@@ -10,6 +10,7 @@ import { Flex } from "@components/Flex";
 import { HeadingSecondary } from "@components/Heading";
 import { InfoIcon } from "@components/Icons";
 import { Paragraph } from "@components/Paragraph";
+import { t } from "@i18n";
 import { RenderModalProps } from "@vencord/discord-types";
 import { Modal, openModal, TextArea, TextInput, useState } from "@webpack/common";
 
@@ -43,7 +44,7 @@ function CreateTagDialog({ initialValue, modalProps }: { initialValue: Tag; moda
     return (
         <Modal
             {...modalProps}
-            title={isEdit ? "Edit Tag" : "Create New Tag"}
+            title={isEdit ? t("plugin.CustomCommands.modal.editTag", "Edit Tag") : t("plugin.CustomCommands.modal.createNewTag", "Create New Tag")}
             subtitle={isEdit ? "Edit your custom command." : "Create a new tag which will be registered as a slash command."}
             actions={[
                 {
@@ -81,7 +82,7 @@ function CreateTagDialog({ initialValue, modalProps }: { initialValue: Tag; moda
 
                 {detectedArguments.length > 0 && (
                     <section>
-                        <HeadingSecondary>Detected Arguments</HeadingSecondary>
+                        <HeadingSecondary>{t("plugin.CustomCommands.modal.detectedArguments", "Detected Arguments")}</HeadingSecondary>
                         <Paragraph>
                             <ul>
                                 {detectedArguments.map(arg => (

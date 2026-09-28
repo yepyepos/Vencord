@@ -22,6 +22,7 @@ import { BaseText } from "@components/BaseText";
 import { CheckedTextInput } from "@components/CheckedTextInput";
 import { Flex } from "@components/Flex";
 import { PlusIcon } from "@components/Icons";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import { getGuildAcronym, hasGuildFeature } from "@utils/discord";
 import { Logger } from "@utils/Logger";
@@ -202,14 +203,14 @@ async function doClone(guildId: string, data: Sticker | Emoji) {
             id: Toasts.genId()
         });
     } catch (e: any) {
-        let message = "Something went wrong (check console!)";
+        let message = t("plugin.ExpressionCloner.toast.wentWrong", "Something went wrong (check console!)");
         try {
             message = JSON.parse(e.text).message;
         } catch { }
 
         new Logger("ExpressionCloner").error("Failed to clone", data.name, "to", guildId, e);
         Toasts.show({
-            message: "Failed to clone: " + message,
+            message: t("plugin.ExpressionCloner.toast.failedToClone", "Failed to clone: ") + message,
             type: Toasts.Type.FAILURE,
             id: Toasts.genId()
         });
@@ -234,7 +235,7 @@ function CloneModal({ data }: { data: Sticker | Emoji; }) {
 
     return (
         <>
-            <Forms.FormTitle>Custom Name</Forms.FormTitle>
+            <Forms.FormTitle>{t("plugin.ExpressionCloner.ui.customName", "Custom Name")}</Forms.FormTitle>
             <CheckedTextInput
                 initialValue={name}
                 onChange={v => {

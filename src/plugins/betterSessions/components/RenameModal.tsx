@@ -17,6 +17,7 @@
 */
 
 import { TextButton } from "@components/Button";
+import { t } from "@i18n";
 import { SessionInfo } from "@plugins/betterSessions/types";
 import { getDefaultName, savedSessionsCache, saveSessionsToDataStore } from "@plugins/betterSessions/utils";
 import { RenderModalProps } from "@vencord/discord-types";
@@ -57,7 +58,7 @@ export function RenameModal({ props, session, state }: { props: RenderModalProps
             ]}
         >
             <div>
-                <Forms.FormTitle tag="h5">New device name</Forms.FormTitle>
+                <Forms.FormTitle tag="h5">{t("plugin.BetterSessions.modal.newDeviceName", "New device name")}</Forms.FormTitle>
                 <TextInput
                     style={{ marginBottom: "10px" }}
                     placeholder={getDefaultName(session.client_info)}

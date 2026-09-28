@@ -10,6 +10,7 @@ import { isPluginEnabled } from "@api/PluginManager";
 import { Divider } from "@components/Divider";
 import { Heading } from "@components/Heading";
 import { resolveError } from "@components/settings/tabs/plugins/components/Common";
+import { t } from "@i18n";
 import { debounce } from "@shared/debounce";
 import { classNameFactory } from "@utils/css";
 import { ActivityType } from "@vencord/discord-types/enums";
@@ -158,7 +159,7 @@ export function RPCSettings() {
         <div className={cl("root")}>
             <SelectSetting
                 settingsKey="type"
-                label="Activity Type"
+                label={t("plugin.CustomRPC.settings.activityType", "Activity Type")}
                 options={[
                     {
                         label: "Playing",
@@ -185,23 +186,23 @@ export function RPCSettings() {
             />
 
             <PairSetting data={[
-                { settingsKey: "appID", label: "Application ID", isValid: isAppIdValid },
-                { settingsKey: "appName", label: "Application Name", isValid: makeValidator(128, true) },
+                { settingsKey: "appID", label: t("plugin.CustomRPC.settings.applicationId", "Application ID"), isValid: isAppIdValid },
+                { settingsKey: "appName", label: t("plugin.CustomRPC.settings.applicationName", "Application Name"), isValid: makeValidator(128, true) },
             ]} />
 
             <PairSetting data={[
-                { settingsKey: "details", label: "Detail (line 1)", isValid: maxLength128 },
-                { settingsKey: "detailsURL", label: "Detail URL", isValid: isUrlValid },
+                { settingsKey: "details", label: t("plugin.CustomRPC.settings.detail", "Detail (line 1)"), isValid: maxLength128 },
+                { settingsKey: "detailsURL", label: t("plugin.CustomRPC.settings.detailUrl", "Detail URL"), isValid: isUrlValid },
             ]} />
 
             <PairSetting data={[
-                { settingsKey: "state", label: "State (line 2)", isValid: maxLength128 },
-                { settingsKey: "stateURL", label: "State URL", isValid: isUrlValid },
+                { settingsKey: "state", label: t("plugin.CustomRPC.settings.state", "State (line 2)"), isValid: maxLength128 },
+                { settingsKey: "stateURL", label: t("plugin.CustomRPC.settings.stateUrl", "State URL"), isValid: isUrlValid },
             ]} />
 
             <SingleSetting
                 settingsKey="streamLink"
-                label="Stream Link (Twitch or YouTube, only if activity type is Streaming)"
+                label={t("plugin.CustomRPC.settings.streamLink", "Stream Link (Twitch or YouTube, only if activity type is Streaming)")}
                 disabled={s.type !== ActivityType.STREAMING}
                 isValid={isStreamLinkValid}
             />
@@ -209,14 +210,14 @@ export function RPCSettings() {
             <PairSetting data={[
                 {
                     settingsKey: "partySize",
-                    label: "Party Size",
+                    label: t("plugin.CustomRPC.settings.partySize", "Party Size"),
                     transform: parseNumber,
                     isValid: isNumberValid,
                     disabled: s.type !== ActivityType.PLAYING,
                 },
                 {
                     settingsKey: "partyMaxSize",
-                    label: "Maximum Party Size",
+                    label: t("plugin.CustomRPC.settings.partyMaxSize", "Maximum Party Size"),
                     transform: parseNumber,
                     isValid: isNumberValid,
                     disabled: s.type !== ActivityType.PLAYING,
@@ -226,33 +227,33 @@ export function RPCSettings() {
             <Divider />
 
             <PairSetting data={[
-                { settingsKey: "imageBig", label: "Large Image URL/Key", isValid: isImageKeyValid },
-                { settingsKey: "imageBigTooltip", label: "Large Image Text", isValid: maxLength128 },
+                { settingsKey: "imageBig", label: t("plugin.CustomRPC.settings.imageBigUrlKey", "Large Image URL/Key"), isValid: isImageKeyValid },
+                { settingsKey: "imageBigTooltip", label: t("plugin.CustomRPC.settings.imageBigText", "Large Image Text"), isValid: maxLength128 },
             ]} />
-            <SingleSetting settingsKey="imageBigURL" label="Large Image clickable URL" isValid={isUrlValid} />
+            <SingleSetting settingsKey="imageBigURL" label={t("plugin.CustomRPC.settings.imageBigUrl", "Large Image clickable URL")} isValid={isUrlValid} />
 
             <PairSetting data={[
-                { settingsKey: "imageSmall", label: "Small Image URL/Key", isValid: isImageKeyValid },
-                { settingsKey: "imageSmallTooltip", label: "Small Image Text", isValid: maxLength128 },
+                { settingsKey: "imageSmall", label: t("plugin.CustomRPC.settings.imageSmallUrlKey", "Small Image URL/Key"), isValid: isImageKeyValid },
+                { settingsKey: "imageSmallTooltip", label: t("plugin.CustomRPC.settings.imageSmallText", "Small Image Text"), isValid: maxLength128 },
             ]} />
-            <SingleSetting settingsKey="imageSmallURL" label="Small Image clickable URL" isValid={isUrlValid} />
+            <SingleSetting settingsKey="imageSmallURL" label={t("plugin.CustomRPC.settings.imageSmallUrl", "Small Image clickable URL")} isValid={isUrlValid} />
 
             <Divider />
 
             <PairSetting data={[
-                { settingsKey: "buttonOneText", label: "Button1 Text", isValid: makeValidator(31) },
-                { settingsKey: "buttonOneURL", label: "Button1 URL", isValid: isUrlValid },
+                { settingsKey: "buttonOneText", label: t("plugin.CustomRPC.settings.buttonOneText", "Button1 Text"), isValid: makeValidator(31) },
+                { settingsKey: "buttonOneURL", label: t("plugin.CustomRPC.settings.buttonOneUrl", "Button1 URL"), isValid: isUrlValid },
             ]} />
             <PairSetting data={[
-                { settingsKey: "buttonTwoText", label: "Button2 Text", isValid: makeValidator(31) },
-                { settingsKey: "buttonTwoURL", label: "Button2 URL", isValid: isUrlValid },
+                { settingsKey: "buttonTwoText", label: t("plugin.CustomRPC.settings.buttonTwoText", "Button2 Text"), isValid: makeValidator(31) },
+                { settingsKey: "buttonTwoURL", label: t("plugin.CustomRPC.settings.buttonTwoUrl", "Button2 URL"), isValid: isUrlValid },
             ]} />
 
             <Divider />
 
             <SelectSetting
                 settingsKey="timestampMode"
-                label="Timestamp Mode"
+                label={t("plugin.CustomRPC.settings.timestampMode", "Timestamp Mode")}
                 options={[
                     {
                         label: "None",
@@ -260,11 +261,11 @@ export function RPCSettings() {
                         default: true
                     },
                     {
-                        label: "Since discord open",
+                        label: t("plugin.CustomRPC.settings.timestampMode.now", "Since discord open"),
                         value: TimestampMode.NOW
                     },
                     {
-                        label: "Same as your current time (not reset after 24h)",
+                        label: t("plugin.CustomRPC.settings.timestampMode.sameAsCurrent", "Same as your current time (not reset after 24h)"),
                         value: TimestampMode.TIME
                     },
                     {
@@ -277,14 +278,14 @@ export function RPCSettings() {
             <PairSetting data={[
                 {
                     settingsKey: "startTime",
-                    label: "Start Timestamp (in milliseconds)",
+                    label: t("plugin.CustomRPC.settings.timestampMode.start", "Start Timestamp (in milliseconds)"),
                     transform: parseNumber,
                     isValid: isNumberValid,
                     disabled: s.timestampMode !== TimestampMode.CUSTOM,
                 },
                 {
                     settingsKey: "endTime",
-                    label: "End Timestamp (in milliseconds)",
+                    label: t("plugin.CustomRPC.settings.timestampMode.end", "End Timestamp (in milliseconds)"),
                     transform: parseNumber,
                     isValid: isNumberValid,
                     disabled: s.timestampMode !== TimestampMode.CUSTOM,

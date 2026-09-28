@@ -18,6 +18,7 @@
 
 import { showNotification } from "@api/Notifications";
 import { definePluginSettings } from "@api/Settings";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import { Logger } from "@utils/Logger";
 import { canonicalizeMatch, canonicalizeReplace } from "@utils/patches";
@@ -98,7 +99,7 @@ function initWs(isManual = false) {
         logger.info("Connected to WebSocket");
 
         (settings.store.notifyOnAutoConnect || isManual) && showNotification({
-            title: "Dev Companion Connected",
+            title: t("plugin.DevCompanion.notification.connected", "Dev Companion Connected"),
             body: "Connected to WebSocket",
             noPersist: true
         });
@@ -112,7 +113,7 @@ function initWs(isManual = false) {
         logger.error("Dev Companion Error:", e);
 
         showNotification({
-            title: "Dev Companion Error",
+            title: t("plugin.DevCompanion.notification.error", "Dev Companion Error"),
             body: (e as ErrorEvent).message || "No Error Message",
             color: "var(--status-danger, red)",
             noPersist: true,
@@ -125,7 +126,7 @@ function initWs(isManual = false) {
         logger.info("Dev Companion Disconnected:", e.code, e.reason);
 
         showNotification({
-            title: "Dev Companion Disconnected",
+            title: t("plugin.DevCompanion.notification.disconnected", "Dev Companion Disconnected"),
             body: e.reason || "No Reason provided",
             color: "var(--status-danger, red)",
             noPersist: true,

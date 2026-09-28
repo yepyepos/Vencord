@@ -23,6 +23,7 @@ import { definePluginSettings } from "@api/Settings";
 import { Divider } from "@components/Divider";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { Flex } from "@components/Flex";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import { copyWithToast, fetchUserProfile } from "@utils/discord";
 import { Margins } from "@utils/margins";
@@ -131,7 +132,7 @@ function SettingsAboutComponent() {
                 <Divider
                     className={classes(Margins.top8, Margins.bottom8)}
                 />
-                <Forms.FormTitle tag="h3">Color pickers</Forms.FormTitle>
+                <Forms.FormTitle tag="h3">{t("plugin.FakeProfileThemes.ui.colorPickers", "Color pickers")}</Forms.FormTitle>
                 <Flex gap="1em">
                     <ColorPicker
                         color={color1}

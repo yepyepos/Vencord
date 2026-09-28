@@ -1512,6 +1512,81 @@ const translations = {
 
     "plugin.IgnoreActivities.ui.filterList": "筛选列表",
     "plugin.IgnoreActivities.menu.enableActivity": "启用活动",
+    // ---- Phase 4: dynamic ui, P1 ----
+    "plugin.ViewIcons.menu.viewAvatar": "查看头像",
+    "plugin.ViewIcons.menu.viewServerAvatar": "查看服务器头像",
+    "plugin.ViewIcons.menu.viewAvatarDecoration": "查看头像装饰",
+    "plugin.ViewIcons.menu.viewIcon": "查看图标",
+    "plugin.ViewIcons.menu.viewBanner": "查看横幅",
+
+    "plugin.CustomRPC.settings.activityType": "活动类型",
+    "plugin.CustomRPC.settings.applicationId": "应用程序 ID",
+    "plugin.CustomRPC.settings.applicationName": "应用程序名称",
+    "plugin.CustomRPC.settings.detail": "详细信息（第 1 行）",
+    "plugin.CustomRPC.settings.detailUrl": "详细信息 URL",
+    "plugin.CustomRPC.settings.state": "状态文本（第 2 行）",
+    "plugin.CustomRPC.settings.stateUrl": "状态 URL",
+    "plugin.CustomRPC.settings.streamLink": "串流链接（Twitch 或 YouTube，仅活动类型为直播时生效）",
+    "plugin.CustomRPC.settings.partySize": "队伍人数",
+    "plugin.CustomRPC.settings.partyMaxSize": "队伍最大人数",
+    "plugin.CustomRPC.settings.imageBigUrlKey": "大图片 URL / Key",
+    "plugin.CustomRPC.settings.imageBigText": "大图片文本",
+    "plugin.CustomRPC.settings.imageBigUrl": "大图片可点击 URL",
+    "plugin.CustomRPC.settings.imageSmallUrlKey": "小图片 URL / Key",
+    "plugin.CustomRPC.settings.imageSmallText": "小图片文本",
+    "plugin.CustomRPC.settings.imageSmallUrl": "小图片可点击 URL",
+    "plugin.CustomRPC.settings.buttonOneText": "按钮 1 文本",
+    "plugin.CustomRPC.settings.buttonOneUrl": "按钮 1 URL",
+    "plugin.CustomRPC.settings.buttonTwoText": "按钮 2 文本",
+    "plugin.CustomRPC.settings.buttonTwoUrl": "按钮 2 URL",
+    "plugin.CustomRPC.settings.timestampMode": "时间戳模式",
+    "plugin.CustomRPC.settings.timestampMode.now": "与 Discord 启动时间一致",
+    "plugin.CustomRPC.settings.timestampMode.sameAsCurrent": "与当前时间一致（24 小时后不重置）",
+    "plugin.CustomRPC.settings.timestampMode.start": "开始时间戳（毫秒）",
+    "plugin.CustomRPC.settings.timestampMode.end": "结束时间戳（毫秒）",
+
+    "plugin.TextReplace.ui.searchPlaceholder": "搜索规则…",
+    "plugin.TextReplace.ui.noRulesMatch": "没有符合搜索条件的规则。",
+    "plugin.TextReplace.ui.onlyIfIncludes": "仅当包含时",
+    "plugin.TextReplace.ui.ruleTester": "规则测试器",
+    "plugin.TextReplace.ui.testInput": "输入要测试规则的消息",
+    "plugin.TextReplace.ui.testOutput": "应用规则后的消息",
+
+    "plugin.WebScreenShare.ui.streamMuted": "串流已静音",
+    "plugin.WebScreenShare.ui.frameRate": "帧率",
+    "plugin.WebScreenShare.ui.streamMode": "串流模式",
+    "plugin.WebScreenShare.ui.muteStreamAudio": "静音串流音频",
+    "plugin.WebScreenShare.ui.muteStreamAudio.description": "阻止系统音频被包含到你的串流中。",
+    "plugin.WebScreenShare.ui.showStreamPreviews": "显示串流预览",
+
+    "plugin.BetterSessions.modal.newDeviceName": "新设备名称",
+
+    "plugin.CustomCommands.ui.registeredTags": "已注册标签",
+    "plugin.CustomCommands.ui.editTag": "编辑标签",
+    "plugin.CustomCommands.ui.deleteTag": "删除标签",
+    "plugin.CustomCommands.modal.editTag": "编辑标签",
+    "plugin.CustomCommands.modal.createNewTag": "创建新标签",
+    "plugin.CustomCommands.modal.detectedArguments": "检测到的参数",
+
+    "plugin.DevCompanion.notification.connected": "Dev Companion 已连接",
+    "plugin.DevCompanion.notification.error": "Dev Companion 错误",
+    "plugin.DevCompanion.notification.disconnected": "Dev Companion 已断开",
+
+    "plugin.ExpressionCloner.toast.wentWrong": "出错了（查看控制台！）",
+    "plugin.ExpressionCloner.toast.failedToClone": "克隆失败：",
+    "plugin.ExpressionCloner.ui.customName": "自定义名称",
+
+    "plugin.SendTimestamps.modal.title": "时间戳选择器",
+    "plugin.SendTimestamps.modal.format": "时间戳格式",
+    "plugin.SendTimestamps.tooltip.insert": "插入时间戳",
+
+    "plugin.MessageLatency.tooltip.oldClient": "该用户疑似在使用旧版 Discord 安卓客户端",
+    "plugin.MessageLatency.tooltip.oldClientSuffix": "该用户疑似在使用旧版 Discord 安卓客户端。",
+
+    "plugin.FakeProfileThemes.ui.colorPickers": "颜色选择器",
+
+    "plugin.MusicRichPresence.ui.howToCreateApiKey": "如何创建 API 密钥",
+    "plugin.MusicRichPresence.ui.createApiKey": "创建 API 密钥",
 } satisfies Record<string, string>;
 
 export default translations;

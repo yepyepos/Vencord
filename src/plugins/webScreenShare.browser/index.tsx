@@ -10,6 +10,7 @@ import {
     Divider,
     Span,
 } from "@components/index";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import { classNameFactory } from "@utils/css";
 import { Logger } from "@utils/Logger";
@@ -152,7 +153,7 @@ function ModalComponent({ modalProps, submit, close, options }: {
                             <span className={cl("ellipsis")}>•</span>
                             <span>{liveSettings.frameRate}fps</span>
                             {liveSettings.systemAudio ? <span className={cl("ellipsis")}>•</span> : ""}
-                            {liveSettings.systemAudio ? <span>Stream Muted</span> : ""}
+                            {liveSettings.systemAudio ? <span>{t("plugin.WebScreenShare.ui.streamMuted", "Stream Muted")}</span> : ""}
                         </Text>
                     </div>
                 }
@@ -178,7 +179,7 @@ function ModalComponent({ modalProps, submit, close, options }: {
                         </section>
 
                         <section className={cl("quality-section")}>
-                            <Text tag="h2" variant="heading-md/semibold" color="text-strong">Frame Rate</Text>
+                            <Text tag="h2" variant="heading-md/semibold" color="text-strong">{t("plugin.WebScreenShare.ui.frameRate", "Frame Rate")}</Text>
                             <OptionRadio
                                 options={StreamFps}
                                 settings={liveSettings}
@@ -188,7 +189,7 @@ function ModalComponent({ modalProps, submit, close, options }: {
                         </section>
                     </div>
                     <div>
-                        <Text tag="h2" variant="heading-md/semibold" color="text-strong">Stream Mode</Text>
+                        <Text tag="h2" variant="heading-md/semibold" color="text-strong">{t("plugin.WebScreenShare.ui.streamMode", "Stream Mode")}</Text>
                         <div>
                             <OptionRadio
                                 options={StreamContentHint}
@@ -207,8 +208,8 @@ function ModalComponent({ modalProps, submit, close, options }: {
                             shape="box"
                             reverse={true}>
                             <div className={cl("control-content")}>
-                                <Text tag="h2" variant="heading-md/semibold" color="text-strong">Mute Stream Audio</Text>
-                                <Text variant="text-sm/normal" color="text-subtle">Prevents system audio from being included in your stream.</Text>
+                                <Text tag="h2" variant="heading-md/semibold" color="text-strong">{t("plugin.WebScreenShare.ui.muteStreamAudio", "Mute Stream Audio")}</Text>
+                                <Text variant="text-sm/normal" color="text-subtle">{t("plugin.WebScreenShare.ui.muteStreamAudio.description", "Prevents system audio from being included in your stream.")}</Text>
                             </div>
                         </Checkbox>
                     </div>
@@ -219,7 +220,7 @@ function ModalComponent({ modalProps, submit, close, options }: {
                             shape="box"
                             reverse={true}>
                             <div className={cl("control-content")}>
-                                <Text tag="h2" variant="heading-md/semibold" color="text-strong">Show Stream Previews</Text>
+                                <Text tag="h2" variant="heading-md/semibold" color="text-strong">{t("plugin.WebScreenShare.ui.showStreamPreviews", "Show Stream Previews")}</Text>
                                 <Text variant="text-sm/normal" color="text-subtle">Allows others to see a preview of your stream before they join.</Text>
                             </div>
                         </Checkbox>
