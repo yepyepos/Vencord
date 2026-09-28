@@ -376,6 +376,96 @@ const translations = {
 
     "plugin.CustomRPC.name": "自定义 Rich Presence",
     "plugin.CustomRPC.description": "为你的 Discord 资料添加完全可自定义的 Rich Presence（游戏状态）",
+
+    // ---- batch 02: D-F ----
+    "plugin.Dearrow.name": "Dearrow",
+    "plugin.Dearrow.description": "由 Dearrow 提供支持，让 YouTube 嵌入的标题和缩略图不再标题党",
+    "plugin.Dearrow.settings.hideButton.displayName": "隐藏按钮",
+    "plugin.Dearrow.settings.hideButton.description": "在 YouTube 嵌入中隐藏 Dearrow 按钮",
+    "plugin.Dearrow.settings.replaceElements.displayName": "替换范围",
+    "plugin.Dearrow.settings.replaceElements.description": "选择替换嵌入中的哪些元素",
+    "plugin.Dearrow.settings.replaceElements.option.0": "全部（标题和缩略图）",
+    "plugin.Dearrow.settings.replaceElements.option.1": "仅标题",
+    "plugin.Dearrow.settings.replaceElements.option.2": "仅缩略图",
+    "plugin.Dearrow.settings.dearrowByDefault.displayName": "自动处理",
+    "plugin.Dearrow.settings.dearrowByDefault.description": "自动对视频进行 Dearrow 处理",
+
+    "plugin.Decor.name": "头像装饰",
+    "plugin.Decor.description": "创建并使用你自己的自定义头像装饰，或从预设中挑选喜欢的样式。",
+
+    "plugin.DevCompanion.name": "开发助手",
+    "plugin.DevCompanion.description": "开发者伴侣插件",
+    "plugin.DevCompanion.settings.notifyOnAutoConnect.displayName": "自动连接时通知",
+    "plugin.DevCompanion.settings.notifyOnAutoConnect.description": "Dev Companion 自动连接时是否通知。",
+
+    "plugin.DisableCallIdle.name": "禁用通话闲置断开",
+    "plugin.DisableCallIdle.description": "禁用 3 分钟后自动将你从私信语音通话中断开并移入 AFK 语音频道的行为。",
+
+    "plugin.DisableDeepLinks.name": "禁用深度链接",
+    "plugin.DisableDeepLinks.description": "禁用 Discord 强行把你引向桌面应用的深度链接功能",
+
+    "plugin.DontRoundMyTimestamps.name": "时间戳不取整",
+    "plugin.DontRoundMyTimestamps.description": "相对时间戳始终向下取整，7.6y 显示为 7y 而不是 8y",
+
+    "plugin.Experiments.name": "实验性功能",
+    "plugin.Experiments.description": "启用 Discord 实验性功能及其他开发者专属特性的访问权限！",
+
+    "plugin.ExpressionCloner.name": "表情克隆器",
+    "plugin.ExpressionCloner.description": "允许你把表情和贴纸克隆到自己的服务器（右键点击它们）",
+
+    "plugin.F8Break.name": "F8 暂停",
+    "plugin.F8Break.description": "在打开 DevTools（含断点）时按 F8 暂停客户端。",
+
+    "plugin.FakeNitro.name": "FakeNitro",
+    "plugin.FakeNitro.description": "允许发送仿制表情 / 贴纸、使用 Nitro 主题，并以 Nitro 画质串流",
+    "plugin.FakeNitro.settings.enableEmojiBypass.displayName": "启用表情绕过",
+    "plugin.FakeNitro.settings.enableEmojiBypass.description": "允许发送仿制表情（同时绕过使用自定义表情的权限限制）",
+    "plugin.FakeNitro.settings.emojiSize.displayName": "表情大小",
+    "plugin.FakeNitro.settings.emojiSize.description": "发送时表情的大小",
+    "plugin.FakeNitro.settings.transformEmojis.displayName": "转换表情",
+    "plugin.FakeNitro.settings.transformEmojis.description": "是否将仿制表情转换为真实表情",
+    "plugin.FakeNitro.settings.enableStickerBypass.displayName": "启用贴纸绕过",
+    "plugin.FakeNitro.settings.enableStickerBypass.description": "允许发送仿制贴纸（同时绕过使用贴纸的权限限制）",
+    "plugin.FakeNitro.settings.stickerSize.displayName": "贴纸大小",
+    "plugin.FakeNitro.settings.stickerSize.description": "发送时贴纸的大小",
+    "plugin.FakeNitro.settings.transformStickers.displayName": "转换贴纸",
+    "plugin.FakeNitro.settings.transformStickers.description": "是否将仿制贴纸转换为真实贴纸",
+    "plugin.FakeNitro.settings.transformCompoundSentence.displayName": "转换复合句",
+    "plugin.FakeNitro.settings.transformCompoundSentence.description": "是否转换复合句中的仿制贴纸和表情（句子中除仿制表情或贴纸链接外还有其他内容）",
+    "plugin.FakeNitro.settings.enableStreamQualityBypass.displayName": "启用串流画质绕过",
+    "plugin.FakeNitro.settings.enableStreamQualityBypass.description": "允许以 Nitro 画质串流",
+    "plugin.FakeNitro.settings.useHyperLinks.displayName": "使用超链接",
+    "plugin.FakeNitro.settings.useHyperLinks.description": "发送仿制表情和贴纸时是否使用超链接",
+    "plugin.FakeNitro.settings.hyperLinkText.displayName": "超链接文本",
+    "plugin.FakeNitro.settings.hyperLinkText.description": "超链接使用的文本。{{NAME}} 会被替换为表情 / 贴纸名称。",
+    "plugin.FakeNitro.settings.disableEmbedPermissionCheck.displayName": "禁用嵌入权限检查",
+    "plugin.FakeNitro.settings.disableEmbedPermissionCheck.description": "发送仿制表情和贴纸时是否禁用嵌入权限检查",
+
+    "plugin.FakeProfileThemes.name": "虚拟资料主题",
+    "plugin.FakeProfileThemes.description": "借助不可见的 3y3 编码在个人简介中隐藏颜色，实现资料页主题自定义",
+    "plugin.FakeProfileThemes.settings.nitroFirst.displayName": "颜色优先来源",
+    "plugin.FakeProfileThemes.settings.nitroFirst.description": "两者同时存在时默认使用的颜色来源",
+    "plugin.FakeProfileThemes.settings.nitroFirst.option.true": "Nitro 颜色",
+    "plugin.FakeProfileThemes.settings.nitroFirst.option.false": "虚拟颜色",
+
+    "plugin.FavoriteEmojiFirst.name": "收藏表情优先",
+    "plugin.FavoriteEmojiFirst.description": "让收藏的表情在表情自动补全中排在最前。",
+
+    "plugin.FixCodeblockGap.name": "修复代码块间距",
+    "plugin.FixCodeblockGap.description": "移除代码块与下方文本之间的间距",
+
+    "plugin.FixImagesQuality.name": "修复图片质量",
+    "plugin.FixImagesQuality.description": "以原始分辨率加载图片以提升画质",
+    "plugin.FixImagesQuality.settings.originalImagesInChat.displayName": "聊天中也加载原图",
+    "plugin.FixImagesQuality.settings.originalImagesInChat.description": "同时在聊天中加载原始图片。注意：请阅读上方的注意事项",
+
+    "plugin.FixSpotifyEmbeds.name": "修复 Spotify 嵌入音量",
+    "plugin.FixSpotifyEmbeds.description": "通过自定义音量，修复 Spotify 嵌入音量过大的问题",
+    "plugin.FixSpotifyEmbeds.settings.volume.displayName": "音量",
+    "plugin.FixSpotifyEmbeds.settings.volume.description": "Spotify 嵌入使用的音量百分比。超过 10% 会非常响",
+
+    "plugin.FixYoutubeEmbeds.name": "修复 YouTube 嵌入",
+    "plugin.FixYoutubeEmbeds.description": "绕过 YouTube 视频在 Discord 中被禁止显示的问题（例如被 UMG 屏蔽）",
 } satisfies Record<string, string>;
 
 export default translations;
