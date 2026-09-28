@@ -117,7 +117,7 @@ function CloudSetupSection() {
                     }}
                     Icon={RestartIcon}
                 >
-                    Reauthorise
+                    {t("ui.cloud.reauthorise", "Reauthorise")}
                 </ButtonWithIcon>
             </Grid>
         </section>
@@ -188,7 +188,7 @@ function SettingsSyncSection() {
                         onClick={() => putCloudSettings(true)}
                         Icon={CloudUploadIcon}
                     >
-                        Upload Settings
+                        {t("ui.cloud.uploadSettings", "Upload Settings")}
                     </ButtonWithIcon>
                     <Tooltip text={t("ui.cloud.replaceWarning", "This will replace your current settings with the ones saved in the cloud. Be careful!")}>
                         {({ onMouseLeave, onMouseEnter }) => (
@@ -200,7 +200,7 @@ function SettingsSyncSection() {
                                 onClick={() => getCloudSettings(true, true)}
                                 Icon={CloudDownloadIcon}
                             >
-                                Download Settings
+                                {t("ui.cloud.downloadSettings", "Download Settings")}
                             </ButtonWithIcon>
                         )}
                     </Tooltip>
@@ -241,7 +241,7 @@ function ResetSection() {
                     ))}
                     Icon={DeleteIcon}
                 >
-                    Delete your Cloud Account
+                    {t("ui.cloud.deleteAccount", "Delete your Cloud Account")}
                 </ButtonWithIcon>
             </Grid>
         </section>

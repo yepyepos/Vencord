@@ -25,6 +25,7 @@ import { Link } from "@components/Link";
 import { Margins } from "@components/margins";
 import { Paragraph } from "@components/Paragraph";
 import { SettingsTab, wrapTab } from "@components/settings/tabs/BaseTab";
+import { t } from "@i18n";
 import { getStylusWebStoreUrl } from "@utils/web";
 import { Forms, React, TabBar, useState } from "@webpack/common";
 
@@ -53,13 +54,13 @@ function ThemesTab() {
                     className="vc-settings-tab-bar-item"
                     id={ThemeTab.LOCAL}
                 >
-                    Local Themes
+                    {t("ui.themes.localTab", "Local Themes")}
                 </TabBar.Item>
                 <TabBar.Item
                     className="vc-settings-tab-bar-item"
                     id={ThemeTab.ONLINE}
                 >
-                    Online Themes
+                    {t("ui.themes.onlineTab", "Online Themes")}
                 </TabBar.Item>
             </TabBar>
 
@@ -67,10 +68,9 @@ function ThemesTab() {
                 <CspErrorCard />
 
                 <Card variant="warning">
-                    <BaseText tag="h3" size="md" weight="medium" className={Margins.bottom8}>Theme Performance</BaseText>
+                    <BaseText tag="h3" size="md" weight="medium" className={Margins.bottom8}>{t("ui.themes.performance.heading", "Theme Performance")}</BaseText>
                     <Paragraph>
-                        Themes and custom CSS have the potential to cause major lag! If you experience performance issues, try
-                        disabling your themes and CSS to see if they're the cause. The most common cause of lag is the <code>:has()</code> operator.
+                        {t("ui.themes.performance.description.prefix", "Themes and custom CSS have the potential to cause major lag! If you experience performance issues, try disabling your themes and CSS to see if they're the cause. The most common cause of lag is the ")}<code>:has()</code>{t("ui.themes.performance.description.suffix", " operator.")}
                     </Paragraph>
                 </Card>
 
@@ -85,10 +85,10 @@ function UserscriptThemesTab() {
     return (
         <SettingsTab>
             <Card variant="danger">
-                <Forms.FormTitle tag="h5">Themes are not supported on the Userscript!</Forms.FormTitle>
+                <Forms.FormTitle tag="h5">{t("ui.themes.userscript.unsupported", "Themes are not supported on the Userscript!")}</Forms.FormTitle>
 
                 <Forms.FormText>
-                    You can instead install themes with the <Link href={getStylusWebStoreUrl()}>Stylus extension</Link>!
+                    {t("ui.themes.userscript.instead.prefix", "You can instead install themes with the ")}<Link href={getStylusWebStoreUrl()}>{t("ui.themes.userscript.instead.link", "Stylus extension")}</Link>{t("ui.themes.userscript.instead.suffix", "!")}
                 </Forms.FormText>
             </Card>
         </SettingsTab>

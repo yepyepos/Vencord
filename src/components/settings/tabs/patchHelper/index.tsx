@@ -21,6 +21,7 @@ import { Divider } from "@components/Divider";
 import { Flex } from "@components/Flex";
 import { HeadingTertiary } from "@components/Heading";
 import { SettingsTab, wrapTab } from "@components/settings/tabs/BaseTab";
+import { t } from "@i18n";
 import { debounce } from "@shared/debounce";
 import { copyWithToast } from "@utils/discord";
 import { Margins } from "@utils/margins";
@@ -39,9 +40,9 @@ const findCandidates = debounce(function ({ find, setModule, setError }) {
     const len = keys.length;
 
     if (len === 0)
-        setError("No match. Perhaps that module is lazy loaded?");
+        setError(t("ui.patchHelper.error.noMatch", "No match. Perhaps that module is lazy loaded?"));
     else if (len !== 1)
-        setError("Multiple matches. Please refine your filter");
+        setError(t("ui.patchHelper.error.multipleMatches", "Multiple matches. Please refine your filter"));
     else
         setModule([keys[0], candidates[keys[0]]]);
 });
@@ -105,7 +106,7 @@ function PatchHelper() {
 
     return (
         <SettingsTab>
-            <HeadingTertiary>Full patch</HeadingTertiary>
+            <HeadingTertiary>{t("ui.patchHelper.fullPatch", "Full patch")}</HeadingTertiary>
             <FullPatchInput
                 setFind={onFindChange}
                 setParsedFind={setParsedFind}
@@ -113,7 +114,7 @@ function PatchHelper() {
                 setReplacement={setReplacement}
             />
 
-            <HeadingTertiary className={Margins.top8}>Find</HeadingTertiary>
+            <HeadingTertiary className={Margins.top8}>{t("ui.patchHelper.find", "Find")}</HeadingTertiary>
             <TextInput
                 type="text"
                 value={find}
@@ -121,7 +122,7 @@ function PatchHelper() {
                 error={findError}
             />
 
-            <HeadingTertiary className={Margins.top8}>Match</HeadingTertiary>
+            <HeadingTertiary className={Margins.top8}>{t("ui.patchHelper.match", "Match")}</HeadingTertiary>
             <TextInput
                 type="text"
                 value={match}
@@ -148,11 +149,11 @@ function PatchHelper() {
 
             {!!(find && match && replacement) && (
                 <>
-                    <HeadingTertiary className={Margins.top20}>Code</HeadingTertiary>
+                    <HeadingTertiary className={Margins.top20}>{t("ui.patchHelper.code", "Code")}</HeadingTertiary>
                     <CodeBlock lang="js" content={code} />
                     <Flex className={Margins.top16}>
                         <Button onClick={() => copyWithToast(code)}>
-                            Copy to Clipboard
+                            {t("ui.patchHelper.copyToClipboard", "Copy to Clipboard")}
                         </Button>
                         <Button onClick={() => copyWithToast("```ts\n" + code + "\n```")}>
                             Copy as Codeblock

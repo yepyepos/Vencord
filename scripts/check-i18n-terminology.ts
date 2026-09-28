@@ -27,8 +27,15 @@ const DRIFT_RULES: Array<{ bad: string; good: string; note?: string; }> = [
     { bad: "表情包", good: "贴纸", note: "Discord official term for Sticker" },
 ];
 
+// exact strings where a flagged term is legitimate (browser-extension
+// context for 扩展, etc.)
+const ALLOWED = new Set([
+    "ui.themes.userscript.instead.link", // "Stylus 扩展" — Stylus IS a browser extension
+]);
+
 let hits = 0;
 for (const [key, value] of Object.entries(table)) {
+    if (ALLOWED.has(key)) continue;
     for (const rule of DRIFT_RULES) {
         if (value.includes(rule.bad)) {
             hits++;

@@ -5,6 +5,7 @@
  */
 
 import { FormSwitch } from "@components/FormSwitch";
+import { t } from "@i18n";
 import { Margins } from "@utils/margins";
 import { Forms, Parser, TextInput, useEffect, useState } from "@webpack/common";
 
@@ -32,7 +33,7 @@ export function ReplacementInput({ replacement, setReplacement, replacementError
                     setReplacement(() => func);
 
                 else
-                    setError("Replacement must be a function");
+                    setError(t("ui.patchHelper.error.replacementMustBeFunction", "Replacement must be a function"));
             } catch (e) {
                 setReplacement(v);
                 setError((e as Error).message);

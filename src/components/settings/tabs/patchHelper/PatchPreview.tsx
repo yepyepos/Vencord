@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import { t } from "@i18n";
 import { Margins } from "@utils/margins";
 import { canonicalizeMatch, canonicalizeReplace } from "@utils/patches";
 import { makeCodeblock } from "@utils/text";
@@ -53,7 +54,7 @@ function Match({ matchResult }: { matchResult: RegExpMatchArray | null; }) {
 
     return (
         <>
-            <Forms.FormTitle>Match</Forms.FormTitle>
+            <Forms.FormTitle>{t("ui.patchHelper.match", "Match")}</Forms.FormTitle>
             <div style={{ userSelect: "text" }}>{Parser.parse(fullMatch)}</div>
             <div style={{ userSelect: "text" }}>{Parser.parse(groups)}</div>
         </>
@@ -83,7 +84,7 @@ function Diff({ diff }: { diff: Change[] | null; }) {
 
     return (
         <>
-            <Forms.FormTitle>Diff</Forms.FormTitle>
+            <Forms.FormTitle>{t("ui.patchHelper.diff", "Diff")}</Forms.FormTitle>
             {diffLines}
         </>
     );
@@ -118,7 +119,7 @@ export function PatchPreview({ module, match, replacement, setReplacementError }
 
     return (
         <>
-            <Forms.FormTitle style={{ userSelect: "text" }}>Module {id}</Forms.FormTitle>
+            <Forms.FormTitle style={{ userSelect: "text" }}>{t("ui.patchHelper.module", "Module {id}", { id })}</Forms.FormTitle>
 
             <Match matchResult={matchResult} />
             <Diff diff={diff} />
@@ -132,7 +133,7 @@ export function PatchPreview({ module, match, replacement, setReplacementError }
                             const wrappedCode = "0," + (!isArrowFunction ? "function" : "") + patchedCode.slice(patchedCode.indexOf("("));
                             Function(wrappedCode);
 
-                            setCompileResult([true, "Compiled successfully"]);
+                            setCompileResult([true, t("ui.patchHelper.compiledSuccessfully", "Compiled successfully")]);
                         } catch (err) {
                             setCompileResult([false, (err as Error).message]);
                         }
