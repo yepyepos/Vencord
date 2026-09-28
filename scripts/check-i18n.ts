@@ -36,19 +36,25 @@ for (const key of keyOccurrences) {
     seen.add(key);
 }
 
-// ---- collect real plugin names from src/plugins/*/{index,main,def}.{ts,tsx} ----
+// ---- collect real plugin names from src/plugins/*/ ----
+// primary: index/main/def.{ts,tsx}; fallback: any other top-level .ts/.tsx
+// (covers _core plugins defined in settings.tsx/noTrack.ts/...)
 const pluginNames = new Map<string, string>(); // name -> folder
 for (const entry of readdirSync(PLUGINS_DIR)) {
     const dir = join(PLUGINS_DIR, entry);
     if (!statSync(dir).isDirectory()) continue;
 
-    const files = readdirSync(dir).filter(f => /^(index|main|def)\.(ts|tsx)$/.test(f));
+    const allTs = readdirSync(dir).filter(f => /\.(ts|tsx)$/.test(f) && statSync(join(dir, f)).isFile());
+    const files = [
+        ...allTs.filter(f => /^(index|main|def)\.(ts|tsx)$/.test(f)),
+        ...allTs.filter(f => !/^(index|main|def)\.(ts|tsx)$/.test(f)),
+    ];
     for (const file of files) {
         const code = readFileSync(join(dir, file), "utf8");
-        const name = code.match(/\bname:\s*"([^"]+)"/)?.[1];
-        if (name) {
-            pluginNames.set(name, entry);
-            break;
+        // all name: matches — a plugin file may also contain slash command
+        // names etc.; the real plugin name is among them
+        for (const m of code.matchAll(/\bname:\s*"([^"]+)"/g)) {
+            if (!pluginNames.has(m[1])) pluginNames.set(m[1], entry);
         }
     }
 }
@@ -102,8 +108,11 @@ for (const [key, value] of Object.entries(table)) {
         continue;
     }
 
-    // option value segments may contain dashes (e.g. option.deepl-pro)
-    if (!/^(?:ui|tag|plugin)\.[\w-]+(?:\.[\w-]+)*$/.test(key)) {
+    // option value segments may contain dashes (e.g. option.deepl-pro);
+    // plugin names may contain spaces/parens (e.g. "WebRichPresence (arRPC)")
+    // so strict identifier segments are only enforced for ui.*/tag.* keys —
+    // plugin.* keys are validated against real plugins/settings below instead
+    if (!key.startsWith("plugin.") && !/^(?:ui|tag)\.[\w-]+(?:\.[\w-]+)*$/.test(key)) {
         error(`malformed key (expected dotted identifiers): ${key}`);
         continue;
     }

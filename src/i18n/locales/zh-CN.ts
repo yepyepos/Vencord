@@ -220,6 +220,162 @@ const translations = {
     // ---- petpet (slash command plugin, no settings) ----
     "plugin.petpet.name": "拍拍",
     "plugin.petpet.description": "添加 /petpet 斜杠命令，可将任意图片生成摸头 GIF",
+
+    // ====================================================================
+    // Phase 3 full localization. Batches are alphabetical by plugin name.
+    // Keys: plugin.<Name>.name/.description/.settings.<key>.displayName/
+    //       .description/.placeholder/.option.<value>
+    // Option values are NEVER translated; enums resolve to their runtime
+    // value (see docs/zh-CN-TRANSLATION-GUIDE.md).
+    // ====================================================================
+
+    // ---- batch 01: A-C ----
+    "plugin.AccountPanelServerProfile.name": "账户面板服务器资料",
+    "plugin.AccountPanelServerProfile.description": "右键点击左下角的账户面板，即可查看你在当前服务器中的个人资料",
+    "plugin.AccountPanelServerProfile.settings.prioritizeServerProfile.displayName": "优先服务器资料",
+    "plugin.AccountPanelServerProfile.settings.prioritizeServerProfile.description": "左键点击账户面板时优先打开服务器个人资料",
+
+    "plugin.AddAttachments.name": "编辑时添加附件",
+    "plugin.AddAttachments.description": "允许你在编辑消息时添加新附件",
+
+    "plugin.AlwaysAnimate.name": "始终动画",
+    "plugin.AlwaysAnimate.description": "让所有可以动起来的内容都动起来",
+
+    "plugin.AlwaysExpandRoles.name": "始终展开身份组",
+    "plugin.AlwaysExpandRoles.description": "在个人资料弹出框中始终展开身份组列表",
+
+    "plugin.AnonymiseFileNames.name": "匿名化文件名",
+    "plugin.AnonymiseFileNames.description": "匿名化上传文件的文件名",
+    "plugin.AnonymiseFileNames.settings.anonymiseByDefault.displayName": "默认匿名化",
+    "plugin.AnonymiseFileNames.settings.anonymiseByDefault.description": "是否默认匿名化文件名",
+    "plugin.AnonymiseFileNames.settings.method.displayName": "匿名化方式",
+    "plugin.AnonymiseFileNames.settings.method.description": "文件名的匿名化方式",
+    "plugin.AnonymiseFileNames.settings.method.option.0": "随机字符",
+    "plugin.AnonymiseFileNames.settings.method.option.1": "固定名称",
+    "plugin.AnonymiseFileNames.settings.method.option.2": "时间戳",
+    "plugin.AnonymiseFileNames.settings.randomisedLength.displayName": "随机字符长度",
+    "plugin.AnonymiseFileNames.settings.randomisedLength.description": "随机字符的长度",
+    "plugin.AnonymiseFileNames.settings.consistent.displayName": "固定文件名",
+    "plugin.AnonymiseFileNames.settings.consistent.description": "匿名化时使用的固定文件名",
+
+    "plugin.AutoDNDWhilePlaying.name": "游戏时自动请勿打扰",
+    "plugin.AutoDNDWhilePlaying.description": "启动游戏时自动更新你的在线状态（在线、离开、请勿打扰）",
+    "plugin.AutoDNDWhilePlaying.settings.statusToSet.displayName": "游戏时的状态",
+    "plugin.AutoDNDWhilePlaying.settings.statusToSet.description": "玩游戏时设置的状态",
+    "plugin.AutoDNDWhilePlaying.settings.statusToSet.option.online": "在线",
+    "plugin.AutoDNDWhilePlaying.settings.statusToSet.option.idle": "离开",
+    "plugin.AutoDNDWhilePlaying.settings.statusToSet.option.dnd": "请勿打扰",
+    "plugin.AutoDNDWhilePlaying.settings.statusToSet.option.invisible": "隐身",
+
+    "plugin.BetterGifAltText.name": "更好的 GIF 替代文本",
+    "plugin.BetterGifAltText.description": "将 GIF 的替代文本从单纯的“GIF”改为包含 GIF 标签 / 文件名",
+
+    "plugin.BetterGifPicker.name": "更好的 GIF 选择器",
+    "plugin.BetterGifPicker.description": "让 GIF 选择器默认打开收藏分类",
+
+    "plugin.BetterRoleContext.name": "更好的身份组右键菜单",
+    "plugin.BetterRoleContext.description": "在用户资料或成员列表中右键点击身份组时，添加复制身份组颜色 / 编辑身份组 / 查看身份组图标选项",
+    "plugin.BetterRoleContext.settings.roleIconFileFormat.displayName": "身份组图标文件格式",
+    "plugin.BetterRoleContext.settings.roleIconFileFormat.description": "查看身份组图标时使用的文件格式",
+
+    "plugin.BetterRoleDot.name": "更好的身份组圆点",
+    "plugin.BetterRoleDot.description": "点击身份组圆点（无障碍设置）时复制身份组颜色，并允许同时使用身份组圆点和彩色昵称",
+    "plugin.BetterRoleDot.settings.bothStyles.displayName": "同时显示两种样式",
+    "plugin.BetterRoleDot.settings.bothStyles.description": "同时显示身份组圆点和彩色昵称",
+    "plugin.BetterRoleDot.settings.copyRoleColorInProfilePopout.displayName": "资料弹窗中复制颜色",
+    "plugin.BetterRoleDot.settings.copyRoleColorInProfilePopout.description": "允许在个人资料弹出框中点击身份组圆点以复制身份组颜色",
+
+    "plugin.BetterSessions.name": "更好的会话管理",
+    "plugin.BetterSessions.description": "增强会话（设备）菜单：查看精确时间、为每个会话自定义名称，并在新会话出现时接收通知",
+    "plugin.BetterSessions.settings.backgroundCheck.displayName": "后台检查新会话",
+    "plugin.BetterSessions.settings.backgroundCheck.description": "在后台检查新会话，检测到时显示通知",
+    "plugin.BetterSessions.settings.checkInterval.displayName": "检查间隔",
+    "plugin.BetterSessions.settings.checkInterval.description": "后台检查新会话的频率（启用后台检查时生效），单位为分钟",
+
+    "plugin.BetterSettings.name": "更好的设置",
+    "plugin.BetterSettings.description": "增强设置菜单的打开体验",
+    "plugin.BetterSettings.settings.disableFade.displayName": "禁用淡入淡出",
+    "plugin.BetterSettings.settings.disableFade.description": "禁用交叉淡入淡出动画",
+    "plugin.BetterSettings.settings.organizeMenu.displayName": "整理设置菜单",
+    "plugin.BetterSettings.settings.organizeMenu.description": "将设置齿轮右键菜单按类别整理",
+    "plugin.BetterSettings.settings.eagerLoad.displayName": "消除首次加载延迟",
+    "plugin.BetterSettings.settings.eagerLoad.description": "消除首次打开菜单时的加载延迟",
+
+    "plugin.BetterUploadButton.name": "更好的上传按钮",
+    "plugin.BetterUploadButton.description": "单击直接上传，右键打开菜单",
+
+    "plugin.BiggerStreamPreview.name": "更大的直播预览",
+    "plugin.BiggerStreamPreview.description": "允许你放大直播预览画面",
+
+    "plugin.BlurNSFW.name": "模糊 NSFW 内容",
+    "plugin.BlurNSFW.description": "模糊 NSFW 频道中的附件，悬停时显示",
+    "plugin.BlurNSFW.settings.blurAmount.displayName": "模糊程度",
+    "plugin.BlurNSFW.settings.blurAmount.description": "模糊程度（像素）",
+
+    "plugin.CallTimer.name": "通话计时器",
+    "plugin.CallTimer.description": "在语音通话中添加计时器",
+    "plugin.CallTimer.settings.format.displayName": "计时格式",
+    "plugin.CallTimer.settings.format.description": "计时器格式，可以是任何有效的 moment.js 格式",
+
+    "plugin.CharacterCounter.name": "字数统计",
+    "plugin.CharacterCounter.description": "在聊天输入框中添加字数统计",
+    "plugin.CharacterCounter.settings.colorEffects.displayName": "颜色警示",
+    "plugin.CharacterCounter.settings.colorEffects.description": "接近字数上限时以黄色 / 红色着色",
+
+    "plugin.ClearURLs.name": "链接清洗",
+    "plugin.ClearURLs.description": "自动移除你所发送链接中的跟踪参数",
+
+    "plugin.ClientTheme.name": "客户端主题",
+    "plugin.ClientTheme.description": "重现旧版客户端主题实验：为你的 Discord 客户端主题添加颜色",
+
+    "plugin.ColorSighted.name": "色觉正常化",
+    "plugin.ColorSighted.description": "像 2015-2017 年的 Discord 一样，移除状态上的色盲友好图标",
+
+    "plugin.ConsoleJanitor.name": "控制台清理器",
+    "plugin.ConsoleJanitor.description": "禁用烦人的控制台消息 / 错误",
+    "plugin.ConsoleJanitor.settings.disableLoggers.displayName": "禁用 Discord 日志器",
+    "plugin.ConsoleJanitor.settings.disableLoggers.description": "禁用 Discord 的日志器",
+    "plugin.ConsoleJanitor.settings.disableSpotifyLogger.displayName": "禁用 Spotify 日志器",
+    "plugin.ConsoleJanitor.settings.disableSpotifyLogger.description": "禁用会泄露账户信息和访问令牌的 Spotify 日志器",
+    "plugin.ConsoleJanitor.settings.whitelistedLoggers.displayName": "日志器白名单",
+    "plugin.ConsoleJanitor.settings.whitelistedLoggers.description": "以分号（;）分隔的日志器列表，即使其他日志器被隐藏也允许显示",
+
+    "plugin.ConsoleShortcuts.name": "控制台快捷方式",
+    "plugin.ConsoleShortcuts.description": "为 window 上的许多对象添加更短的别名。运行 `shortcutList` 查看列表。",
+
+    "plugin.CopyEmojiMarkdown.name": "复制表情 Markdown",
+    "plugin.CopyEmojiMarkdown.description": "允许以格式化字符串复制表情（<:blobcatcozy:1026533070955872337>）",
+    "plugin.CopyEmojiMarkdown.settings.copyUnicode.displayName": "复制 Unicode 字符",
+    "plugin.CopyEmojiMarkdown.settings.copyUnicode.description": "对默认表情复制原始 Unicode 字符（👽）而非 :name: 格式",
+
+    "plugin.CopyFileContents.name": "复制文件内容",
+    "plugin.CopyFileContents.description": "为文本文件附件添加复制其内容的按钮",
+
+    "plugin.CopyStickerLinks.name": "复制贴纸链接",
+    "plugin.CopyStickerLinks.description": "添加复制和打开贴纸链接的功能",
+
+    "plugin.CopyUserURLs.name": "复制用户链接",
+    "plugin.CopyUserURLs.description": "在用户右键菜单中添加“复制用户链接”选项",
+
+    "plugin.CrashHandler.name": "崩溃处理器",
+    "plugin.CrashHandler.description": "用于处理并尽可能在不重启的情况下从崩溃中恢复的实用插件",
+    "plugin.CrashHandler.settings.attemptToPreventCrashes.displayName": "尝试阻止崩溃",
+    "plugin.CrashHandler.settings.attemptToPreventCrashes.description": "是否尝试阻止 Discord 崩溃。",
+    "plugin.CrashHandler.settings.attemptToNavigateToHome.displayName": "尝试返回主页",
+    "plugin.CrashHandler.settings.attemptToNavigateToHome.description": "在阻止 Discord 崩溃时是否尝试导航到主页。",
+
+    "plugin.CustomCommands.name": "自定义命令",
+    "plugin.CustomCommands.description": "允许你创建自定义斜杠命令 / 标签",
+
+    "plugin.CustomIdle.name": "自定义离开状态",
+    "plugin.CustomIdle.description": "允许你设置 Discord 进入离开状态的时间（或禁用自动离开）",
+    "plugin.CustomIdle.settings.idleTimeout.displayName": "离开超时时间",
+    "plugin.CustomIdle.settings.idleTimeout.description": "Discord 进入离开状态前的分钟数（0 为禁用自动离开）",
+    "plugin.CustomIdle.settings.remainInIdle.displayName": "保持离开状态",
+    "plugin.CustomIdle.settings.remainInIdle.description": "回到 Discord 时保持离开状态，直到你确认要上线",
+
+    "plugin.CustomRPC.name": "自定义 Rich Presence",
+    "plugin.CustomRPC.description": "为你的 Discord 资料添加完全可自定义的 Rich Presence（游戏状态）",
 } satisfies Record<string, string>;
 
 export default translations;
