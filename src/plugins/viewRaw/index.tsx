@@ -24,6 +24,7 @@ import { CodeBlock } from "@components/CodeBlock";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { HeadingSecondary } from "@components/Heading";
 import { Margins } from "@components/margins";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import { copyWithToast, getCurrentGuild, getIntlMessage } from "@utils/discord";
 import { isTruthy } from "@utils/guards";
@@ -86,7 +87,7 @@ function openViewRawModal(json: string, type: string, msgContent?: string) {
                         onClick: () => copyWithToast(json, `${type} data copied to clipboard!`)
                     },
                     msgContent && {
-                        text: "Copy Raw Content",
+                        text: t("plugin.ViewRaw.button.copyRawContent", "Copy Raw Content"),
                         variant: "secondary",
                         onClick: () => copyWithToast(msgContent, "Content copied to clipboard!")
                     }
@@ -94,9 +95,9 @@ function openViewRawModal(json: string, type: string, msgContent?: string) {
             >
                 {!!msgContent && (
                     <>
-                        <HeadingSecondary>Message Content</HeadingSecondary>
+                        <HeadingSecondary>{t("plugin.ViewRaw.heading.messageContent", "Message Content")}</HeadingSecondary>
                         <CodeBlock className="vc-viewRaw-codeBlock" content={msgContent} lang="" />
-                        <HeadingSecondary className={Margins.top16}>Message Data</HeadingSecondary>
+                        <HeadingSecondary className={Margins.top16}>{t("plugin.ViewRaw.heading.messageData", "Message Data")}</HeadingSecondary>
                     </>
                 )}
                 <CodeBlock className="vc-viewRaw-codeBlock" content={json} lang="json" />
@@ -148,7 +149,7 @@ function MakeContextCallback(name: "Guild" | "Role" | "User" | "Channel" | "Mess
         (devContainer ?? children).splice(-1, 0,
             <Menu.MenuItem
                 id={id}
-                label="View Raw"
+                label={t("plugin.ViewRaw.menu.viewRaw", "View Raw")}
                 action={action}
                 icon={CopyRawIcon}
                 leadingAccessory={{ type: "icon", icon: CopyRawIcon }}
@@ -167,7 +168,7 @@ const devContextCallback: NavContextMenuPatchCallback = (children, { id }: { id:
     children.push(
         <Menu.MenuItem
             id={"vc-view-role-raw"}
-            label="View Raw"
+            label={t("plugin.ViewRaw.menu.viewRaw", "View Raw")}
             action={() => openViewRawModal(JSON.stringify(role, null, 4), "Role")}
             icon={CopyRawIcon}
             leadingAccessory={{ type: "icon", icon: CopyRawIcon }}

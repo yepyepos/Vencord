@@ -16,6 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import { insertTextIntoChatInputBox } from "@utils/discord";
 import definePlugin from "@utils/types";
@@ -50,7 +51,7 @@ export default definePlugin({
             if (channel.guild_id && !PermissionStore.can(PermissionsBits.SEND_MESSAGES, channel)) return null;
 
             return {
-                label: "Quick Mention",
+                label: t("plugin.QuickMention.menu.quickMention", "Quick Mention"),
                 icon: Icon,
                 message: msg,
                 channel,

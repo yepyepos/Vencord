@@ -18,6 +18,7 @@
 
 import { NavContextMenuPatchCallback } from "@api/ContextMenu";
 import { ScreenshareIcon } from "@components/Icons";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import { openImageModal } from "@utils/discord";
 import definePlugin from "@utils/types";
@@ -67,7 +68,7 @@ export const addViewStreamContext: NavContextMenuPatchCallback = (children, { us
 
     const streamPreviewItem = (
         <Menu.MenuItem
-            label="View Stream Preview"
+            label={t("plugin.BiggerStreamPreview.menu.viewPreview", "View Stream Preview")}
             id="view-stream-preview"
             icon={ScreenshareIcon}
             leadingAccessory={{ type: "icon", icon: ScreenshareIcon }}

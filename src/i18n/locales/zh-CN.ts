@@ -1415,6 +1415,18 @@ const translations = {
     "ui.themes.lightDarkPrefix": "可以在行首使用 @light 或 @dark 前缀，根据你的 Discord 主题切换",
     "ui.themes.directLinks": "请务必使用指向文件的直接链接（raw 或 github.io）！",
     "ui.themes.enterLinks": "输入主题链接…",
+    // ---- Phase 3.5: simple stable plugin runtime UI wraps ----
+    "plugin.ViewRaw.button.copyRawContent": "复制原始内容",
+    "plugin.ViewRaw.heading.messageContent": "消息内容",
+    "plugin.ViewRaw.heading.messageData": "消息数据",
+    "plugin.ViewRaw.menu.viewRaw": "查看原始内容",
+    "plugin.CopyStickerLinks.menu.copy": "复制贴纸链接",
+    "plugin.CopyStickerLinks.menu.open": "打开贴纸链接",
+    "plugin.QuickMention.menu.quickMention": "快速提及",
+    "plugin.ServerInfo.menu.serverInfo": "服务器信息",
+    "plugin.BiggerStreamPreview.menu.viewPreview": "查看直播预览",
+    "plugin.ReverseImageSearch.menu.searchImage": "搜索图片",
+    "plugin.PictureInPicture.tooltip.toggle": "切换画中画",
 } satisfies Record<string, string>;
 
 export default translations;

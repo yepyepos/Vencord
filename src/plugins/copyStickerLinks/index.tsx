@@ -19,6 +19,7 @@
 import { NavContextMenuPatchCallback } from "@api/ContextMenu";
 import { isPluginEnabled } from "@api/PluginManager";
 import { LinkIcon, TopRightArrow } from "@components/Icons";
+import { t } from "@i18n";
 import ExpressionClonerPlugin from "@plugins/expressionCloner";
 import { Devs } from "@utils/constants";
 import { copyWithToast } from "@utils/discord";
@@ -44,7 +45,7 @@ function buildMenuItem(sticker: PartialSticker, addBottomSeparator: boolean) {
                 <Menu.MenuItem
                     id="vc-copy-sticker-link"
                     key="vc-copy-sticker-link"
-                    label="Copy Sticker Link"
+                    label={t("plugin.CopyStickerLinks.menu.copy", "Copy Sticker Link")}
                     leadingAccessory={{ type: "icon", icon: LinkIcon }}
                     action={() => copyWithToast(getUrl(sticker), "Link copied!")}
                 />
@@ -52,7 +53,7 @@ function buildMenuItem(sticker: PartialSticker, addBottomSeparator: boolean) {
                 <Menu.MenuItem
                     id="vc-open-sticker-link"
                     key="vc-open-sticker-link"
-                    label="Open Sticker Link"
+                    label={t("plugin.CopyStickerLinks.menu.open", "Open Sticker Link")}
                     leadingAccessory={{ type: "icon", icon: LinkIcon }}
                     trailingIndicator={{ type: "icon", icon: TopRightArrow }}
                     action={() => VencordNative.native.openExternal(getUrl(sticker))}

@@ -57,7 +57,7 @@
 
 | 英文 | 中文 | 类型 | 备注 |
 | --- | --- | --- | --- |
-| Plugin | 插件 | Vencord 概念 | 禁用"扩展" |
+| Plugin | 插件 | Vencord 概念 | 禁用"扩展"（"扩展描述"= extended description 除外） |
 | Plugin List | 插件列表 | Vencord 概念 | |
 | Settings | 设置 | 通用 | 禁用"设定" |
 | Theme | 主题 | 通用 | |
@@ -69,6 +69,19 @@
 | Chatbar | 聊天栏 | Vencord 概念 | 输入框上方按钮区 |
 | MessagePopover | 消息悬浮菜单 | Vencord 概念 | hover 消息出现的按钮区 |
 | Client Mod | 客户端修改 | Vencord 概念 | |
+| Streamer Mode | 直播模式 | Discord 概念 | |
+| Stream / Go Live | 串流 / 开启直播 | Discord 概念 | 动词用"串流" |
+| Picture in Picture (PiP) | 画中画 | 功能 | |
+| Decoration (Avatar) | 头像装饰 | Discord 概念 | Decor 插件语境 |
+| Whitelist / Blacklist | 白名单 / 黑名单 | 通用 | |
+| Badge | 徽章 | 通用 | 资料徽章 |
+| Unread badge / count | 角标 / 计数 | 通用 | 任务栏未读角标 |
+| Session (device) | 会话 | 通用 | 设备管理语境 |
+| Keybind / Shortcut | 快捷键 | 通用 | |
+| Load / Loaded | 加载 / 已加载 | 通用 | |
+| Rule | 规则 | 通用 | TextReplace 语境 |
+| Tag（自定义命令） | 标签 | Vencord 概念 | CustomCommands 语境；插件分类 Tag 译"标签" |
+| Vencord Toolbox | Vencord 工具箱 | Vencord 概念 | 标题栏快捷面板 |
 
 ## 4. 技术术语
 

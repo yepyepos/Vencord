@@ -35,7 +35,8 @@
         "testTsc": "tsc --noEmit",
         "testI18n": "tsx scripts/test-i18n.ts",
         "checkI18n": "tsx scripts/check-i18n.ts",
-        "checkI18nTerms": "tsx scripts/check-i18n-terminology.ts"
+        "checkI18nTerms": "tsx scripts/check-i18n-terminology.ts",
+        "qaI18n": "tsx scripts/qa-i18n.ts"
     },
     "dependencies": {
         "@intrnl/xxhash64": "^0.1.2",

@@ -18,6 +18,7 @@
 
 import { findGroupChildrenByChildId, NavContextMenuPatchCallback } from "@api/ContextMenu";
 import { OpenExternalIcon, SearchIcon } from "@components/Icons";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 import { Menu } from "@webpack/common";
@@ -39,7 +40,7 @@ function search(src: string, engine: string) {
 function makeSearchItem(src: string) {
     return (
         <Menu.MenuItem
-            label="Search Image"
+            label={t("plugin.ReverseImageSearch.menu.searchImage", "Search Image")}
             key="search-image"
             id="search-image"
             leadingAccessory={{ type: "icon", icon: SearchIcon }}
