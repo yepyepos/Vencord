@@ -1,282 +1,265 @@
-# Vencord zh-CN Dynamic UI 审计清单（Phase 3.5）
+# Vencord zh-CN Dynamic UI 审计清单（Phase 4 完成版）
 
-> 生成日期：2026-09-28 · 基线：zh-CN @ 1377aa57 + Phase 3.5 修正
+> 更新日期：2026-09-28 · 基线：zh-CN（Phase 4 完成）
 > 扫描方式：对 `src/plugins/**/*.{ts,tsx}` 全量扫描用户可见字符串
 > （JSX 文本节点、`label/text/tooltip/title/placeholder/message` 字符串字面量），
 > 已排除 `definePluginSettings` 块内条目（归 CENTRAL，由中央覆盖层处理）。
-> 本清单是 Phase 4（Dynamic UI 全量处理）的准确工作清单。
 
-## 总览
+## 总览（Phase 4 完成状态）
 
 | 分类 | 数量 | 说明 |
 | --- | --- | --- |
-| 扫描命中 | 400 | 用户可见候选（含少量噪声） |
-| DONE（已 t() 包装） | 26 | Phase 2/3/3.5 已处理，中文生效 |
-| CENTRAL（中央覆盖层已覆盖） | 81 | 设置定义内的 option label 等，走 `option.<value>` 键 |
-| KEEP-ENGLISH（保留英文） | 110 | 技术/格式/品牌/URL/代码 |
-| REVIEW（待人工判断） | 22 | 多为含品牌词的短句，逐条判定 |
-| **PLUGIN-T()（剩余待包装）** | **161** | **Phase 4 的实际工作量** |
+| 扫描命中 | 407 | 用户可见候选（含少量噪声） |
+| **DONE（已 t() 包装，中文生效）** | **210** | Phase 2/3/3.5/4 累计 |
+| CENTRAL（中央覆盖层覆盖） | 81 | 设置定义内 option label 等 |
+| KEEP-ENGLISH（保留英文） | 116 | 其中 0 条为 Phase 4 记录的有据保留（见下） |
+| **Remaining（真正未翻译）** | **0** | **无** |
 
-## 剩余 PLUGIN-T() 优先级分布
+> REVIEW 22 条已全部判定：20 条翻译（品牌词保留+功能词翻译）、2 条并入 KEEP-ENGLISH。
 
-| 优先级 | 数量 | 范围 |
-| --- | --- | --- |
-| P0（高频/核心 UI） | 72 | PinDMs、PermissionsViewer、Translate、Decor、ReviewDB、ShowHiddenChannels 等 |
-| P1（常见功能） | 42 | ViewRaw、ViewIcons、CustomRPC、TextReplace、WebScreenShare 等 |
-| P2（低频功能） | 34 | 单按钮/单菜单类小插件 |
-| P3（技术/开发者向） | 13 | ChatInputButtonAPI、_core 开发工具、arRPC |
+## KEEP-ENGLISH 有据保留明细（Phase 4 新增 6 条）
 
-> 优先级仅表示开发顺序，不代表插件功能价值评价。
->
-> **churn 风险提示**（来自 Phase 1 审计 churn 数据）：P0 中的 Decor、ReviewDB、PermissionsViewer
-> 属于 upstream 高频改动插件，包装时 diff 必须保持最小（仅包显示文本）；
-> 若某插件在 Phase 4 实施时正处于上游重构期，可降级后置。
+| 插件 | 位置 | 原文 | 保留原因 |
+| --- | --- | --- | --- |
+| Experiments | `index.tsx:64` | Search experiments | patch `find:` 匹配器字符串（技术文本，非 UI） |
+| WebPWA | `index.tsx:71` | Hop In | PWA manifest 元数据，来自 Discord 官方资源 |
+| ConcatenatedComponentExtractor (NoTrack) | `noTrack.ts:163` | Analytics tracking is disabled by NoTrack | 返回给 Discord 跟踪端点的 mock HTTP 响应体（技术文本） |
+| ConcatenatedComponentExtractor (NoTrack) | `noTrack.ts:168` | Analytics tracking is disabled by NoTrack | 同上（第二处端点） |
+| ConcatenatedComponentExtractor (Settings) | `settings.tsx:225` | Backup & Restore | deprecated customSections 的动态第三方标题，无法静态包装 |
+| ConcatenatedComponentExtractor (Settings) | `settings.tsx:232` | Patch Helper | deprecated customSections 的动态第三方标题，无法静态包装 |
 
-## P0（72 条）
+## DONE 明细（210 条，按优先级）
+
+### P0（91 条）
 
 | 插件 | 位置 | 类型 | 英文原文 |
 | --- | --- | --- | --- |
-| BetterRoleContext | `index.tsx:87` | label | Edit Role |
-| BetterRoleContext | `index.tsx:100` | label | Copy Role Color |
-| BetterRoleContext | `index.tsx:113` | label | View Role Icon |
-| BetterRoleContext | `index.tsx:129` | label | View Role Members |
-| BetterRoleContext | `index.tsx:152` | jsx | View Role Members |
-| BetterRoleContext | `index.tsx:183` | label | Role Actions |
-| ClientTheme | `components/Settings.tsx:70` | jsx | Theme Color |
-| ClientTheme | `components/Settings.tsx:71` | jsx | Add a color to your Discord client theme |
-| ClientTheme | `components/Settings.tsx:82` | jsx | Your theme won't look good! |
-| Decor | `ui/components/DecorationContextMenu.tsx:20` | label | Decoration Options |
-| Decor | `ui/components/DecorationContextMenu.tsx:24` | label | Copy Decoration Hash |
-| Decor | `ui/components/DecorationContextMenu.tsx:32` | label | Delete Decoration |
-| Decor | `ui/components/DecorationContextMenu.tsx:39` | title | Delete Decoration |
-| Decor | `ui/modals/ChangeDecorationModal.tsx:123` | title | Your Decorations |
-| Decor | `ui/modals/ChangeDecorationModal.tsx:139` | title | Change Decoration |
-| Decor | `ui/modals/ChangeDecorationModal.tsx:183` | title | Log Out |
-| Decor | `ui/modals/ChangeDecorationModal.tsx:212` | text | You already have a decoration pending review |
-| Decor | `ui/modals/CreateDecorationModal.tsx:63` | title | Create Decoration |
-| Decor | `ui/modals/CreateDecorationModal.tsx:71` | text | Submit for Review |
-| Decor | `ui/modals/CreateDecorationModal.tsx:98` | placeholder | Choose a file |
-| Decor | `ui/modals/CreateDecorationModal.tsx:110` | placeholder | Companion Cube |
-| Decor | `ui/modals/GuidelinesModal.tsx:19` | title | Hold on |
-| GreetStickerPicker | `index.tsx:78` | label | Greet Sticker Picker |
-| GreetStickerPicker | `index.tsx:81` | label | Greet Mode |
-| GreetStickerPicker | `index.tsx:98` | label | Greet Stickers |
-| GreetStickerPicker | `index.tsx:115` | label | Unholy Multi-Greet |
-| GreetStickerPicker | `index.tsx:140` | label | Send Greets |
-| MessageLogger | `HistoryModal.tsx:43` | title | Message Edit History |
-| MessageLogger | `HistoryModal.tsx:53` | text | This edit state was not logged so it can't be displayed. |
-| PermissionsViewer | `components/icons.tsx:53` | jsx | Not overwritten |
-| PermissionsViewer | `components/RolesAndUsersPermissions.tsx:84` | jsx | No permissions to display! |
-| PermissionsViewer | `components/RolesAndUsersPermissions.tsx:225` | label | Role Options |
-| PermissionsViewer | `components/RolesAndUsersPermissions.tsx:269` | label | User Options |
-| PermissionsViewer | `components/UserPermissions.tsx:78` | jsx | Granted By |
-| PermissionsViewer | `components/UserPermissions.tsx:162` | text | Role Details |
-| PermissionsViewer | `index.tsx:68` | label | View Permissions |
-| PermissionsViewer | `index.tsx:197` | text | View Permissions |
-| PinDMs | `components/contextMenu.tsx:22` | label | Pin DMs |
-| PinDMs | `components/contextMenu.tsx:29` | label | Add Category |
-| PinDMs | `components/contextMenu.tsx:52` | label | Unpin DM |
-| PinDMs | `components/contextMenu.tsx:61` | label | Move Up |
-| PinDMs | `components/contextMenu.tsx:71` | label | Move Down |
-| PinDMs | `index.tsx:273` | label | Pin DMs Category Menu |
-| PinDMs | `index.tsx:277` | label | Edit Category |
-| PinDMs | `index.tsx:287` | label | Move Up |
-| PinDMs | `index.tsx:294` | label | Move Down |
-| PinDMs | `index.tsx:307` | label | Delete Category |
-| ReviewDB | `components/BlockedUserModal.tsx:17` | text | Unblock user |
-| ReviewDB | `components/BlockedUserModal.tsx:69` | jsx | No blocked users. |
-| ReviewDB | `components/BlockedUserModal.tsx:89` | title | Blocked Users |
-| ReviewDB | `components/BlockedUserModal.tsx:92` | jsx | You are not logged into ReviewDB! |
-| ReviewDB | `components/MessageButton.tsx:28` | text | Delete Review |
-| ReviewDB | `components/MessageButton.tsx:45` | text | Report Review |
-| ReviewDB | `components/ReviewComponent.tsx:60` | title | Are you sure? |
-| ReviewDB | `components/ReviewComponent.tsx:79` | title | Are you sure? |
-| ReviewDB | `components/ReviewComponent.tsx:102` | title | Are you sure? |
-| ReviewDB | `index.tsx:50` | label | View Reviews |
-| ReviewDB | `index.tsx:63` | label | View Reviews |
-| ReviewDB | `index.tsx:183` | jsx | User Reviews |
-| ShowHiddenChannels | `components/HiddenChannelLockScreen.tsx:251` | jsx | Posts on this forum require a tag to be set. |
-| ShowHiddenChannels | `components/HiddenChannelLockScreen.tsx:264` | text | Permission Details |
-| SpotifyControls | `index.tsx:106` | jsx | Check the console for errors |
-| SpotifyControls | `PlayerComponent.tsx:207` | label | Total Duration |
-| SpotifyControls | `PlayerComponent.tsx:228` | label | Open Album |
-| SpotifyControls | `PlayerComponent.tsx:236` | label | View Album Cover |
-| Translate | `TranslateIcon.tsx:51` | title | Vencord Auto-Translate Enabled |
-| Translate | `TranslateIcon.tsx:85` | tooltip | Open Translate Modal |
-| Translate | `TranslateIcon.tsx:101` | text | Auto Translate Enabled |
-| Translate | `TranslateModal.tsx:52` | placeholder | Select a language |
-| Translate | `TranslateModal.tsx:66` | title | Auto Translate |
-| VencordToolbox | `menu.tsx:220` | label | Manage Themes |
-| VencordToolbox | `menu.tsx:307` | label | Open Notification Log |
+| BetterRoleContext | `index.tsx:88` | t() | Edit Role |
+| BetterRoleContext | `index.tsx:101` | t() | Copy Role Color |
+| BetterRoleContext | `index.tsx:114` | t() | View Role Icon |
+| BetterRoleContext | `index.tsx:130` | t() | View Role Members |
+| BetterRoleContext | `index.tsx:153` | t() | View Role Members |
+| BetterRoleContext | `index.tsx:184` | t() | Role Actions |
+| ClientTheme | `components/Settings.tsx:71` | t() | Theme Color |
+| ClientTheme | `components/Settings.tsx:72` | t() | Add a color to your Discord client theme |
+| ClientTheme | `components/Settings.tsx:83` | t() | Your theme won't look good! |
+| ClientTheme | `components/Settings.tsx:101` | t() | Reset Theme Color |
+| Decor | `ui/components/DecorationContextMenu.tsx:21` | t() | Decoration Options |
+| Decor | `ui/components/DecorationContextMenu.tsx:25` | t() | Copy Decoration Hash |
+| Decor | `ui/components/DecorationContextMenu.tsx:33` | t() | Delete Decoration |
+| Decor | `ui/components/DecorationContextMenu.tsx:40` | t() | Delete Decoration |
+| Decor | `ui/modals/ChangeDecorationModal.tsx:124` | t() | Your Decorations |
+| Decor | `ui/modals/ChangeDecorationModal.tsx:125` | t() | You can delete your own decorations by right clicking on them. |
+| Decor | `ui/modals/ChangeDecorationModal.tsx:140` | t() | Change Decoration |
+| Decor | `ui/modals/ChangeDecorationModal.tsx:184` | t() | Log Out |
+| Decor | `ui/modals/ChangeDecorationModal.tsx:213` | t() | You already have a decoration pending review |
+| Decor | `ui/modals/CreateDecorationModal.tsx:64` | t() | Create Decoration |
+| Decor | `ui/modals/CreateDecorationModal.tsx:72` | t() | Submit for Review |
+| Decor | `ui/modals/CreateDecorationModal.tsx:99` | t() | Choose a file |
+| Decor | `ui/modals/CreateDecorationModal.tsx:111` | t() | Companion Cube |
+| Decor | `ui/modals/GuidelinesModal.tsx:20` | t() | Hold on |
+| Experiments | `index.tsx:138` | t() | Hold on!! |
+| FakeNitro | `index.tsx:176` | t() | Hold on! |
+| FakeNitro | `index.tsx:804` | t() | Hold on! |
+| GreetStickerPicker | `index.tsx:79` | t() | Greet Sticker Picker |
+| GreetStickerPicker | `index.tsx:82` | t() | Greet Mode |
+| GreetStickerPicker | `index.tsx:99` | t() | Greet Stickers |
+| GreetStickerPicker | `index.tsx:116` | t() | Unholy Multi-Greet |
+| GreetStickerPicker | `index.tsx:141` | t() | Send Greets |
+| IgnoreActivities | `index.tsx:139` | t() | Filter List |
+| IgnoreActivities | `index.tsx:195` | t() | Enable Activity |
+| MessageLogger | `HistoryModal.tsx:44` | t() | Message Edit History |
+| MessageLogger | `HistoryModal.tsx:54` | t() | This edit state was not logged so it can't be displayed. |
+| MessageLogger | `index.tsx:186` | t() | Toggle Deleted Highlight |
+| MessageLogger | `index.tsx:197` | t() | Remove Message History |
+| MessageLogger | `index.tsx:215` | t() | Clear Message Log |
+| MusicRichPresence | `index.tsx:254` | t() | How to create an API key |
+| MusicRichPresence | `index.tsx:256` | t() | Create API Key |
+| PermissionsViewer | `components/icons.tsx:59` | t() | Not overwritten |
+| PermissionsViewer | `components/RolesAndUsersPermissions.tsx:85` | t() | No permissions to display! |
+| PermissionsViewer | `components/RolesAndUsersPermissions.tsx:226` | t() | Role Options |
+| PermissionsViewer | `components/RolesAndUsersPermissions.tsx:270` | t() | User Options |
+| PermissionsViewer | `components/UserPermissions.tsx:79` | t() | Granted By |
+| PermissionsViewer | `components/UserPermissions.tsx:163` | t() | Role Details |
+| PermissionsViewer | `index.tsx:69` | t() | View Permissions |
+| PermissionsViewer | `index.tsx:198` | t() | View Permissions |
+| PinDMs | `components/contextMenu.tsx:23` | t() | Pin DMs |
+| PinDMs | `components/contextMenu.tsx:30` | t() | Add Category |
+| PinDMs | `components/contextMenu.tsx:53` | t() | Unpin DM |
+| PinDMs | `components/contextMenu.tsx:62` | t() | Move Up |
+| PinDMs | `components/contextMenu.tsx:72` | t() | Move Down |
+| PinDMs | `index.tsx:274` | t() | Pin DMs Category Menu |
+| PinDMs | `index.tsx:278` | t() | Edit Category |
+| PinDMs | `index.tsx:288` | t() | Move Up |
+| PinDMs | `index.tsx:295` | t() | Move Down |
+| PinDMs | `index.tsx:308` | t() | Delete Category |
+| ReviewDB | `components/BlockedUserModal.tsx:18` | t() | Unblock user |
+| ReviewDB | `components/BlockedUserModal.tsx:70` | t() | No blocked users. |
+| ReviewDB | `components/BlockedUserModal.tsx:90` | t() | Blocked Users |
+| ReviewDB | `components/BlockedUserModal.tsx:93` | t() | You are not logged into ReviewDB! |
+| ReviewDB | `components/MessageButton.tsx:29` | t() | Delete Review |
+| ReviewDB | `components/MessageButton.tsx:46` | t() | Report Review |
+| ReviewDB | `components/ReviewComponent.tsx:61` | t() | Are you sure? |
+| ReviewDB | `components/ReviewComponent.tsx:80` | t() | Are you sure? |
+| ReviewDB | `components/ReviewComponent.tsx:103` | t() | Are you sure? |
+| ReviewDB | `index.tsx:51` | t() | View Reviews |
+| ReviewDB | `index.tsx:64` | t() | View Reviews |
+| ReviewDB | `index.tsx:184` | t() | User Reviews |
+| ShowHiddenChannels | `components/HiddenChannelLockScreen.tsx:252` | t() | Posts on this forum require a tag to be set. |
+| ShowHiddenChannels | `components/HiddenChannelLockScreen.tsx:265` | t() | Permission Details |
+| ShowHiddenChannels | `index.tsx:575` | t() | Hidden Channel |
+| SpotifyControls | `index.tsx:107` | t() | Check the console for errors |
+| SpotifyControls | `PlayerComponent.tsx:208` | t() | Total Duration |
+| SpotifyControls | `PlayerComponent.tsx:224` | t() | Spotify Album Menu |
+| SpotifyControls | `PlayerComponent.tsx:229` | t() | Open Album |
+| SpotifyControls | `PlayerComponent.tsx:237` | t() | View Album Cover |
+| Translate | `index.tsx:43` | t() | Translate |
+| Translate | `index.tsx:92` | t() | Translate |
+| Translate | `TranslateIcon.tsx:52` | t() | Vencord Auto-Translate Enabled |
+| Translate | `TranslateIcon.tsx:53` | t() | You just enabled Auto Translate! Any message will automatically be translated before being sent. |
+| Translate | `TranslateIcon.tsx:54` | t() | Disable Auto-Translate |
+| Translate | `TranslateIcon.tsx:86` | t() | Open Translate Modal |
+| Translate | `TranslateIcon.tsx:102` | t() | Auto Translate Enabled |
+| Translate | `TranslateModal.tsx:53` | t() | Select a language |
+| Translate | `TranslateModal.tsx:67` | t() | Auto Translate |
+| VencordToolbox | `menu.tsx:216` | t() | Edit QuickCSS |
+| VencordToolbox | `menu.tsx:221` | t() | Manage Themes |
+| VencordToolbox | `menu.tsx:308` | t() | Open Notification Log |
 
-## P1（42 条）
-
-| 插件 | 位置 | 类型 | 英文原文 |
-| --- | --- | --- | --- |
-| BetterSessions | `components/RenameModal.tsx:60` | jsx | New device name |
-| CustomCommands | `CreateTagModal.tsx:84` | jsx | Detected Arguments |
-| CustomCommands | `SettingsTagList.tsx:23` | jsx | Registered Tags |
-| CustomCommands | `SettingsTagList.tsx:30` | label | Edit Tag |
-| CustomCommands | `SettingsTagList.tsx:33` | label | Delete Tag |
-| CustomRPC | `RpcSettings.tsx:161` | label | Activity Type |
-| CustomRPC | `RpcSettings.tsx:189` | label | Application Name |
-| CustomRPC | `RpcSettings.tsx:193` | label | Detail (line 1) |
-| CustomRPC | `RpcSettings.tsx:198` | label | State (line 2) |
-| CustomRPC | `RpcSettings.tsx:204` | label | Stream Link (Twitch or YouTube, only if activity type is Streaming) |
-| CustomRPC | `RpcSettings.tsx:212` | label | Party Size |
-| CustomRPC | `RpcSettings.tsx:219` | label | Maximum Party Size |
-| CustomRPC | `RpcSettings.tsx:230` | label | Large Image Text |
-| CustomRPC | `RpcSettings.tsx:236` | label | Small Image Text |
-| CustomRPC | `RpcSettings.tsx:243` | label | Button1 Text |
-| CustomRPC | `RpcSettings.tsx:247` | label | Button2 Text |
-| CustomRPC | `RpcSettings.tsx:255` | label | Timestamp Mode |
-| CustomRPC | `RpcSettings.tsx:267` | label | Same as your current time (not reset after 24h) |
-| CustomRPC | `RpcSettings.tsx:280` | label | Start Timestamp (in milliseconds) |
-| CustomRPC | `RpcSettings.tsx:287` | label | End Timestamp (in milliseconds) |
-| FakeNitro | `index.tsx:175` | title | Hold on! |
-| FakeNitro | `index.tsx:803` | title | Hold on! |
-| IgnoreActivities | `index.tsx:138` | jsx | Filter List |
-| IgnoreActivities | `index.tsx:194` | label | Enable Activity |
-| TextReplace | `index.tsx:243` | placeholder | Search for a rule... |
-| TextReplace | `index.tsx:251` | jsx | No rules match your search criteria. |
-| TextReplace | `index.tsx:289` | label | Only if includes |
-| TextReplace | `index.tsx:349` | jsx | Rule Tester |
-| TextReplace | `index.tsx:351` | placeholder | Type a message to test rules on |
-| TextReplace | `index.tsx:352` | placeholder | Message with rules applied |
-| ViewIcons | `index.tsx:117` | label | View Avatar |
-| ViewIcons | `index.tsx:125` | label | View Server Avatar |
-| ViewIcons | `index.tsx:139` | label | View Avatar Decoration |
-| ViewIcons | `index.tsx:164` | label | View Icon |
-| ViewIcons | `index.tsx:179` | label | View Banner |
-| ViewIcons | `index.tsx:198` | label | View Icon |
-| WebScreenShare | `index.tsx:155` | jsx | Stream Muted |
-| WebScreenShare | `index.tsx:181` | jsx | Frame Rate |
-| WebScreenShare | `index.tsx:191` | jsx | Stream Mode |
-| WebScreenShare | `index.tsx:210` | jsx | Mute Stream Audio |
-| WebScreenShare | `index.tsx:211` | jsx | Prevents system audio from being included in your stream. |
-| WebScreenShare | `index.tsx:222` | jsx | Show Stream Previews |
-
-## P2（34 条）
+### P1（70 条）
 
 | 插件 | 位置 | 类型 | 英文原文 |
 | --- | --- | --- | --- |
-| AddAttachments | `index.tsx:135` | label | Add Attachments |
-| AddAttachments | `index.tsx:154` | tooltip | Add Attachments |
-| Dearrow | `index.tsx:122` | label | Toggle Dearrow |
-| DevCompanion | `index.tsx:101` | title | Dev Companion Connected |
-| DevCompanion | `index.tsx:115` | title | Dev Companion Error |
-| DevCompanion | `index.tsx:128` | title | Dev Companion Disconnected |
-| Experiments | `index.tsx:63` | placeholder | Search experiments |
-| Experiments | `index.tsx:137` | jsx | Hold on!! |
-| ExpressionCloner | `index.tsx:205` | message | Something went wrong (check console!) |
-| ExpressionCloner | `index.tsx:212` | message | Failed to clone:  |
-| ExpressionCloner | `index.tsx:237` | jsx | Custom Name |
-| FakeProfileThemes | `index.tsx:134` | jsx | Color pickers |
-| GameActivityToggle | `index.tsx:186` | label | Enable Game Activity |
-| MessageLatency | `index.tsx:154` | text | User is suspected to be on an old Discord Android client |
-| MutualGroupDMs | `index.tsx:197` | jsx | You don't have any group chats in common |
-| PauseInvitesForever | `index.tsx:75` | jsx | Pause Indefinitely. |
-| PreviewMessage | `index.tsx:100` | tooltip | Preview Message |
-| RelationshipNotifier | `utils.ts:118` | title | Relationship Notifier |
-| ReplaceGoogleSearch | `index.tsx:89` | label | Search Text |
-| SendTimestamps | `index.tsx:71` | title | Timestamp Picker |
-| SendTimestamps | `index.tsx:91` | jsx | Timestamp Format |
-| SendTimestamps | `index.tsx:144` | tooltip | Insert Timestamp |
-| ShikiCodeblocks | `previewExample.tsx:12` | jsx | Click Me |
-| SilentTyping | `index.tsx:103` | label | Enable Silent Typing |
-| StartupTimings | `index.tsx:35` | title | Startup Timings |
-| StartupTimings | `StartupTimingPage.tsx:122` | jsx | Server Trace |
-| StartupTimings | `StartupTimingPage.tsx:142` | title | Startup Timings |
-| UserVoiceShow | `components.tsx:101` | jsx | In Voice Chat |
-| VcNarrator | `index.tsx:259` | jsx | Play Example Sounds |
-| VcNarrator | `VoiceSetting.tsx:36` | placeholder | Select a voice |
-| VcNarrator | `VoiceSetting.tsx:88` | placeholder | Select a language |
-| VcNarrator | `VoiceSetting.tsx:110` | jsx | No voices found. |
-| VoiceDownload | `index.tsx:33` | label | Download voice message |
-| WebPWA | `index.tsx:71` | label | Hop In |
+| BetterSessions | `components/RenameModal.tsx:61` | t() | New device name |
+| CustomCommands | `CreateTagModal.tsx:47` | t() | Edit Tag |
+| CustomCommands | `CreateTagModal.tsx:85` | t() | Detected Arguments |
+| CustomCommands | `SettingsTagList.tsx:24` | t() | Registered Tags |
+| CustomCommands | `SettingsTagList.tsx:31` | t() | Edit Tag |
+| CustomCommands | `SettingsTagList.tsx:34` | t() | Delete Tag |
+| CustomRPC | `index.tsx:265` | t() | Discord Developer Portal |
+| CustomRPC | `RpcSettings.tsx:162` | t() | Activity Type |
+| CustomRPC | `RpcSettings.tsx:189` | t() | Application ID |
+| CustomRPC | `RpcSettings.tsx:190` | t() | Application Name |
+| CustomRPC | `RpcSettings.tsx:194` | t() | Detail (line 1) |
+| CustomRPC | `RpcSettings.tsx:195` | t() | Detail URL |
+| CustomRPC | `RpcSettings.tsx:199` | t() | State (line 2) |
+| CustomRPC | `RpcSettings.tsx:200` | t() | State URL |
+| CustomRPC | `RpcSettings.tsx:205` | t() | Stream Link (Twitch or YouTube, only if activity type is Streaming) |
+| CustomRPC | `RpcSettings.tsx:213` | t() | Party Size |
+| CustomRPC | `RpcSettings.tsx:220` | t() | Maximum Party Size |
+| CustomRPC | `RpcSettings.tsx:230` | t() | Large Image URL/Key |
+| CustomRPC | `RpcSettings.tsx:231` | t() | Large Image Text |
+| CustomRPC | `RpcSettings.tsx:233` | t() | Large Image clickable URL |
+| CustomRPC | `RpcSettings.tsx:236` | t() | Small Image URL/Key |
+| CustomRPC | `RpcSettings.tsx:237` | t() | Small Image Text |
+| CustomRPC | `RpcSettings.tsx:239` | t() | Small Image clickable URL |
+| CustomRPC | `RpcSettings.tsx:244` | t() | Button1 Text |
+| CustomRPC | `RpcSettings.tsx:245` | t() | Button1 URL |
+| CustomRPC | `RpcSettings.tsx:248` | t() | Button2 Text |
+| CustomRPC | `RpcSettings.tsx:249` | t() | Button2 URL |
+| CustomRPC | `RpcSettings.tsx:256` | t() | Timestamp Mode |
+| CustomRPC | `RpcSettings.tsx:264` | t() | Since discord open |
+| CustomRPC | `RpcSettings.tsx:268` | t() | Same as your current time (not reset after 24h) |
+| CustomRPC | `RpcSettings.tsx:281` | t() | Start Timestamp (in milliseconds) |
+| CustomRPC | `RpcSettings.tsx:288` | t() | End Timestamp (in milliseconds) |
+| DevCompanion | `index.tsx:102` | t() | Dev Companion Connected |
+| DevCompanion | `index.tsx:116` | t() | Dev Companion Error |
+| DevCompanion | `index.tsx:129` | t() | Dev Companion Disconnected |
+| ExpressionCloner | `index.tsx:206` | t() | Something went wrong (check console!) |
+| ExpressionCloner | `index.tsx:213` | t() | Failed to clone:  |
+| ExpressionCloner | `index.tsx:238` | t() | Custom Name |
+| FakeProfileThemes | `index.tsx:135` | t() | Color pickers |
+| MessageLatency | `index.tsx:155` | t() | User is suspected to be on an old Discord Android client |
+| MessageLatency | `index.tsx:159` | t() | User is suspected to be on an old Discord Android client. |
+| SendTimestamps | `index.tsx:72` | t() | Timestamp Picker |
+| SendTimestamps | `index.tsx:92` | t() | Timestamp Format |
+| SendTimestamps | `index.tsx:145` | t() | Insert Timestamp |
+| StartupTimings | `index.tsx:36` | t() | Startup Timings |
+| StartupTimings | `StartupTimingPage.tsx:123` | t() | Server Trace |
+| StartupTimings | `StartupTimingPage.tsx:143` | t() | Startup Timings |
+| TextReplace | `index.tsx:244` | t() | Search for a rule... |
+| TextReplace | `index.tsx:252` | t() | No rules match your search criteria. |
+| TextReplace | `index.tsx:290` | t() | Only if includes |
+| TextReplace | `index.tsx:350` | t() | Rule Tester |
+| TextReplace | `index.tsx:352` | t() | Type a message to test rules on |
+| TextReplace | `index.tsx:353` | t() | Message with rules applied |
+| ViewIcons | `index.tsx:118` | t() | View Avatar |
+| ViewIcons | `index.tsx:126` | t() | View Server Avatar |
+| ViewIcons | `index.tsx:140` | t() | View Avatar Decoration |
+| ViewIcons | `index.tsx:165` | t() | View Icon |
+| ViewIcons | `index.tsx:180` | t() | View Banner |
+| ViewIcons | `index.tsx:199` | t() | View Icon |
+| ViewRaw | `index.tsx:90` | t() | Copy Raw Content |
+| ViewRaw | `index.tsx:98` | t() | Message Content |
+| ViewRaw | `index.tsx:100` | t() | Message Data |
+| ViewRaw | `index.tsx:152` | t() | View Raw |
+| ViewRaw | `index.tsx:171` | t() | View Raw |
+| WebScreenShare | `index.tsx:156` | t() | Stream Muted |
+| WebScreenShare | `index.tsx:182` | t() | Frame Rate |
+| WebScreenShare | `index.tsx:192` | t() | Stream Mode |
+| WebScreenShare | `index.tsx:211` | t() | Mute Stream Audio |
+| WebScreenShare | `index.tsx:212` | t() | Prevents system audio from being included in your stream. |
+| WebScreenShare | `index.tsx:223` | t() | Show Stream Previews |
 
-## P3（13 条）
+### P2（36 条）
 
 | 插件 | 位置 | 类型 | 英文原文 |
 | --- | --- | --- | --- |
-| AccountPanelServerProfile | `index.tsx:46` | label | Prioritize Server Profile |
-| WebRichPresence (arRPC) | `index.tsx:52` | jsx | Follow the instructions in the GitHub repo |
-| ChatInputButtonAPI | `badges/index.tsx:65` | label | Badge Options |
-| ChatInputButtonAPI | `badges/index.tsx:70` | label | Copy Badge Name |
-| ChatInputButtonAPI | `badges/index.tsx:78` | label | Copy Badge Image Link |
-| ChatInputButtonAPI | `badges/index.tsx:136` | message | Successfully refetched badges! |
-| ConcatenatedComponentExtractor | `noTrack.ts:163` | message | Analytics tracking is disabled by NoTrack |
-| ConcatenatedComponentExtractor | `noTrack.ts:168` | message | Analytics tracking is disabled by NoTrack |
-| ConcatenatedComponentExtractor | `settings.tsx:225` | title | Backup & Restore |
-| ConcatenatedComponentExtractor | `settings.tsx:232` | title | Patch Helper |
-| ConcatenatedComponentExtractor | `supportHelper.tsx:145` | title | Hold on! |
-| ConcatenatedComponentExtractor | `supportHelper.tsx:215` | title | Hold on! |
-| ConcatenatedComponentExtractor | `supportHelper.tsx:243` | title | Hold on! |
+| AccountPanelServerProfile | `index.tsx:47` | t() | Prioritize Server Profile |
+| AddAttachments | `index.tsx:136` | t() | Add Attachments |
+| AddAttachments | `index.tsx:155` | t() | Add Attachments |
+| BiggerStreamPreview | `index.tsx:71` | t() | View Stream Preview |
+| CopyEmojiMarkdown | `index.tsx:67` | t() | Copy Emoji Markdown |
+| CopyStickerLinks | `index.tsx:48` | t() | Copy Sticker Link |
+| CopyStickerLinks | `index.tsx:56` | t() | Open Sticker Link |
+| CopyUserURLs | `index.tsx:40` | t() | Copy User URL |
+| Dearrow | `index.tsx:123` | t() | Toggle Dearrow |
+| GameActivityToggle | `index.tsx:137` | t() | Share Spotify Activity |
+| GameActivityToggle | `index.tsx:187` | t() | Enable Game Activity |
+| ImageZoom | `index.tsx:96` | t() | Square Lens |
+| ImageZoom | `index.tsx:104` | t() | Nearest Neighbour |
+| ImageZoom | `index.tsx:112` | t() | Zoom |
+| ImageZoom | `index.tsx:126` | t() | Lens Size |
+| ImageZoom | `index.tsx:140` | t() | Zoom Speed |
+| MutualGroupDMs | `index.tsx:198` | t() | You don't have any group chats in common |
+| NewGuildSettings | `index.tsx:90` | t() | Apply NewGuildSettings |
+| PauseInvitesForever | `index.tsx:76` | t() | Pause Indefinitely. |
+| PictureInPicture | `index.tsx:43` | t() | Toggle Picture in Picture |
+| PreviewMessage | `index.tsx:101` | t() | Preview Message |
+| QuickMention | `index.tsx:54` | t() | Quick Mention |
+| RelationshipNotifier | `utils.ts:119` | t() | Relationship Notifier |
+| ReplaceGoogleSearch | `index.tsx:90` | t() | Search Text |
+| ReverseImageSearch | `index.tsx:43` | t() | Search Image |
+| ServerInfo | `index.tsx:23` | t() | Server Info |
+| ShikiCodeblocks | `previewExample.tsx:18` | t() | Click Me |
+| SilentTyping | `index.tsx:104` | t() | Enable Silent Typing |
+| UserVoiceShow | `components.tsx:102` | t() | In Voice Chat |
+| VcNarrator | `index.tsx:260` | t() | Play Example Sounds |
+| VcNarrator | `VoiceSetting.tsx:37` | t() | Select a voice |
+| VcNarrator | `VoiceSetting.tsx:89` | t() | Select a language |
+| VcNarrator | `VoiceSetting.tsx:111` | t() | No voices found. |
+| VoiceDownload | `index.tsx:34` | t() | Download voice message |
+| VoiceMessages | `index.tsx:71` | t() | Send Voice Message |
+| VoiceMessages | `index.tsx:213` | t() | Record Voice Message |
 
-## REVIEW（待人工判断，22 条）
-
-> 含品牌/技术词的短句。判定原则：品牌词保留、功能词翻译（如 "Copy User URL" → "复制用户 URL"）。
+### P3（13 条）
 
 | 插件 | 位置 | 类型 | 英文原文 |
 | --- | --- | --- | --- |
-| WebRichPresence (arRPC) | `index.tsx:50` | jsx | How to use arRPC |
-| WebRichPresence (arRPC) | `index.tsx:93` | message | Connected to arRPC |
-| CopyEmojiMarkdown | `index.tsx:66` | label | Copy Emoji Markdown |
-| CopyUserURLs | `index.tsx:39` | label | Copy User URL |
-| CrashHandler | `index.ts:102` | title | Discord has crashed! |
-| CrashHandler | `index.ts:137` | title | Discord has crashed! |
-| CustomRPC | `index.tsx:264` | jsx | Discord Developer Portal |
-| CustomRPC | `RpcSettings.tsx:188` | label | Application ID |
-| CustomRPC | `RpcSettings.tsx:194` | label | Detail URL |
-| CustomRPC | `RpcSettings.tsx:199` | label | State URL |
-| CustomRPC | `RpcSettings.tsx:229` | label | Large Image URL/Key |
-| CustomRPC | `RpcSettings.tsx:232` | label | Large Image clickable URL |
-| CustomRPC | `RpcSettings.tsx:235` | label | Small Image URL/Key |
-| CustomRPC | `RpcSettings.tsx:238` | label | Small Image clickable URL |
-| CustomRPC | `RpcSettings.tsx:244` | label | Button1 URL |
-| CustomRPC | `RpcSettings.tsx:248` | label | Button2 URL |
-| CustomRPC | `RpcSettings.tsx:263` | label | Since discord open |
-| GameActivityToggle | `index.tsx:136` | label | Share Spotify Activity |
-| MusicRichPresence | `index.tsx:253` | jsx | How to create an API key |
-| MusicRichPresence | `index.tsx:255` | jsx | Create API Key |
-| SpotifyControls | `PlayerComponent.tsx:223` | label | Spotify Album Menu |
-| VencordToolbox | `menu.tsx:215` | label | Edit QuickCSS |
-
-## KEEP-ENGLISH（保留英文，110 条）
-
-技术标识（png/webp/jpg、键位、代码、日志消息、格式示例）、纯小写标识符、URL、
-品牌主导短语（如 "Spotify Album Menu"）。完整明细见仓库工作数据（未入库）。
-
-## DONE（已包装，26 条）
-
-| 插件 | 位置 | 原文 |
-| --- | --- | --- |
-| BiggerStreamPreview | `index.tsx:70` | View Stream Preview |
-| CopyStickerLinks | `index.tsx:47` | Copy Sticker Link |
-| CopyStickerLinks | `index.tsx:55` | Open Sticker Link |
-| ImageZoom | `index.tsx:96` | Square Lens |
-| ImageZoom | `index.tsx:104` | Nearest Neighbour |
-| ImageZoom | `index.tsx:112` | Zoom |
-| ImageZoom | `index.tsx:126` | Lens Size |
-| ImageZoom | `index.tsx:140` | Zoom Speed |
-| MessageLogger | `index.tsx:186` | Toggle Deleted Highlight |
-| MessageLogger | `index.tsx:197` | Remove Message History |
-| MessageLogger | `index.tsx:215` | Clear Message Log |
-| NewGuildSettings | `index.tsx:90` | Apply NewGuildSettings |
-| PictureInPicture | `index.tsx:42` | Toggle Picture in Picture |
-| QuickMention | `index.tsx:53` | Quick Mention |
-| ReverseImageSearch | `index.tsx:42` | Search Image |
-| ServerInfo | `index.tsx:22` | Server Info |
-| ShowHiddenChannels | `index.tsx:575` | Hidden Channel |
-| Translate | `index.tsx:43` | Translate |
-| Translate | `index.tsx:92` | Translate |
-| ViewRaw | `index.tsx:89` | Copy Raw Content |
-| ViewRaw | `index.tsx:97` | Message Content |
-| ViewRaw | `index.tsx:99` | Message Data |
-| ViewRaw | `index.tsx:151` | View Raw |
-| ViewRaw | `index.tsx:170` | View Raw |
-| VoiceMessages | `index.tsx:71` | Send Voice Message |
-| VoiceMessages | `index.tsx:213` | Record Voice Message |
+| WebRichPresence (arRPC) | `index.tsx:51` | t() | How to use arRPC |
+| WebRichPresence (arRPC) | `index.tsx:53` | t() | Follow the instructions in the GitHub repo |
+| WebRichPresence (arRPC) | `index.tsx:94` | t() | Connected to arRPC |
+| CrashHandler | `index.ts:103` | t() | Discord has crashed! |
+| CrashHandler | `index.ts:138` | t() | Discord has crashed! |
+| ChatInputButtonAPI | `badges/index.tsx:66` | t() | Badge Options |
+| ChatInputButtonAPI | `badges/index.tsx:71` | t() | Copy Badge Name |
+| ChatInputButtonAPI | `badges/index.tsx:79` | t() | Copy Badge Image Link |
+| ChatInputButtonAPI | `badges/index.tsx:137` | t() | Successfully refetched badges! |
+| ConcatenatedComponentExtractor | `supportHelper.tsx:146` | t() | Hold on! |
+| ConcatenatedComponentExtractor | `supportHelper.tsx:147` | t() | Understood |
+| ConcatenatedComponentExtractor | `supportHelper.tsx:216` | t() | Hold on! |
+| ConcatenatedComponentExtractor | `supportHelper.tsx:244` | t() | Hold on! |
 
 > 已包装插件的中文 key 位于 `src/i18n/locales/zh-CN.ts`
-> （`plugin.<Name>.menu/.modal/.tooltip/.button/.heading/.popover` 命名空间）。
+> （`plugin.<Name>.menu/.modal/.tooltip/.button/.heading/.popover/.ui/.player/.settings` 等语义命名空间）。
+> 所有 key 均为稳定标识符命名；模板变量经 checkI18n 双向校验。
