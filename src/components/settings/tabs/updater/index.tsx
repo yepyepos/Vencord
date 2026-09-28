@@ -26,6 +26,7 @@ import { HeadingSecondary } from "@components/Heading";
 import { Link } from "@components/Link";
 import { Paragraph } from "@components/Paragraph";
 import { SettingsTab, wrapTab } from "@components/settings/tabs/BaseTab";
+import { t, useVencordLocale } from "@i18n";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
 import { useAwaiter } from "@utils/react";
@@ -37,6 +38,7 @@ import gitHash from "~git-hash";
 import { CommonProps, HashLink, Newer, Updatable } from "./Components";
 
 function VesktopSection() {
+    useVencordLocale();
     if (!IS_VESKTOP) return null;
 
     const [isVesktopOutdated] = useAwaiter<boolean>(VesktopNative.app.isOutdated, { fallbackValue: false });
@@ -45,18 +47,18 @@ function VesktopSection() {
         <Flex className={Margins.bottom20} flexDirection="column" gap="1em">
             <Card variant="info">
                 <HeadingSecondary>Vesktop & Vencord</HeadingSecondary>
-                <Paragraph>Vesktop and Vencord are two separate things. This updater is for Vencord.</Paragraph>
+                <Paragraph>{t("ui.updater.vesktopInfo", "Vesktop and Vencord are two separate things. This updater is for Vencord.")}</Paragraph>
                 <Paragraph className={Margins.top8}>
-                    You receive separate popups for Vesktop updates. You can also manually update by installing the <Link href="https://vesktop.dev/install">latest version</Link>.
+                    {t("ui.updater.vesktopPopups.prefix", "You receive separate popups for Vesktop updates. You can also manually update by installing the ")}<Link href="https://vesktop.dev/install">{t("ui.updater.vesktopPopups.link", "latest version")}</Link>.
                 </Paragraph>
             </Card>
 
             {isVesktopOutdated && (
                 <Card variant="warning">
-                    <HeadingSecondary>Vesktop Outdated</HeadingSecondary>
+                    <HeadingSecondary>{t("ui.updater.vesktopOutdated", "Vesktop Outdated")}</HeadingSecondary>
                     <Flex flexDirection="column" gap="0.5em">
-                        <Paragraph>Your version of Vesktop is outdated!</Paragraph>
-                        <Button variant="link" onClick={() => VesktopNative.app.openUpdater()}>Open Vesktop Updater</Button>
+                        <Paragraph>{t("ui.updater.vesktopOutdated.description", "Your version of Vesktop is outdated!")}</Paragraph>
+                        <Button variant="link" onClick={() => VesktopNative.app.openUpdater()}>{t("ui.updater.openVesktopUpdater", "Open Vesktop Updater")}</Button>
                     </Flex>
                 </Card>
             )}
@@ -65,6 +67,7 @@ function VesktopSection() {
 }
 
 function Updater() {
+    useVencordLocale();
     const settings = useSettings(["autoUpdate", "autoUpdateNotification"]);
 
     const [repo, err, repoPending] = useAwaiter(getRepo, {
@@ -83,15 +86,15 @@ function Updater() {
 
             <div className="vc-settings-switches">
                 <FormSwitch
-                    title="Automatically update"
-                    description="Automatically update Vencord without confirmation prompt"
+                    title={t("ui.updater.autoUpdate.title", "Automatically update")}
+                    description={t("ui.updater.autoUpdate.description", "Automatically update Vencord without confirmation prompt")}
                     value={settings.autoUpdate}
                     onChange={(v: boolean) => settings.autoUpdate = v}
                     hideBorder
                 />
                 <FormSwitch
-                    title="Get notified when an automatic update completes"
-                    description="Show a notification when Vencord automatically updates"
+                    title={t("ui.updater.autoUpdateNotification.title", "Get notified when an automatic update completes")}
+                    description={t("ui.updater.autoUpdateNotification.description", "Show a notification when Vencord automatically updates")}
                     value={settings.autoUpdateNotification}
                     onChange={(v: boolean) => settings.autoUpdateNotification = v}
                     disabled={!settings.autoUpdate}

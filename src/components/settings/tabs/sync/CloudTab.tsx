@@ -31,6 +31,7 @@ import { CloudDownloadIcon, CloudUploadIcon, DeleteIcon, RestartIcon } from "@co
 import { Link } from "@components/Link";
 import { Paragraph } from "@components/Paragraph";
 import { SettingsTab, wrapTab } from "@components/settings/tabs/BaseTab";
+import { t, useVencordLocale } from "@i18n";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
 import { IconComponent } from "@utils/types";
@@ -41,7 +42,7 @@ function validateUrl(url: string) {
         new URL(url);
         return true;
     } catch {
-        return "Invalid URL";
+        return t("ui.cloud.invalidUrl", "Invalid URL");
     }
 }
 
@@ -70,7 +71,7 @@ function CloudSetupSection() {
 
     return (
         <section>
-            <SectionHeading text="Cloud Integrations" />
+            <SectionHeading text={t("ui.cloud.integrations.heading", "Cloud Integrations")} />
 
             <Paragraph size="md" className={Margins.bottom20}>
                 Vencord comes with a cloud integration that adds goodies like settings sync across devices.
@@ -80,8 +81,8 @@ function CloudSetupSection() {
             </Paragraph>
             <FormSwitch
                 key="backend"
-                title="Enable Cloud Integrations"
-                description="This will request authorization if you have not yet set up cloud integrations."
+                title={t("ui.cloud.integrations.title", "Enable Cloud Integrations")}
+                description={t("ui.cloud.integrations.description", "This will request authorization if you have not yet set up cloud integrations.")}
                 value={cloud.authenticated}
                 onChange={v => {
                     if (v)
@@ -130,12 +131,12 @@ function SettingsSyncSection() {
 
     return (
         <section>
-            <SectionHeading text="Settings Sync" />
+            <SectionHeading text={t("ui.cloud.sync.heading", "Settings Sync")} />
             <Flex flexDirection="column" gap="1em">
                 <FormSwitch
                     key="cloud-sync"
-                    title="Enable Settings Sync"
-                    description="Save your Vencord settings to the cloud so you can easily keep them the same on all your devices"
+                    title={t("ui.cloud.sync.title", "Enable Settings Sync")}
+                    description={t("ui.cloud.sync.description", "Save your Vencord settings to the cloud so you can easily keep them the same on all your devices")}
                     value={cloud.settingsSync}
                     onChange={v => { cloud.settingsSync = v; }}
                     disabled={!cloud.authenticated}
@@ -153,20 +154,20 @@ function SettingsSyncSection() {
                     <Select
                         options={[
                             {
-                                label: "Two-way sync (changes go both directions)",
+                                label: t("ui.cloud.sync.twoWay", "Two-way sync (changes go both directions)"),
                                 value: "both",
                                 default: true,
                             },
                             {
-                                label: "This device is the source (upload only)",
+                                label: t("ui.cloud.sync.uploadOnly", "This device is the source (upload only)"),
                                 value: "push",
                             },
                             {
-                                label: "The cloud is the source (download only)",
+                                label: t("ui.cloud.sync.downloadOnly", "The cloud is the source (download only)"),
                                 value: "pull",
                             },
                             {
-                                label: "Do not sync automatically (manual sync via buttons below only)",
+                                label: t("ui.cloud.sync.manual", "Do not sync automatically (manual sync via buttons below only)"),
                                 value: "manual",
                             }
                         ]}
@@ -189,7 +190,7 @@ function SettingsSyncSection() {
                     >
                         Upload Settings
                     </ButtonWithIcon>
-                    <Tooltip text="This will replace your current settings with the ones saved in the cloud. Be careful!">
+                    <Tooltip text={t("ui.cloud.replaceWarning", "This will replace your current settings with the ones saved in the cloud. Be careful!")}>
                         {({ onMouseLeave, onMouseEnter }) => (
                             <ButtonWithIcon
                                 variant="dangerPrimary"
@@ -214,7 +215,7 @@ function ResetSection() {
 
     return (
         <section>
-            <SectionHeading text="Reset Cloud Data" />
+            <SectionHeading text={t("ui.cloud.reset.heading", "Reset Cloud Data")} />
 
             <Grid columns={2} gap="1em">
                 <ButtonWithIcon
@@ -231,11 +232,11 @@ function ResetSection() {
                     onClick={() => openModal(props => (
                         <ConfirmModal
                             {...props}
-                            title="Are you sure?"
-                            subtitle="Once your data is erased, we cannot recover it. There's no going back!"
+                            title={t("ui.cloud.reset.confirmTitle", "Are you sure?")}
+                            subtitle={t("ui.cloud.reset.confirmSubtitle", "Once your data is erased, we cannot recover it. There's no going back!")}
                             onConfirm={eraseAllCloudData}
-                            confirmText="Erase it!"
-                            cancelText="Nevermind"
+                            confirmText={t("ui.cloud.reset.erase", "Erase it!")}
+                            cancelText={t("ui.cloud.reset.nevermind", "Nevermind")}
                         />
                     ))}
                     Icon={DeleteIcon}
@@ -248,6 +249,7 @@ function ResetSection() {
 }
 
 function CloudTab() {
+    useVencordLocale();
     return (
         <SettingsTab>
             <Flex flexDirection="column" gap="1em">

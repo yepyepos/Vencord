@@ -8,6 +8,7 @@ import { Card } from "@components/Card";
 import { ErrorCard } from "@components/ErrorCard";
 import { Flex } from "@components/Flex";
 import { Link } from "@components/Link";
+import { t } from "@i18n";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
 import { relaunch } from "@utils/native";
@@ -60,7 +61,7 @@ export function Newer(props: CommonProps) {
     return (
         <>
             <Forms.FormText className={Margins.bottom8}>
-                Your local copy has more recent commits. Please stash or reset them.
+                {t("ui.updater.localNewer", "Your local copy has more recent commits. Please stash or reset them.")}
             </Forms.FormText>
             <Changes {...props} updates={changes} />
         </>
@@ -78,14 +79,14 @@ export function Updatable(props: CommonProps) {
         <>
             {!updates && updateError ? (
                 <>
-                    <Forms.FormText>Failed to check updates. Check the console for more info</Forms.FormText>
+                    <Forms.FormText>{t("ui.updater.checkFailed", "Failed to check updates. Check the console for more info")}</Forms.FormText>
                     <ErrorCard style={{ padding: "1em" }}>
-                        <p>{updateError.stderr || updateError.stdout || "An unknown error occurred"}</p>
+                        <p>{updateError.stderr || updateError.stdout || t("ui.updater.unknownError", "An unknown error occurred")}</p>
                     </ErrorCard>
                 </>
             ) : (
                 <Forms.FormText className={Margins.bottom8}>
-                    {isOutdated ? (updates.length === 1 ? "There is 1 Update" : `There are ${updates.length} Updates`) : "Up to Date!"}
+                    {isOutdated ? t("ui.updater.updatesCount", "There are {count} Updates", { count: updates.length }) : t("ui.updater.upToDate", "Up to Date!")}
                 </Forms.FormText>
             )}
 
@@ -103,10 +104,10 @@ export function Updatable(props: CommonProps) {
                                     openModal(props => (
                                         <ConfirmModal
                                             {...props}
-                                            title="Update Success!"
-                                            subtitle="Successfully updated. Restart now to apply the changes?"
-                                            confirmText="Restart"
-                                            cancelText="Not now!"
+                                            title={t("ui.updater.updateSuccess.title", "Update Success!")}
+                                            subtitle={t("ui.updater.updateSuccess.subtitle", "Successfully updated. Restart now to apply the changes?")}
+                                            confirmText={t("ui.plugins.restart", "Restart")}
+                                            cancelText={t("ui.updater.notNow", "Not now!")}
                                             variant="primary"
                                             onConfirm={() => {
                                                 relaunch();
@@ -133,7 +134,7 @@ export function Updatable(props: CommonProps) {
                             setUpdates([]);
 
                             Toasts.show({
-                                message: "No updates found!",
+                                message: t("ui.updater.noUpdates", "No updates found!"),
                                 id: Toasts.genId(),
                                 type: Toasts.Type.MESSAGE,
                                 options: {
@@ -143,7 +144,7 @@ export function Updatable(props: CommonProps) {
                         }
                     })}
                 >
-                    Check for Updates
+                    {t("ui.updater.checkForUpdates", "Check for Updates")}
                 </Button>
             </Flex>
         </>
