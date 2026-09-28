@@ -310,3 +310,115 @@ yepyepos/Vencord (origin)
 - 新增：`docs/I18N_AUDIT_ZH_CN.md`（本文件）
 - 其余工作树无任何改动；未执行 `reset --hard` / `clean`（工作树本来就干净）
 - 提交：`docs: add zh-CN localization audit`（zh-CN 分支）
+
+---
+
+# 15. PoC 实施结果（Phase 2，2026-09-28）
+
+> 本章为第二阶段（i18n 基础设施 + 中央覆盖层 PoC）的实施记录。
+> PoC 证明：**中央覆盖层 + Vencord 自有轻量 i18n 在真实 Vencord 中可靠**，
+> 且 upstream 更新只影响少量中央代码，中文翻译数据本身保持独立。
+
+## 15.1 Git 提交
+
+| Commit | 内容 |
+| --- | --- |
+| `193db04d` feat(i18n): add zh-CN localization infrastructure | i18n 核心、locale 数据结构、fallback、测试、检查脚本、@i18n 别名（8 文件，+693/−2） |
+| `eb3de98f` feat(i18n): localize plugin metadata and settings | 中央覆盖层、插件元数据/设置 PoC、首批 8 插件中文数据（9 文件，+221/−69） |
+| 本提交 | 本报告更新 |
+
+## 15.2 实际修改/新增文件
+
+**新增（5）**：
+
+| 文件 | 作用 |
+| --- | --- |
+| `src/i18n/core.ts` | 纯逻辑核心：`translate(table, key, fallback, vars)`、模板插值、插件元数据/设置定义翻译、双语搜索匹配；零依赖，可在 Node 中直接测试 |
+| `src/i18n/index.ts` | 渲染层入口：`t(key, fallback, vars)`、`tPluginName/tPluginDescription/tTag/tSettingDef`；locale 跟随 Discord `LocaleStore`（默认 en-US） |
+| `src/i18n/locales/zh-CN.ts` | 中文翻译数据（**纯数据**，166 个 key），稳定点分 key，永不使用英文原文作 key |
+| `scripts/test-i18n.ts` | 18 项断言测试（node:assert，零测试框架） |
+| `scripts/check-i18n.ts` | 数据完整性检查：key 重复、插件/设置项/标签真实存在、空值（exit code 非零可进 CI） |
+
+**修改（9）**：
+
+| 文件 | 修改量 | 内容 |
+| --- | --- | --- |
+| `components/.../plugins/PluginCard.tsx` | 小 | name/description 走 `tPluginName/tPluginDescription`；依赖启动失败提示 |
+| `components/.../plugins/PluginModal.tsx` | 小 | 标题/描述/标签/Authors/Settings/按钮文案；**`renderSettings` 中对每个设置定义传浅拷贝译文**（一处覆盖全部设置项渲染） |
+| `components/.../plugins/index.tsx` | 中 | 双语搜索（原文匹配 \|\| 译文匹配）；标签筛选 label 译文、value 保持英文（筛选语义不变）；列表/筛选/重启弹窗文案 |
+| `plugins/_core/settings.tsx` | 小 | Vencord 设置分区标题（7 处） |
+| `plugins/imageZoom/index.tsx` | 极小 | 示范：右键菜单 5 个 label 包 `t()`（仅显示文本） |
+| `plugins/translate/index.tsx` | 极小 | 示范：菜单/弹窗按钮 label |
+| `plugins/newGuildSettings/index.tsx` | 极小 | 示范：菜单项 label |
+| `tsconfig.json` / `eslint.config.mjs` / `package.json` | 各 1-2 行 | `@i18n` 别名 + `testI18n`/`checkI18n` 脚本 |
+
+**插件自身定义（`name:`/`description:`/`description: "..."` 设置字段）零修改**；
+插件业务逻辑零修改；3 个示范插件文件仅包裹显示文本。
+
+## 15.3 覆盖统计
+
+| 指标 | 数量 |
+| --- | --- |
+| 新增翻译 key 总数 | **166**（`ui.*` 45 + `tag.*` 21 + `plugin.*` 99） |
+| PoC 插件 | **8 个**（AlwaysTrust、VoiceMessages、ImageZoom、BetterFolders、NewGuildSettings、Translate、PlainFolderIcon、petpet） |
+| 覆盖插件类别 | 6/6：纯设置插件 / 多设置项插件 / 自定义 settings.tsx / Modal / Context Menu / 动态 UI |
+| 覆盖设置定义 | 32 个设置项 + 11 个下拉选项 label（按 option value 为 key）+ 7 个菜单/弹窗字符串 |
+| 元数据覆盖 | 8 插件 name+description 全部中文；未翻译插件（158 个）自动回退英文 |
+| 双语搜索 | 中文（"语音"）与英文（"voice"）均可找到插件；缩写匹配保留 |
+
+## 15.4 Fallback 四种情况验证（test-i18n.ts，18/18 通过）
+
+| 情况 | 行为 | 测试 |
+| --- | --- | --- |
+| A 有中文 | 英文 → 中文 | ✅ `A: existing key returns Chinese` |
+| B 缺 key | 英文 → 英文 | ✅ `B: missing key`、`untranslated plugin falls back to English` |
+| C key 错误 | 英文 fallback | ✅ `C: wrong key` |
+| D 数据损坏 | 英文 fallback（undefined/null/抛错代理/空字符串表均安全） | ✅ 3 项 `D: broken table` 测试 |
+
+附加验证：模板插值（`{count} 条消息`）、占位符缺失时可读降级、原定义对象零突变（浅拷贝）、option 按 value 翻译。
+
+## 15.5 构建验证
+
+| 检查 | 结果 |
+| --- | --- |
+| `pnpm testI18n` | ✅ 18/18 |
+| `pnpm checkI18n` | ✅ 166 key 一致（3 个 WARN 为枚举型 option value 无法静态解析，预期内） |
+| `pnpm lint` | ✅ 0 错误 |
+| `pnpm testTsc`（tsc --noEmit，strict） | ✅ 0 错误 |
+| `pnpm build`（Desktop） | ✅ |
+| `pnpm buildWeb`（Browser：Chrome/Firefox 扩展） | ✅ |
+| `pnpm test`（官方全套：standalone + tsc + lint + lint-styles + generatePluginJson） | ✅ exit 0 |
+| 产物含中文 | ✅ `dist/renderer.js` 含全部 key 与译文（esbuild 默认 ASCII 输出，中文以 `\uXXXX` 转义存在，运行时正常渲染） |
+
+Desktop 与 Browser 共用同一 renderer 产物路径，一套 zh-CN 同时服务两端（未创建任何平台专属本地化实现）。
+
+## 15.6 PoC 中发现的问题与决策
+
+1. **React 响应性限制**：`t()` 每次调用读取 `LocaleStore.locale`，但组件不会自动订阅 locale 变化重渲染。
+   切换语言后需重新打开设置页或重启生效。缓解方案（未来）：中央组件改用 `useStateFromStores` 订阅 LocaleStore。
+2. **displayName 增强**：译文表可以为没有 `displayName` 的设置定义提供中文标题（原文仍显示英文自动标题）。
+   已实现并在测试中锁定行为。
+3. **esbuild charset**：默认 ASCII 输出使中文以 `\uXXXX` 转义（略增大产物体积）。可在构建脚本设 `charset: "utf8"` 优化，
+   属于无关构建改动，本阶段未做，留待全量阶段评估。
+4. **checkI18n 静态分析边界**：枚举/常量型 option value（如 `FolderIconDisplay.Never`）无法静态验证，降级为 WARN。
+5. **eslint simple-import-sort** 的 --fix 输出逗号间距不规范但不违反任何规则（外观怪异，lint 通过）。
+
+## 15.7 对第一阶段的修正与确认
+
+- **确认**：中央覆盖层方案成立。插件元数据 + 设置项（≈55% 工作量）只需 3 个中央组件文件 + 1 个核心设置文件 + 纯数据文件；
+  166 个插件中 158 个的源码**零改动**即获得中文元数据/设置显示。
+- **修正（工作量构成，非总量）**：审计估计"修改 60–80 文件"的构成需要调整——中央文件比预期更少（≤12），
+  但插件运行时 UI 的逐插件 `t()` 包装（≈90 个含 JSX 的插件、≈360 处）比预期占比更高。总量估计 60–80 文件维持不变，
+  冲突面进一步向"机械单行包装"集中，rebase 难度低于原评估。
+- **key 命名空间扩展**：实施中新增了 `plugin.<Name>.menu.*` / `plugin.<Name>.popover.*`（插件自有运行时 UI），
+  checkI18n 已支持。`option.<value>` 以稳定 value 为 key（含数字 value），上游改词不影响翻译。
+
+## 15.8 是否适合进入全量翻译阶段
+
+**适合。** 未发现阻塞性技术问题。建议全量阶段按序执行：
+
+1. 全部 166 插件元数据 + 311 设置项译文表（纯数据，零冲突）；
+2. Vencord 其余核心 UI（Themes/Updater/Cloud/Vencord 标签页 ≈180 处，中央组件，中冲突）;
+3. 分批推进插件运行时 UI 的 `t()` 包装（先稳定插件后高 churn 插件）；
+4. 引入 LocaleStore 订阅解决语言切换响应性；
+5. 每批次跑 `pnpm test && pnpm testI18n && pnpm checkI18n && pnpm build && pnpm buildWeb`。
