@@ -635,3 +635,112 @@ U1 重写插件页空状态文案 + 新增筛选选项；U2 重构 `renderSettin
 AlwaysTrust、FakeNitro、MessageLogger、MusicRichPresence、ShikiCodeblocks、Translate、TypingIndicator、petpet。
 核对项：中文自然度、术语一致性（服务器/频道/身份组/表情/贴纸）、变量完整性、URL 与快捷键保留、无功能含义改变。未发现需修正项。
 
+---
+
+# 18. Phase 3.5 — 质量审查、运行时 UI 清单与发布前回归（2026-09-28）
+
+> 本章回答：**现有 1187 条译文是否可发布？剩余动态 UI 有多少、在哪里？**
+> 本阶段不追求新增翻译数量，核心是 QA、诚实分类与 Phase 4 工作清单。
+
+## 18.1 Git 提交
+
+| Commit | 内容 |
+| --- | --- |
+| `f086b43a` feat(i18n): qa tooling, dynamic ui audit and simple plugin wraps | QA 脚本 + 动态 UI 清单 + 7 插件 11 处包装 + 术语表终版 |
+| 本提交 | 本文档更新 |
+
+## 18.2 数据对账（最终）
+
+```text
+total = 1187 = ui 145 + tag 21 + plugin 1021
+```
+
+- `pnpm checkI18n`：✅ 0 错误（含 orphan/unused/格式/模板变量校验）
+- `pnpm checkI18nTerms`：✅ 0 漂移（9 条规则）
+- `pnpm testI18n`：✅ 32/32
+- Phase 3 报告的 1176 → 本阶段 1187：+11 条来自 7 个稳定插件的新增运行时包装 key
+
+## 18.3 QA 机械化检查（新工具 `pnpm qaI18n`）
+
+| 检查 | 结果 |
+| --- | --- |
+| Settings 结构回归 | 从 272 个可见定义中确定性抽样 30 个，经真实 `translateSettingDef` 验证：default/onChange/isValid/restartNeeded/type 引用全部保持，仅显示文本变化 |
+| 模板变量报告 | 260 对 description 源文↔译文变量集合比对，0 失配（100% 一致） |
+| URL / Markdown 完整性 | 全量校验：源描述中无裸 http(s) URL（URL 均在 placeholder/代码中），Markdown 链接数零变化 |
+| 长度报告 | 5 个候选（中文比英文长 2.2 倍以上），人工复核均为多行描述文本，无按钮/标签截断风险 |
+| 人工抽样 dump | 每次运行输出 25 条设置 + 15 条插件描述的 EN/ZH 对照 |
+
+说明：QA 脚本曾暴露自身两个解析缺陷（插件描述误取设置描述、`definePluginSettings` 导入语句误判为调用块），
+均已修复——这正是"机械化 QA + 人工对照"流程的价值。
+
+## 18.4 人工抽样审查
+
+- 通过 `qaI18n` 的确定性抽样 + 人工通读，共审查 **约 65 对** EN/ZH 对照（40+ 设置对、25 插件描述对），
+  覆盖长描述插件（BetterSessions、FakeNitro）、Select 多的插件（ShowMeYourName、ShikiCodeblocks）、
+  Modal 类（BetterSessions RenameModal）、技术文本（ConsoleShortcuts、WebKeybinds）等。
+- **发现并修正 2 处术语漂移**（Phase 3 期间已被 checkI18nTerms 捕获）："扩展描述"→"完整描述"（歧义）、
+  "开启直播模式"→"串流时自动启用直播模式"。
+- 自然度复核结论：无机器直译腔残留；动作/状态（启用/已启用）未混用；快捷键、代码、变量占位符全部保留。
+
+## 18.5 搜索与筛选实测（数据级，生产函数模拟）
+
+用真实 `pluginMatchesTranslatedQuery` + 真实 zh-CN 表对 166 插件元数据模拟 `pluginFilter`：
+
+| 查询 | 期望 | 结果 |
+| --- | --- | --- |
+| `语音` / `语音消息` | VoiceMessages | ✅ 命中 |
+| `Voice` | VoiceMessages | ✅ 命中（英文路径不受影响） |
+| `翻译` / `Translate` | Translate | ✅ 命中 |
+| `置顶` / `Pin` | PinDMs | ✅ 命中 |
+| `BF`（缩写） | BetterFolders | ✅ 命中 |
+| `更好的文件夹` | BetterFolders | ✅ 命中 |
+| `摸头`（描述词） | petpet | ✅ 命中 |
+| `VENCORDTOOLBOX`（大小写） | VencordToolbox | ✅ 命中 |
+| Tag `实用`/`身份组` | label 中文、value 保持 `Utility`/`Roles` | ✅ |
+
+**行为边界（与上游一致，非缺陷）**：搜索仅匹配插件名/描述/searchTerms，设置项文本与 option label 不参与搜索
+（上游英文行为相同）。若未来要支持"搜设置项找插件"，属功能增强而非本地化范畴，记录于 Phase 4 备选。
+
+## 18.6 Dynamic UI 审计（核心产物）
+
+新文档 `docs/DYNAMIC_UI_AUDIT_ZH_CN.md`：对 `src/plugins/**` 全量扫描用户可见运行时字符串
+（排除 `definePluginSettings` 块内已被中央覆盖层处理的条目），共 400 处命中，分类如下：
+
+| 分类 | 数量 | 说明 |
+| --- | --- | --- |
+| DONE（已 t() 包装） | 26 | 中文已生效 |
+| CENTRAL（中央覆盖层覆盖） | 81 | 设置定义内 option label 等 |
+| KEEP-ENGLISH（保留英文） | 110 | 技术/格式/品牌/URL/日志 |
+| REVIEW（待人工判断） | 22 | 含品牌词短句，附判定原则 |
+| **PLUGIN-T()（剩余待包装）** | **161** | **Phase 4 实际工作量** |
+
+剩余 161 条优先级分布：**P0 72**（PinDMs、PermissionsViewer、Translate 聊天栏、Decor、ReviewDB 等）、
+**P1 42**（ViewRaw、ViewIcons、CustomRPC、TextReplace、WebScreenShare 等）、
+**P2 34**（单按钮/单菜单小插件）、**P3 13**（API/开发者向）。
+文档含逐条 插件/文件:行号/类型/原文 明细及 churn 风险提示（P0 中 Decor/ReviewDB/PermissionsViewer
+为 upstream 高频改动插件，包装需最小 diff）。
+
+## 18.7 运行时英文的诚实分类
+
+| 类别 | 数量 | 性质 |
+| --- | --- | --- |
+| Intentional English | ≈115 | KEEP-ENGLISH 110 + _api 插件元数据（开发者向）+ 6 个技术格式选项 |
+| 尚未翻译（PLUGIN-T()） | 161 | 全部有英文 fallback，永不空白；Phase 4 按 P0→P3 处理 |
+| REVIEW | 22 | 待逐条判定（多为"品牌词+功能词"短语） |
+| 无法本地化 | 0 | 未发现 |
+
+## 18.8 构建与回归
+
+| 检查 | 结果 |
+| --- | --- |
+| `pnpm checkI18n` / `checkI18nTerms` / `qaI18n` / `testI18n` | ✅ 全绿 |
+| `pnpm testTsc` / `pnpm lint` | ✅ 0 错误 |
+| `pnpm build`（Desktop）/ `pnpm buildWeb`（Browser） | ✅ / ✅ |
+| `pnpm test`（官方全套门禁） | ✅ exit 0 |
+| Git 变更审查 | `git diff --check` 干净；无业务逻辑/option value/插件 ID/URL/正则改动 |
+
+**运行时限制的诚实说明**：本环境无法启动 Discord 客户端做真实 GUI 运行测试。
+语言切换（English→中文→English）的正确性由三层保证：① `useVencordLocale()` 订阅机制（Phase 2.5 实现）；
+② 32 项单元测试锁定 fallback/插值/不可变性；③ 本节数据级实测（搜索/结构回归）。
+真实客户端点击级验证仍建议在发布前由人工执行（清单：插件列表→详情→设置→搜索→标签→Modal→右键菜单→Tooltip→语言往返）。
+
