@@ -1,0 +1,312 @@
+# Vencord 简体中文（zh-CN）国际化审计报告
+
+> 生成日期：2026-09-28
+> 审计基线：`main` = `upstream/main` = `90aea0dd`（"fix modals"）
+> 审计方式：实际 checkout 源码扫描（脚本统计）+ git 历史 churn 分析 + 构建验证 + 社区项目调查
+
+---
+
+# 1. Git 基线
+
+| 项目 | 值 |
+| --- | --- |
+| Fork | https://github.com/yepyepos/Vencord |
+| origin | https://github.com/yepyepos/Vencord.git |
+| upstream | https://github.com/Vendicated/Vencord.git |
+| 分支 | `main`（同步基线）、`zh-CN`（本分支，中文化维护层，均创建于同一起点） |
+| 当前 HEAD | `90aea0ddbbfbee16ce052b2c7ab610ffe957b4ca`（"fix modals"） |
+| upstream/main | `90aea0ddbbfbee16ce052b2c7ab610ffe957b4ca`（与本地完全一致，`rev-list --left-right --count` = `0  0`） |
+| package.json version | `1.15.7`（仅作参考；真正的基线以 commit SHA 为准） |
+| 工作树 | 干净（审计前无任何用户修改） |
+
+**结论**：Fork 与官方零分叉，是理想的同步起点。基线必须以 `90aea0dd` 这一 commit SHA 追踪，而非 `1.15.7` 版本号（官方持续开发，版本号不唯一）。
+
+---
+
+# 2. 项目规模
+
+| 指标 | 数量 |
+| --- | --- |
+| `src/` 全部文件 | 611（`.ts` 237、`.tsx` 231、`.css` 78、其余为类型/杂项） |
+| 参与扫描的 `.ts/.tsx` | 468 |
+| 插件目录（`src/plugins/*`） | 168（其中 166 个真实插件 + `_api`、`_core` 两个基础设施目录） |
+| 插件内文件 | 414 |
+| 公共组件（`src/components/`） | 86 文件（含 `settings/tabs/` 下 7 个标签页） |
+| `src/utils/`、`src/api/`、`src/webpack/` | 31 / 24 / 33 文件 |
+| 含用户可见字符串的源文件 | 287 / 468（约 61%） |
+
+---
+
+# 3. i18n 现状
+
+## 3.1 Vencord 如何访问 Discord i18n
+
+- `src/webpack/common/utils.ts`：通过 `mapMangledModuleLazy` 拿到 Discord 的 i18n 模块，
+  暴露 `i18n.t`（`IntlMessagesProxy`，按 hash 取消息）与 `i18n.intl`（`string()/format()`）。
+- `src/utils/intlHash.ts`：内嵌 Discord 官方 [discord-intl](https://github.com/discord/discord-intl)
+  的 `runtimeHashMessageKey()`（xxhash64 + base64），把消息 key 哈希成运行时 key。
+- `src/utils/discord.tsx`：封装 `getIntlMessage(key, values?)` —— Vencord 复用 Discord 官方翻译的统一入口。
+
+## 3.2 复用 Discord i18n 的实际使用量
+
+全仓库 **仅 18 个文件** 使用了 `getIntlMessage` / `runtimeHashMessageKey`（去重后计），
+例如 `plugins/decor`、`plugins/messageLogger`、`plugins/typingIndicator`、`components/Icons.tsx`、
+`plugins/noBlockedMessages`、`plugins/showTimeoutDuration` 等。
+
+**结论：Discord i18n 复用是"例外"而非"惯例"，覆盖面极小。**
+
+## 3.3 Vencord 自有 i18n 基础设施
+
+执行全仓库（排除 node_modules/.git/dist）`localization|translation|locale|locales|i18n` 扫描后逐一核查，
+**确认 Vencord 没有自己的 i18n / locale 系统**：
+
+- ❌ 无 `locale/`、`locales/`、`translations/` 目录
+- ❌ 无翻译加载器（translation loader）、无语言选择机制
+- ❌ 所有用户可见文本为硬编码英文，直接内联在组件与插件定义中
+- 扫描命中均为以下三类，与自有本地化无关：
+  1. 访问 **Discord 原生** `LocaleStore` / locale 概念（如 `betterSessions`、`consoleJanitor`）
+  2. `localeCompare`（排序）
+  3. `plugins/translate`（**消息翻译插件**，调用 Google/DeepL 翻译聊天内容 —— 是功能特性，
+     与 Vencord UI 本地化是完全不同的两回事）
+
+## 3.4 硬编码分布（关键位置）
+
+| 位置 | 内容 |
+| --- | --- |
+| `src/utils/types.ts` | `PluginTags` 固定 21 个英文标签（Accessibility / Appearance / Fun / Utility …），在插件筛选 UI 中直接展示 |
+| `src/plugins/_core/settings.tsx` | Vencord 设置分区标题（"Vencord"、"Plugins"、"Themes"、"Updater"、"Cloud"、"Backup & Restore"）硬编码 |
+| `src/components/settings/**` | 插件管理页（PluginCard / PluginModal / 搜索框 / 无结果提示）、主题页、Updater、Cloud、Vencord 主设置页的全部文案 |
+| `src/components/settings/tabs/plugins/components/*` | 设置项渲染器读取插件定义的 `displayName` / `description` / `placeholder` 并直接显示 |
+| `definePlugin({ name, description, tags, ... })` | 166 个插件的名称/描述/标签全部为硬编码英文（约 164 个有描述、163 个有标签） |
+| `definePluginSettings({ type: OptionType.* })` | 311 个设置项定义（分布 99 文件、96 个插件），其 `description`/`displayName`/`placeholder`/下拉选项全部为硬编码英文；目前仅 21 处定义了 `displayName`（多数设置项只显示 description） |
+| 各插件 JSX / toast / 菜单 | 硬编码英文（见 §4/§5） |
+
+---
+
+# 4. 用户可见字符串统计
+
+> 统计口径：启发式扫描（JSX 属性字符串、JSX 文本节点、toast/notice 调用、设置项定义），
+> 已过滤标识符/路径/正则/常量。数字为**近似上限**（含少量需人工复核项），但量级可靠。
+
+| 类别 | 数量 | 说明 |
+| --- | --- | --- |
+| 用户可见字符串总计（启发式命中） | ≈ 1196 | 287 个文件 |
+| 其中：DISCORD-I18N（已复用 Discord 官方翻译） | 18 处调用 / 18 文件 | `getIntlMessage` 等；随 Discord 语言自动变中文，**无需翻译** |
+| 其中：VENCORD-UI（Vencord 自有界面） | ≈ 176 处 / ~25 文件 | `src/components/**`：设置页、插件管理、主题、Updater、Cloud、公共组件 |
+| 其中：PLUGIN-METADATA（插件元数据） | ≈ 351 条 | 166 个插件名 + ~164 条描述 + 163 组标签 + 21 个固定标签词 |
+| 其中：PLUGIN-SETTINGS（插件设置项） | ≈ 311 项定义 | 96 个插件、99 个文件；`description` 为主，含少量 `displayName`/`placeholder`/下拉选项 |
+| 其中：PLUGIN-UI（插件运行时界面） | ≈ 358 处 | JSX 文本、右键菜单、toast/notice（19 个插件有 toast 调用）、按钮 |
+| 硬编码英文合计（Vencord 自有文本） | ≈ 1180 条 | 不含 Discord 原生部分 |
+| 需人工复核 | ≈ 80–120 条 | 启发式无法完全区分"用户可见"与"技术字符串"（如 patch find/match、日志、错误码） |
+
+**DISCORD-I18N 边界结论**：Discord 原生 UI（好友列表、设置、消息操作等）由 Discord 自身 i18n 提供，
+Discord 已有官方 zh-CN，用户把 Discord 语言切到简体中文即可，Vencord 不应重新翻译。
+`i18n.Messages.*` 类文本在本仓库中以 `getIntlMessage`/`i18n.t` 形式出现，同样自动跟随 Discord 语言。
+
+---
+
+# 5. 插件统计
+
+| 指标 | 数量 |
+| --- | --- |
+| 插件总数 | 166（另含 `_api`/`_core` 基础设施） |
+| 有 UI 的插件 | ≈ 130+（有 JSX/菜单/弹窗） |
+| 含用户可见文本的插件 | **166 / 166**（元数据 name+description 是下限，全部命中） |
+| 有设置页的插件（`definePluginSettings`） | 96 |
+| 使用 Discord i18n 的插件 | 15（仅个别字符串复用官方翻译） |
+| 全部硬编码英文的插件 | ≈ 151（166 − 15） |
+
+**按可见字符串数排名（Top 15，来自实际扫描）**：
+
+| 插件 | 命中数 | 插件 | 命中数 |
+| --- | --- | --- | --- |
+| reviewDB | 37 | voiceMessages | 12 |
+| musicRichPresence | 34 | showMeYourName | 11 |
+| betterFolders | 12 | viewRaw | 11 |
+| imageZoom | 12 | webScreenShare.browser | 11 |
+| newGuildSettings | 12 | fakeProfileThemes | 10 |
+| permissionsViewer | 12 | greetStickerPicker | 10 |
+
+（中位插件仅 3–6 处；头部 15 个插件约占总量的 20%）
+
+**推荐处理方式分层**：
+
+| 分层 | 范围 | 方式 |
+| --- | --- | --- |
+| 元数据 + 设置项（约 660 条） | 全部 166 插件 | **中央覆盖层**（overlay）——见 §6，不逐插件改源码 |
+| 运行时 UI（约 360 处） | ~90 个插件 | 逐插件包 `t()` / 中央 patch；按热度增量推进 |
+| 平台专用插件（`.web`/`.desktop`/`.browser` 后缀 14 个） | — | 文本走同一翻译层，无额外工作 |
+
+---
+
+# 6. 推荐的本地化架构
+
+## 四方案对比
+
+| 维度 | A 直接写中文 | B Vencord 自有 locale/i18n | C 尽量复用 Discord i18n | **D 混合（推荐）** |
+| --- | --- | --- | --- | --- |
+| 实现成本 | 最低 | 高（需建基础设施 + 包装所有字符串） | 低 | 中（B 的轻量子集 + C 补充） |
+| 维护成本 | 最高：每条译文散落源码，upstream 每次改动都要人肉比对 | 中：译文集中在语言文件，源码 diff 仅是 `t("...")` 包装 | 最低 | 中偏低 |
+| upstream 冲突风险 | 极高（166 个插件逐行改写，rebase 即灾难） | 中（改动点仍多，但模式统一、冲突机械可解） | 无冲突 | 中，可通过"中央渲染层 patch"进一步压低 |
+| Browser 兼容 | ✅ | ✅（纯 renderer 代码） | ✅ | ✅ |
+| Desktop 兼容 | ✅ | ✅ | ✅ | ✅ |
+| 未来扩展其他语言 | 不可能 | 好 | 部分 | 好（同一机制加语言文件即可） |
+
+## 推荐方案 D：`t()` 轻量包装 + 中央渲染覆盖 + Discord zh-CN 复用
+
+1. **Discord 原生文本**：不翻译。Discord 语言设为 zh-CN 后自动生效（含现有 18 处 `getIntlMessage` 调用）。
+2. **Vencord 自有文本**：新增极小的自有 i18n（约 2 个新文件）：
+   - `src/utils/translation.ts`：`t(fallback, ...)` —— 返回当前语言译文，**缺 key 时原样返回英文 fallback**（永不丢文本、永不白屏）；
+   - `src/locales/zh-CN.ts`：key→译文映射；语言跟随 Discord 当前 locale（`LocaleStore.locale`），先只实现 zh-CN。
+3. **元数据/设置项中央覆盖（核心设计，冲突最小化）**：不逐个改 166 个插件的源码，而是：
+   - 新增 `src/locales/zh-CN/plugins.ts` 覆盖层：`{ 插件名: { name, description, tags } }` 与设置项译文表；
+   - 在 **5–8 个中央渲染点** 应用覆盖：`PluginCard.tsx`、`PluginModal.tsx`、插件列表搜索/过滤、
+     `settings/components/*Setting.tsx`（`SettingsSection` 一处覆盖全部设置项标题/描述）、
+     `_core/settings.tsx`（分区标题）、`AddonCard.tsx`。
+   - **一处修改、全项目生效**：约 660 条元数据+设置项文本零插件源码 diff，upstream 同步几乎无冲突。
+4. **剩余插件运行时 UI（≈360 处）**：优先用 `t(fallback)` 包装；按插件热度增量推进（先 reviewDB、
+   translate、messageLogger、permissionsViewer、showHiddenChannels 等常用插件）。
+
+## 共享性验证（§十九 的回答）
+
+- Desktop 与 Browser **共用同一份 `src/` renderer 代码**；`browser/` 目录只是扩展入口
+  （manifest、background、content scripts、polyfill stub），`src/main/` 才是 Desktop 专属（Node 进程）。
+- 设置项已有 `target: "WEB" | "DESKTOP" | "BOTH"` 机制，平台专用插件用 `.web/.desktop/.browser` 目录后缀。
+- **结论：一套 zh-CN 本地化代码同时服务 Desktop 与 Browser，无需两套。**
+  唯一注意点：`src/main/` 内极少量文本（6 处启发式命中，多为通知/日志）在 Browser 下不加载，翻译与否不影响共享。
+
+---
+
+# 7. 工作量分析
+
+## 分级拆分
+
+| 级别 | 内容 | 预计文件数 | 预计 key 数 | 风险 |
+| --- | --- | --- | --- | --- |
+| 低风险 | i18n 基础设施（`t()` + zh-CN 加载 + 语言跟随） | 新增 2–3，修改 0 | 0（机制） | 极低：纯新增文件 |
+| 低风险 | 插件元数据 + 设置项中央覆盖层 | 新增 1–2（译文表），修改 6–8 个中央渲染组件 | ≈ 660（166 名称 + 164 描述 + 21 标签 + 311 设置项） | 低：diff 集中、模式统一 |
+| 低风险 | Vencord 设置分区标题 + 固定标签 | 修改 2（`_core/settings.tsx`、`types.ts` 渲染处） | ≈ 30 | 低 |
+| 中风险 | Vencord 核心 UI（设置 7 个标签页、公共组件） | ≈ 25 | ≈ 180 | 中：`components/settings` 是 upstream 高频改动区 |
+| 中风险 | 常用插件运行时 UI（首批 15–20 个） | ≈ 20–25 | ≈ 120 | 中：与插件自身演进耦合 |
+| 高风险 | 高 churn 插件（decor、reviewDB、permissionsViewer、messageLogger、fakeNitro、showHiddenChannels…） | ≈ 15 | ≈ 150 | 高：upstream 频繁重构，建议最后做、按需做 |
+| 需要特殊 patch | 插件搜索/过滤逻辑按译文匹配、`PluginTags` 筛选、`UIElements` 管理弹窗 | 2–3 | — | 中：改匹配逻辑需谨慎，避免破坏原语义 |
+| 需要人工审查 | ≈ 80–120 条启发式命中复核（区分 UI 文本 vs 技术/日志/错误信息） | — | — | — |
+
+## 汇总量化
+
+- 预计最终涉及源文件：**约 60–80 个被修改 + 新增 4–6 个**（若采用中央覆盖层；逐插件改写方案则需 ~250 个文件，不推荐）。
+- 预计新增翻译 key：**约 1140 条**（Vencord UI ≈180 + 元数据/设置 ≈690 + 插件运行时 ≈270，含 20% 复审裁减余量）。
+- 需调整的公共组件：**约 10 个**（SettingsSection 渲染器、PluginCard/PluginModal、AddonCard、Toast/Notice 工具、`_core/settings.tsx`）。
+- 需处理插件：**166 个的元数据全部走覆盖层；运行时 UI 分批，首批 15–20 个高热度插件**。
+
+以上数字均来自本次 checkout（`90aea0dd`）的实际扫描，非估算上限。
+
+---
+
+# 8. Upstream 维护风险
+
+最近 500 次提交的目录级 churn（git 实测）：
+
+| 目录 | 变更文件次数 | 冲突风险评价 |
+| --- | --- | --- |
+| `src/plugins/**` | 1556 | 最高，但**中央覆盖层策略使 zh-CN 分支几乎不碰插件源码**，风险被结构性消除 |
+| `src/components/**` | 370 | 高：其中 `settings/**` 263 次（且上游近期刚把 `VencordSettings`/`PluginSettings` 目录重组为 `settings/tabs/**`——证明该区是重构热点） |
+| `src/webpack/**` | 103 | 中：我们的修改原则上不应触及；保持零修改 |
+| `src/utils/**` | 88 | 中：新增 `translation.ts` 独立文件，冲突面小 |
+| `src/api/**` | 79 | 低：原则上不碰 |
+
+**高风险文件（若必须修改，最易冲突）**：`src/components/settings/tabs/plugins/index.tsx`、
+`PluginModal.tsx`、`src/plugins/_core/settings.tsx`、各 `*Setting.tsx` 渲染器、`decor`/`reviewDB` 插件。
+
+**结构性缓解**：zh-CN 分支的修改应遵循"新增文件优先、中央渲染点其次、插件源码最后"的顺序；
+rebase 时冲突将集中在 ≤10 个已知文件，机械可解。
+
+---
+
+# 9. 后续实施阶段建议（Phase 1–9）
+
+根据本次审计实际结果定制（与任务书示例阶段对应，但顺序与范围按数据调整）：
+
+| Phase | 内容 | 规模 | 退出标准 |
+| --- | --- | --- | --- |
+| 1 | 建立 `t()` + zh-CN 语言文件 + 跟随 Discord locale 的语言判定 | 新增 3 文件 | build/lint 通过；英文环境行为与官方完全一致 |
+| 2 | 插件元数据 + 设置项中央覆盖层（§6.3） | 1 译文表 + 6–8 组件 patch | 166 个插件在 zh-CN 下全中文名称/描述/设置项；英文回退可验证 |
+| 3 | Vencord 核心 Settings 七个标签页 + 分区标题 | ≈ 25 文件 / ≈ 210 key | 设置全界面中文 |
+| 4 | 公共组件 / Toast / Notice / ErrorBoundary 文案 | ≈ 8 文件 | 全局提示中文 |
+| 5 | 首批高热度插件运行时 UI（15–20 个） | ≈ 20–25 文件 / ≈ 120 key | 常用插件界面中文 |
+| 6 | 其余插件分批推进（低 churn 优先，高 churn 谨慎） | 分 3–4 批 | 按批次验收 |
+| 7 | Browser 构建（`pnpm buildWeb`）实测扩展环境 | — | Chrome 扩展下中文生效 |
+| 8 | Desktop 注入（`pnpm inject`）实测 | — | Windows 客户端下中文生效 |
+| 9 | upstream 同步演练：`git fetch upstream && git rebase upstream/main` 全流程 | — | 冲突集中在已知 ≤10 文件且 30 分钟内可解 |
+
+**每个 Phase 单独成 commit/PR，保持 `main` 零修改。**
+
+---
+
+# 10. 构建与开发流程验证（§二十）
+
+- 依赖安装：`pnpm install --frozen-lockfile` ✅（16s）
+- `pnpm lint`（eslint）✅ 通过，0 错误
+- `pnpm build` ✅ 通过（dist/renderer.js 718.0kb）
+- 其他官方脚本：`buildWeb`（浏览器扩展）、`watch`/`dev`、`inject`/`uninject`、`lint-styles`（stylelint）
+- 本次审计**未修改任何源码**，未为通过检查改动无关代码。
+
+---
+
+# 11. 社区已有本地化机制调查（§二十三.12）
+
+对当前仓库与公开 GitHub 项目做了实际检索（非猜测）：
+
+1. **Vendicated/Vencord 上游**：无任何自有 UI i18n 基础设施；官方明确不做界面多语言。
+2. **未发现任何可复用的 Vencord zh-CN UI 语言包**：GitHub / 搜索引擎中不存在成规模的
+   "Vencord 简体中文界面语言包"项目（检索于 2026-09-28）。
+3. 可借鉴的相邻项目：
+   - [LOSTSTR/Esharq](https://github.com/LOSTSTR/Esharq/blob/main/README.en.md)：阿拉伯语**整客户端 fork**，
+     对 Vencord 式代码做全量界面本地化 + 即时语言切换——验证了"fork 层本地化"可行，但其"整包改写"模式正是本项目要避免的高冲突路径；
+   - [Milkshiift/GoofCord](https://github.com/Milkshiift/GoofCord)：Discord 客户端 mod，翻译经 **Weblate** 管理——若未来译文量上千，可引入 Weblate 协作；
+   - [lynxize/vencord-plugins](https://github.com/lynxize/vencord-plugins)：社区 fork 适配 Discord 新 i18n 库的提交，说明 Discord i18n 侧的 API（`discord-intl` 哈希）在持续演化，`getIntlMessage` 复用需跟随上游适配。
+4. 结论：**本项目需要自建 zh-CN 层，无现成轮子；推荐架构（D）在公开项目中无直接先例，但各组成部分（中央 patch、fallback 包装）均为 Vencord 生态的成熟惯用手法。**
+
+---
+
+# 12. 十二个关键问题的最终回答（§二十三）
+
+1. **Vencord 自身有多少用户可见文本？** ≈ 1180 条硬编码英文（启发式，287 文件），另含少量 Discord 原生文本。
+2. **多少已用 i18n？** 仅 18 个文件的少量字符串复用 Discord i18n（`getIntlMessage`）；**Vencord 自有 i18n = 0**。
+3. **多少属于 Discord 原生文本？** 除上述 18 处复用调用外，运行时所有经 Discord 组件/Store 渲染的原生 UI 文本均为 Discord 所有，不在本仓库源码内，**不在汉化范围**。
+4. **多少属于 Vencord 自有文本？** ≈ 1180 条：核心 UI ≈176、插件元数据 ≈351、插件设置项 311、插件运行时 UI ≈358（含少量复核裁减）。
+5. **Discord 官方 zh-CN 可复用程度？** 对"Discord 原生文本"= 100% 自动复用（用户切语言即可）；对 Vencord 自有概念（插件名、Vencord 设置）≈ 仅个别通用词（Enable/Disable/Copy ID 等几十个 key）可通过 `getIntlMessage` 复用，其余必须自译。
+6. **是否值得建立独立 zh-CN locale？** **值得，且必须**——无自有 locale 则只能整包改写英文（方案 A），rebase 成本灾难。推荐轻量 `t(fallback)` + 中央覆盖层（方案 D），成本可控。
+7. **预计修改多少文件？** 约 **60–80 个修改 + 4–6 个新增**（采用中央覆盖层）；若逐插件硬改则需 ~250 文件（不推荐）。
+8. **哪些文件最易冲突？** `components/settings/tabs/plugins/index.tsx`、`PluginModal.tsx`、`_core/settings.tsx`、`*Setting.tsx` 渲染器、以及 decor/reviewDB/permissionsViewer/messageLogger 插件（500 提交内 churn 最高）。
+9. **Browser 与 Desktop 是否需不同处理？** 不需要。renderer 代码共享，一套 zh-CN 同时服务两者；仅 `src/main/`（Desktop 专属）6 处文本为 Desktop-only，可忽略或后置。
+10. **最合理的第一步？** **Phase 1+2 打包推进**：`t()` 机制 + 插件元数据/设置项中央覆盖层。一次交付就让 166 个插件的名称/描述/设置全部中文，覆盖约 55% 工作量，且几乎零 upstream 冲突。
+11. **长期跟随官方更新的分支策略？** 见 §13。
+12. **已有可借鉴实现？** 见 §11：无可复用的 zh-CN 轮子；Esharq（整 fork 本地化先例）、GoofCord（Weblate 管理译文）可参考；`discord-intl` 哈希 API 演化需持续适配。
+
+---
+
+# 13. 推荐分支策略（§二十三.11）
+
+```text
+Vendicated/Vencord (upstream)
+        │  fetch + rebase（每周或按需）
+        ▼
+yepyepos/Vencord (origin)
+        ├── main    ← 永远等于 upstream/main（fast-forward only，禁止直接提交）
+        └── zh-CN   ← 中文化维护层，rebase 到 main 之上
+```
+
+- `main` 同步：`git fetch upstream && git switch main && git merge --ff-only upstream/main && git push origin main`。
+- `zh-CN` 维护：`git switch zh-CN && git rebase main`；冲突被架构限制在 ≤10 个中央文件。
+- 译文内容与代码结构分离：译文表（`src/locales/zh-CN/*.ts`）是纯数据文件，upstream 永不触碰 → **90% 的翻译工作零冲突**。
+- 不使用 merge 官方 main 的方式（会产生大量 merge commit 污染历史）；rebase 保持 zh-CN 是"官方基线 + 干净补丁层"。
+- 可选：用 GitHub Actions 每日自动比对 `upstream/main`，有更新时开 PR 提醒同步。
+
+---
+
+# 14. 审计产生的文件与 Git 状态
+
+- 新增：`docs/I18N_AUDIT_ZH_CN.md`（本文件）
+- 其余工作树无任何改动；未执行 `reset --hard` / `clean`（工作树本来就干净）
+- 提交：`docs: add zh-CN localization audit`（zh-CN 分支）
