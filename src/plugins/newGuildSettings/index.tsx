@@ -22,6 +22,7 @@ import {
 } from "@api/ContextMenu";
 import { definePluginSettings } from "@api/Settings";
 import { CogWheel } from "@components/Icons";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
 import { Guild } from "@vencord/discord-types";
@@ -86,7 +87,7 @@ const makeContextMenuPatch: (shouldAddIcon: boolean) => NavContextMenuPatchCallb
     const group = findGroupChildrenByChildId("privacy", children);
     group?.push(
         <Menu.MenuItem
-            label="Apply NewGuildSettings"
+            label={t("plugin.NewGuildSettings.menu.apply", "Apply NewGuildSettings")}
             id="vc-newguildsettings-apply"
             icon={shouldAddIcon ? CogWheel : void 0}
             leadingAccessory={shouldAddIcon ? { type: "icon", icon: CogWheel } : void 0}

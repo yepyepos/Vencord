@@ -9,6 +9,7 @@ import { hasAnyVisibleSettings, isPluginEnabled, pluginRequiresRestart, startDep
 import { Settings } from "@api/Settings";
 import { CogWheel, InfoIcon } from "@components/Icons";
 import { AddonCard } from "@components/settings/AddonCard";
+import { t, tPluginDescription, tPluginName } from "@i18n";
 import { Plugin } from "@utils/types";
 import { React, showToast, Toasts } from "@webpack/common";
 
@@ -36,7 +37,11 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
 
             if (failures.length) {
                 logger.error(`Failed to start dependencies for ${plugin.name}: ${failures.join(", ")}`);
-                showNotice("Failed to start dependencies: " + failures.join(", "), "Close", () => null);
+                showNotice(
+                    t("ui.plugins.failedToStartDependencies", "Failed to start dependencies: {failures}", { failures: failures.join(", ") }),
+                    t("ui.common.close", "Close"),
+                    () => null
+                );
                 return;
             }
 
@@ -79,8 +84,8 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
 
     return (
         <AddonCard
-            name={plugin.name}
-            description={plugin.description}
+            name={tPluginName(plugin)}
+            description={tPluginDescription(plugin)}
             isNew={isNew}
             enabled={isEnabled()}
             setEnabled={toggleEnabled}

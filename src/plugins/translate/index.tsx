@@ -19,6 +19,7 @@
 import "./styles.css";
 
 import { findGroupChildrenByChildId, NavContextMenuPatchCallback } from "@api/ContextMenu";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 import { Message } from "@vencord/discord-types";
@@ -39,7 +40,7 @@ const messageCtxPatch: NavContextMenuPatchCallback = (children, { message }: { m
     group.splice(group.findIndex(c => c?.props?.id === "copy-text") + 1, 0, (
         <Menu.MenuItem
             id="vc-trans"
-            label="Translate"
+            label={t("plugin.Translate.menu.translate", "Translate")}
             icon={TranslateIcon}
             leadingAccessory={{ type: "icon", icon: TranslateIcon }}
             action={async () => {
@@ -88,7 +89,7 @@ export default definePlugin({
             if (!content) return null;
 
             return {
-                label: "Translate",
+                label: t("plugin.Translate.popover.translate", "Translate"),
                 icon: TranslateIcon,
                 message,
                 channel: ChannelStore.getChannel(message.channel_id),

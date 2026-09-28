@@ -19,6 +19,7 @@
 import { definePluginSettings } from "@api/Settings";
 import { BackupRestoreIcon, CloudIcon, MainSettingsIcon, PaintbrushIcon, PatchHelperIcon, PlaceholderIcon, PluginsIcon, UpdaterIcon, VesktopSettingsIcon } from "@components/Icons";
 import { BackupAndRestoreTab, CloudTab, PatchHelperTab, PluginsTab, ThemesTab, UpdaterTab, VencordTab } from "@components/settings/tabs";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import { isTruthy } from "@utils/guards";
 import definePlugin, { IconProps, OptionType } from "@utils/types";
@@ -170,46 +171,46 @@ export default definePlugin({
         const vencordEntries: SettingsLayoutNode[] = [
             buildEntry({
                 key: "vencord_main",
-                title: "Vencord",
-                panelTitle: "Vencord Settings",
+                title: t("ui.settings.section.vencord", "Vencord"),
+                panelTitle: t("ui.settings.section.vencordSettings", "Vencord Settings"),
                 Component: VencordTab,
                 Icon: MainSettingsIcon
             }),
             buildEntry({
                 key: "vencord_plugins",
-                title: "Plugins",
+                title: t("ui.settings.section.plugins", "Plugins"),
                 Component: PluginsTab,
                 Icon: PluginsIcon
             }),
             buildEntry({
                 key: "vencord_themes",
-                title: "Themes",
+                title: t("ui.settings.section.themes", "Themes"),
                 Component: ThemesTab,
                 Icon: PaintbrushIcon
             }),
             !IS_UPDATER_DISABLED && UpdaterTab && buildEntry({
                 key: "vencord_updater",
-                title: "Updater",
-                panelTitle: "Vencord Updater",
+                title: t("ui.settings.section.updater", "Updater"),
+                panelTitle: t("ui.settings.section.vencordUpdater", "Vencord Updater"),
                 Component: UpdaterTab,
                 Icon: UpdaterIcon
             }),
             buildEntry({
                 key: "vencord_cloud",
-                title: "Cloud",
-                panelTitle: "Vencord Cloud",
+                title: t("ui.settings.section.cloud", "Cloud"),
+                panelTitle: t("ui.settings.section.vencordCloud", "Vencord Cloud"),
                 Component: CloudTab,
                 Icon: CloudIcon
             }),
             buildEntry({
                 key: "vencord_backup_restore",
-                title: "Backup & Restore",
+                title: t("ui.settings.section.backupRestore", "Backup & Restore"),
                 Component: BackupAndRestoreTab,
                 Icon: BackupRestoreIcon
             }),
             !IS_STANDALONE && PatchHelperTab && buildEntry({
                 key: "vencord_patch_helper",
-                title: "Patch Helper",
+                title: t("ui.settings.section.patchHelper", "Patch Helper"),
                 Component: PatchHelperTab,
                 Icon: PatchHelperIcon
             }),

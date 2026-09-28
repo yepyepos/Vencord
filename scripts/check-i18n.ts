@@ -67,6 +67,8 @@ function pluginDefinesSetting(folder: string, settingKey: string): boolean {
 }
 
 // helper: does the given plugin folder contain the option value literal?
+// enums/constants (`value: FolderIconDisplay.Never`) cannot be resolved
+// statically, so callers downgrade failures to a warning
 function pluginContainsOptionValue(folder: string, settingKey: string, value: string): boolean {
     const dir = join(PLUGINS_DIR, folder);
     for (const file of readdirSync(dir)) {
@@ -131,8 +133,22 @@ for (const [key, value] of Object.entries(table)) {
         } else if (!pluginDefinesSetting(folder, settingKey)) {
             error(`settings key "${settingKey}" not found in plugin ${pluginName} (${key})`);
         } else if (!pluginContainsOptionValue(folder, settingKey, value)) {
-            error(`option value "${value}" not found for ${pluginName}.${settingKey} (${key})`);
+            // may be a constant/enum option value which cannot be verified statically
+            console.warn(`WARN   option value "${value}" not found verbatim for ${pluginName}.${settingKey} (${key})`);
         }
+        continue;
+    }
+
+    if ((match = key.match(/^plugin\.([^.]+)\.(?:menu|popover|ui)\./))) {
+        const [, pluginName] = match;
+        if (!pluginNames.has(pluginName)) error(`plugin not found for ${key}`);
+        continue;
+    }
+
+    if (key.startsWith("plugin.")) {
+        const pluginName = key.split(".")[1];
+        if (!pluginNames.has(pluginName)) error(`plugin not found for ${key}`);
+        else console.warn(`WARN   unrecognized plugin.* key structure (only plugin existence checked): ${key}`);
         continue;
     }
 

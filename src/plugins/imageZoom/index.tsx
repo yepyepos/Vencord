@@ -18,6 +18,7 @@
 
 import { NavContextMenuPatchCallback } from "@api/ContextMenu";
 import { definePluginSettings } from "@api/Settings";
+import { t } from "@i18n";
 import { debounce } from "@shared/debounce";
 import { Devs } from "@utils/constants";
 import { Logger } from "@utils/Logger";
@@ -92,7 +93,7 @@ const imageContextMenuPatch: NavContextMenuPatchCallback = (children, props) => 
         <Menu.MenuGroup id="image-zoom">
             <Menu.MenuCheckboxItem
                 id="vc-square"
-                label="Square Lens"
+                label={t("plugin.ImageZoom.menu.square", "Square Lens")}
                 checked={square}
                 action={() => {
                     settings.store.square = !square;
@@ -100,7 +101,7 @@ const imageContextMenuPatch: NavContextMenuPatchCallback = (children, props) => 
             />
             <Menu.MenuCheckboxItem
                 id="vc-nearest-neighbour"
-                label="Nearest Neighbour"
+                label={t("plugin.ImageZoom.menu.nearestNeighbour", "Nearest Neighbour")}
                 checked={nearestNeighbour}
                 action={() => {
                     settings.store.nearestNeighbour = !nearestNeighbour;
@@ -108,7 +109,7 @@ const imageContextMenuPatch: NavContextMenuPatchCallback = (children, props) => 
             />
             <Menu.MenuControlItem
                 id="vc-zoom"
-                label="Zoom"
+                label={t("plugin.ImageZoom.menu.zoom", "Zoom")}
                 control={(props, ref) => (
                     <Menu.MenuSliderControl
                         ref={ref}
@@ -122,7 +123,7 @@ const imageContextMenuPatch: NavContextMenuPatchCallback = (children, props) => 
             />
             <Menu.MenuControlItem
                 id="vc-size"
-                label="Lens Size"
+                label={t("plugin.ImageZoom.menu.size", "Lens Size")}
                 control={(props, ref) => (
                     <Menu.MenuSliderControl
                         ref={ref}
@@ -136,7 +137,7 @@ const imageContextMenuPatch: NavContextMenuPatchCallback = (children, props) => 
             />
             <Menu.MenuControlItem
                 id="vc-zoom-speed"
-                label="Zoom Speed"
+                label={t("plugin.ImageZoom.menu.zoomSpeed", "Zoom Speed")}
                 control={(props, ref) => (
                     <Menu.MenuSliderControl
                         ref={ref}
