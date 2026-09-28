@@ -8,6 +8,7 @@ import "./styles.css";
 
 import { definePluginSettings } from "@api/Settings";
 import ErrorBoundary from "@components/ErrorBoundary";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import { classes } from "@utils/misc";
 import definePlugin, { OptionType, StartAt } from "@utils/types";
@@ -270,11 +271,11 @@ export default definePlugin({
                             navId="vc-pindms-header-menu"
                             onClose={() => FluxDispatcher.dispatch({ type: "CONTEXT_MENU_CLOSE" })}
                             color="danger"
-                            aria-label="Pin DMs Category Menu"
+                            aria-label={t("plugin.PinDMs.menu.categoryMenu", "Pin DMs Category Menu")}
                         >
                             <Menu.MenuItem
                                 id="vc-pindms-edit-category"
-                                label="Edit Category"
+                                label={t("plugin.PinDMs.menu.editCategory", "Edit Category")}
                                 action={() => openCategoryModal(category.id, null)}
                             />
 
@@ -284,14 +285,14 @@ export default definePlugin({
                                         {
                                             canMoveCategoryInDirection(category.id, -1) && <Menu.MenuItem
                                                 id="vc-pindms-move-category-up"
-                                                label="Move Up"
+                                                label={t("plugin.PinDMs.menu.moveUp", "Move Up")}
                                                 action={() => moveCategory(category.id, -1)}
                                             />
                                         }
                                         {
                                             canMoveCategoryInDirection(category.id, 1) && <Menu.MenuItem
                                                 id="vc-pindms-move-category-down"
-                                                label="Move Down"
+                                                label={t("plugin.PinDMs.menu.moveDown", "Move Down")}
                                                 action={() => moveCategory(category.id, 1)}
                                             />
                                         }
@@ -304,7 +305,7 @@ export default definePlugin({
                             <Menu.MenuItem
                                 id="vc-pindms-delete-category"
                                 color="danger"
-                                label="Delete Category"
+                                label={t("plugin.PinDMs.menu.deleteCategory", "Delete Category")}
                                 action={() => removeCategory(category.id)}
                             />
 

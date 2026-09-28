@@ -23,6 +23,7 @@ import { definePluginSettings } from "@api/Settings";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { SafetyIcon } from "@components/Icons";
 import { TooltipContainer } from "@components/TooltipContainer";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import { classes } from "@utils/misc";
 import definePlugin, { OptionType } from "@utils/types";
@@ -65,7 +66,7 @@ function MenuItem(guildId: string, { id, type, withIcon }: { id?: string, type?:
     return (
         <Menu.MenuItem
             id="perm-viewer-permissions"
-            label="View Permissions"
+            label={t("plugin.PermissionsViewer.menu.viewPermissions", "View Permissions")}
             leadingAccessory={withIcon ? { type: "icon", icon: SafetyIcon } : undefined}
             action={() => {
                 const guild = GuildStore.getGuild(guildId);
@@ -194,7 +195,7 @@ export default definePlugin({
                 )}
             >
                 {popoutProps => (
-                    <TooltipContainer text="View Permissions">
+                    <TooltipContainer text={t("plugin.PermissionsViewer.menu.viewPermissions", "View Permissions")}>
                         <Button
                             {...popoutProps}
                             ref={buttonRef}

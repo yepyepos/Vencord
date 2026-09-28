@@ -18,6 +18,7 @@
 
 import { Divider } from "@components/Divider";
 import { FormSwitch } from "@components/FormSwitch";
+import { t } from "@i18n";
 import { Margins } from "@utils/margins";
 import { RenderModalProps } from "@vencord/discord-types";
 import { Forms, Modal,openModal, SearchableSelect, useMemo } from "@webpack/common";
@@ -49,7 +50,7 @@ function LanguageSelect({ settingsKey, includeAuto }: { settingsKey: typeof Lang
             <SearchableSelect
                 options={options}
                 value={options.find(o => o.value === currentValue)?.value}
-                placeholder="Select a language"
+                placeholder={t("plugin.Translate.modal.selectLanguage", "Select a language")}
                 maxVisibleItems={5}
                 closeOnSelect={true}
                 onChange={v => settings.store[settingsKey] = v}
@@ -63,7 +64,7 @@ function AutoTranslateToggle() {
 
     return (
         <FormSwitch
-            title="Auto Translate"
+            title={t("plugin.Translate.modal.autoTranslate.title", "Auto Translate")}
             description={settings.def.autoTranslate.description}
             value={value}
             onChange={v => settings.store.autoTranslate = v}

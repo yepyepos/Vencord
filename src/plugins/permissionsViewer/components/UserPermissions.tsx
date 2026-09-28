@@ -18,6 +18,7 @@
 
 import ErrorBoundary from "@components/ErrorBoundary";
 import { HeadingTertiary } from "@components/Heading";
+import { t } from "@i18n";
 import { cl, getGuildPermissionSpecMap, getSortedRolesForMember, sortUserRoles } from "@plugins/permissionsViewer/utils";
 import { getIntlMessage } from "@utils/discord";
 import { classes } from "@utils/misc";
@@ -75,7 +76,7 @@ interface GrantedByTooltipProps {
 function GrantedByTooltip({ roleName, roleColor }: GrantedByTooltipProps) {
     return (
         <>
-            <Text variant="text-sm/medium">Granted By</Text>
+            <Text variant="text-sm/medium">{t("plugin.PermissionsViewer.details.grantedBy", "Granted By")}</Text>
             <FakeRole text={roleName} color={roleColor} />
         </>
     );
@@ -159,7 +160,7 @@ function UserPermissionsComponent({ guild, guildMember, closePopout }: { guild: 
                         </div>
                     )}
                 </Tooltip>
-                <Tooltip text="Role Details">
+                <Tooltip text={t("plugin.PermissionsViewer.details.roleDetails", "Role Details")}>
                     {tooltipProps => (
                         <div
                             {...tooltipProps}

@@ -8,6 +8,7 @@ import { openNotificationLogModal } from "@api/Notifications/notificationLog";
 import { isPluginEnabled, isSettingDisabled, isSettingHidden, plugins } from "@api/PluginManager";
 import { Settings, useSettings } from "@api/Settings";
 import { openPluginModal, openSettingsTabModal, PluginsTab, ThemesTab } from "@components/settings";
+import { t } from "@i18n";
 import { useAwaiter } from "@utils/react";
 import { wordsFromCamel, wordsToTitle } from "@utils/text";
 import { OptionType, Plugin } from "@utils/types";
@@ -217,7 +218,7 @@ export function buildThemeMenuEntries() {
             />
             <Menu.MenuItem
                 id="manage-themes"
-                label="Manage Themes"
+                label={t("plugin.VencordToolbox.menu.manageThemes", "Manage Themes")}
                 action={() => openSettingsTabModal(ThemesTab)}
             />
             {!!themes?.length && (
@@ -304,7 +305,7 @@ export function renderPopout(onClose: () => void) {
         >
             <Menu.MenuItem
                 id="notifications"
-                label="Open Notification Log"
+                label={t("plugin.VencordToolbox.menu.openNotificationLog", "Open Notification Log")}
                 action={openNotificationLogModal}
             />
 

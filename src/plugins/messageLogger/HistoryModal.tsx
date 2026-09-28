@@ -6,6 +6,7 @@
 
 import ErrorBoundary from "@components/ErrorBoundary";
 import { TooltipContainer } from "@components/TooltipContainer";
+import { t } from "@i18n";
 import { classNameFactory } from "@utils/css";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
@@ -40,7 +41,7 @@ export function HistoryModal({ modalProps, message }: { modalProps: RenderModalP
         <Modal
             {...modalProps}
             size="lg"
-            title="Message Edit History"
+            title={t("plugin.MessageLogger.modal.editHistory", "Message Edit History")}
         >
             <TabBar
                 type="top"
@@ -50,7 +51,7 @@ export function HistoryModal({ modalProps, message }: { modalProps: RenderModalP
                 onItemSelect={setCurrentTab}
             >
                 {message.firstEditTimestamp.getTime() !== message.timestamp.getTime() && (
-                    <TooltipContainer text="This edit state was not logged so it can't be displayed.">
+                    <TooltipContainer text={t("plugin.MessageLogger.modal.editNotLogged", "This edit state was not logged so it can't be displayed.")}>
                         <TabBar.Item
                             className="vc-settings-tab-bar-item"
                             id={-1}

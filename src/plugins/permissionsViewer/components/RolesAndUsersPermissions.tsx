@@ -19,6 +19,7 @@
 import ErrorBoundary from "@components/ErrorBoundary";
 import { Flex } from "@components/Flex";
 import { CopyIdIcon, InfoIcon, OwnerCrownIcon } from "@components/Icons";
+import { t } from "@i18n";
 import { buildExtraRoleContextMenuItems } from "@plugins/betterRoleContext";
 import { cl, getGuildPermissionSpecMap, loadGetGuildPermissionSpecMap } from "@plugins/permissionsViewer/utils";
 import { copyToClipboard } from "@utils/clipboard";
@@ -81,7 +82,7 @@ function RolesAndUsersPermissionsComponent({ permissions, guild, modalProps, hea
         >
             {!selectedItem && (
                 <div className={cl("modal-no-perms")}>
-                    <Text variant="heading-lg/normal">No permissions to display!</Text>
+                    <Text variant="heading-lg/normal">{t("plugin.PermissionsViewer.modal.noPermissions", "No permissions to display!")}</Text>
                 </div>
             )}
 
@@ -222,7 +223,7 @@ function RoleContextMenu({ guild, roleId, onClose }: { guild: Guild; roleId: str
         <Menu.Menu
             navId={cl("role-context-menu")}
             onClose={ContextMenuApi.closeContextMenu}
-            aria-label="Role Options"
+            aria-label={t("plugin.PermissionsViewer.menu.roleOptions", "Role Options")}
         >
             {before}
 
@@ -266,7 +267,7 @@ function UserContextMenu({ userId }: { userId: string; }) {
         <Menu.Menu
             navId={cl("user-context-menu")}
             onClose={ContextMenuApi.closeContextMenu}
-            aria-label="User Options"
+            aria-label={t("plugin.PermissionsViewer.menu.userOptions", "User Options")}
         >
             <Menu.MenuItem
                 id={cl("copy-user-id")}

@@ -1,4 +1,10 @@
 /*
+ * Vencord, a Discord client mod
+ * Copyright (c) 2026 Vendicated and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+import { t } from "@i18n";/*
  * Vencord, a modification for Discord's desktop app
  * Copyright (c) 2023 Vendicated and contributors
  *
@@ -50,7 +56,7 @@ export function PermissionDefaultIcon() {
             viewBox="0 0 16 16"
         >
             <g>
-                <title>Not overwritten</title>
+                <title>{t("plugin.PermissionsViewer.icon.notOverwritten", "Not overwritten")}</title>
                 <polygon fill="var(--text-default)" points="12 2.32 10.513 2 4 13.68 5.487 14" />
             </g>
         </svg>

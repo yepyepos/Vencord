@@ -1427,6 +1427,52 @@ const translations = {
     "plugin.BiggerStreamPreview.menu.viewPreview": "查看直播预览",
     "plugin.ReverseImageSearch.menu.searchImage": "搜索图片",
     "plugin.PictureInPicture.tooltip.toggle": "切换画中画",
+    // ---- Phase 4: dynamic ui, P0 batch 1 ----
+    "plugin.BetterRoleContext.menu.editRole": "编辑身份组",
+    "plugin.BetterRoleContext.menu.copyRoleColor": "复制身份组颜色",
+    "plugin.BetterRoleContext.menu.viewRoleIcon": "查看身份组图标",
+    "plugin.BetterRoleContext.menu.viewRoleMembers": "查看身份组成员",
+    "plugin.BetterRoleContext.menu.roleActions": "身份组操作",
+
+    "plugin.PinDMs.menu.pinDms": "置顶私信",
+    "plugin.PinDMs.menu.addCategory": "添加分组",
+    "plugin.PinDMs.menu.unpinDm": "取消置顶",
+    "plugin.PinDMs.menu.moveUp": "上移",
+    "plugin.PinDMs.menu.moveDown": "下移",
+    "plugin.PinDMs.menu.categoryMenu": "私信分组菜单",
+    "plugin.PinDMs.menu.editCategory": "编辑分组",
+    "plugin.PinDMs.menu.deleteCategory": "删除分组",
+
+    "plugin.PermissionsViewer.icon.notOverwritten": "未覆盖",
+    "plugin.PermissionsViewer.modal.noPermissions": "没有可显示的权限！",
+    "plugin.PermissionsViewer.menu.roleOptions": "身份组操作",
+    "plugin.PermissionsViewer.menu.userOptions": "用户操作",
+    "plugin.PermissionsViewer.details.grantedBy": "授予来源",
+    "plugin.PermissionsViewer.details.roleDetails": "身份组详情",
+    "plugin.PermissionsViewer.menu.viewPermissions": "查看权限",
+
+    "plugin.Translate.modal.autoTranslateEnabled.title": "已启用 Vencord 自动翻译",
+    "plugin.Translate.modal.autoTranslateEnabled.subtitle": "刚刚启用了自动翻译！所有消息将在发送前自动翻译。",
+    "plugin.Translate.modal.autoTranslateEnabled.disable": "禁用自动翻译",
+    "plugin.Translate.tooltip.openModal": "打开翻译窗口",
+    "plugin.Translate.tooltip.autoTranslateEnabled": "自动翻译已启用",
+    "plugin.Translate.modal.selectLanguage": "选择语言",
+    "plugin.Translate.modal.autoTranslate.title": "自动翻译",
+
+    "plugin.GreetStickerPicker.menu.picker": "打招呼贴纸选择器",
+    "plugin.GreetStickerPicker.menu.greetMode": "打招呼方式",
+    "plugin.GreetStickerPicker.menu.greetStickers": "打招呼贴纸",
+    "plugin.GreetStickerPicker.menu.unholyMultiGreet": "多重打招呼",
+    "plugin.GreetStickerPicker.menu.sendGreets": "发送打招呼",
+
+    "plugin.MessageLogger.modal.editHistory": "消息编辑历史",
+    "plugin.MessageLogger.modal.editNotLogged": "该编辑状态未被记录，因此无法显示。",
+
+    "plugin.ShowHiddenChannels.lockScreen.forumTagRequired": "此论坛帖需要先设置标签。",
+    "plugin.ShowHiddenChannels.lockScreen.permissionDetails": "权限详情",
+
+    "plugin.VencordToolbox.menu.manageThemes": "管理主题",
+    "plugin.VencordToolbox.menu.openNotificationLog": "打开通知日志",
 } satisfies Record<string, string>;
 
 export default translations;

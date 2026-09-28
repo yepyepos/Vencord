@@ -18,6 +18,7 @@
 
 import { ChatBarButton, ChatBarButtonFactory } from "@api/ChatButtons";
 import { TooltipContainer } from "@components/TooltipContainer";
+import { t } from "@i18n";
 import { classes } from "@utils/misc";
 import { IconComponent } from "@utils/types";
 import { RenderModalProps } from "@vencord/discord-types";
@@ -48,9 +49,9 @@ function AutoTranslateConfirmModal(props: RenderModalProps) {
     return (
         <ConfirmModal
             {...props}
-            title="Vencord Auto-Translate Enabled"
-            subtitle="You just enabled Auto Translate! Any message will automatically be translated before being sent."
-            confirmText="Disable Auto-Translate"
+            title={t("plugin.Translate.modal.autoTranslateEnabled.title", "Vencord Auto-Translate Enabled")}
+            subtitle={t("plugin.Translate.modal.autoTranslateEnabled.subtitle", "You just enabled Auto Translate! Any message will automatically be translated before being sent.")}
+            confirmText={t("plugin.Translate.modal.autoTranslateEnabled.disable", "Disable Auto-Translate")}
             onConfirm={() => settings.store.autoTranslate = false}
             cancelText="Got it"
             variant="primary"
@@ -82,7 +83,7 @@ export const TranslateChatBarIcon: ChatBarButtonFactory = ({ isMainChat }) => {
 
     const button = (
         <ChatBarButton
-            tooltip="Open Translate Modal"
+            tooltip={t("plugin.Translate.tooltip.openModal", "Open Translate Modal")}
             onClick={e => {
                 if (e.shiftKey) return toggle();
                 else openTranslateModal();
@@ -98,7 +99,7 @@ export const TranslateChatBarIcon: ChatBarButtonFactory = ({ isMainChat }) => {
 
     if (shouldShowTranslateEnabledTooltip && settings.store.showAutoTranslateTooltip)
         return (
-            <TooltipContainer text="Auto Translate Enabled" forceOpen>
+            <TooltipContainer text={t("plugin.Translate.tooltip.autoTranslateEnabled", "Auto Translate Enabled")} forceOpen>
                 {button}
             </TooltipContainer>
         );
