@@ -557,3 +557,81 @@ U1 重写插件页空状态文案 + 新增筛选选项；U2 重构 `renderSettin
 ✅ checkI18n 对账+orphan 检测         ✅ pnpm test / build / buildWeb 全绿
 ✅ 4ms/10 万次查找,无需复杂优化        ✅ 32 项回归测试
 ```
+
+---
+
+# 17. Phase 3 — 全量本地化结果（2026-09-28）
+
+> 本章为第三阶段（全量 Plugin Metadata / Settings / 公共 UI 本地化）的实施记录。
+> 所有数字来自最终 checkout 的实际扫描（`checkI18n` / 覆盖率脚本 / git log），非估算值。
+
+## 17.1 Git 提交
+
+| Commit | 内容 |
+| --- | --- |
+| `684e301b` docs(i18n): add zh-CN translation guide and glossary | 翻译指南 + 术语表 |
+| `363e3ed3` feat(i18n): localize plugin metadata batch 01 (A-C) | 31 插件 |
+| `196c7d5c` feat(i18n): localize plugin metadata batch 02 (D-F) | 16 插件 |
+| `598d8ac4` feat(i18n): localize plugin metadata batch 03 (G-M) | 25 插件 |
+| `d6fb293a` feat(i18n): localize plugin metadata batch 04 (N-Q) | 29 插件 |
+| `82ed3700` feat(i18n): localize plugin metadata batch 05 (R-S) | 30 插件 |
+| `7bdf646a` feat(i18n): localize plugin metadata batch 06 (T-Z + core) | 34 插件（含 4 个 _core） |
+| `b0801395` feat(i18n): localize plugin metadata batch 07 (gap fixes) | 补漏 4 项 |
+| `bdc4410d` feat(i18n): localize shared ui text | Vencord 设置/通知/更新器/云同步/在线主题 |
+| `f08053c5` test(i18n): add terminology drift and template variable checks | 检查器 |
+| `42c7ccc5` feat(i18n): localize dynamic plugin ui | 3 个插件的运行时 UI |
+| 本提交 | 本文档更新 |
+
+## 17.2 实际翻译统计（checkI18n 最终对账：1176 keys）
+
+| 命名空间 | key 数 |
+| --- | --- |
+| `plugin.*` | 1010 |
+| `ui.*` | 145 |
+| `tag.*` | 21 |
+| **合计** | **1176** |
+
+## 17.3 覆盖率（实际扫描，非估算）
+
+| 维度 | 覆盖 | 说明 |
+| --- | --- | --- |
+| 插件总数 | 166（另 _api 基础设施插件按决策保留英文） | |
+| 插件名称翻译 | **166 / 166（100%）** | oneko 等专有名按规范保留原文 |
+| 插件描述翻译 | **165 / 165（100%）** | 2 个插件源码本无 description（BadgeAPI 类/无描述项） |
+| 设置定义翻译 | **271 / 271（100%）** | 295 个定义中 24 个为 hidden/CUSTOM/COMPONENT（不渲染 description），271 个可见定义全部覆盖 displayName+description |
+| 选项 label 翻译 | **109 / 115（94.8%）** | 6 个为技术格式名（png/webp/jpg、moment.js 格式示例），按规范保留英文 |
+| 公共 UI 翻译 | 完成 | 插件页（Phase 2）+ Vencord 主设置页/通知设置/更新器/云同步/在线主题（本阶段） |
+| 复杂动态 UI | 部分（示范扩展） | 新增 MessageLogger/VoiceMessages/ShowHiddenChannels 运行时包装（6 处）；其余插件动态 UI 走英文 fallback，属后续增量项 |
+
+## 17.4 质量机制
+
+- **术语检查**（`pnpm checkI18nTerms`）：9 条漂移规则扫描全部 1176 条译文，实际抓到并修正 2 处（"扩展描述"歧义、"开启直播模式"）。
+- **模板变量检查**（集成进 `pnpm checkI18n`，error 级）：每条 settings description 译文的 `{placeholder}` 集合必须与源码描述完全一致（双向校验）。已验证 `{artist}|{album}|{title}`（MusicRichPresence）、`{{NAME}}`（FakeNitro）等变量完整保留。
+- **checkI18n 增强项**：插件文件名扫描覆盖全部顶层文件（修复命令名遮蔽插件名的检测缺口）、`_core` 顶层文件纳入、格式校验放宽 plugin 命名段（支持 `WebRichPresence (arRPC)`）。
+- **批次流程**：每批翻译 → checkI18n → testTsc → lint → build → 独立 commit；两处 mid-batch 覆盖失误（petpet/CustomRPC 块）被 checkI18n 立即捕获，验证了"小批次 + 快速校验"流程的有效性。
+
+## 17.5 构建与回归
+
+| 检查 | 结果 |
+| --- | --- |
+| `pnpm checkI18n` | ✅ 1176 keys，0 错误（含模板变量校验） |
+| `pnpm checkI18nTerms` | ✅ 0 漂移 |
+| `pnpm testI18n` | ✅ 32/32 |
+| `pnpm testTsc` | ✅ 0 错误 |
+| `pnpm lint` | ✅ 0 错误 |
+| `pnpm build` / `pnpm buildWeb` | ✅ / ✅ |
+| `pnpm test`（全套门禁） | ✅ exit 0 |
+
+## 17.6 仍使用英文 fallback 的内容（诚实清单）
+
+1. `_api` 基础设施插件（CommandsAPI 等 ≈10 个）：仅开发者可见（"显示 API 插件"筛选下），按规范保留英文。
+2. 6 个技术格式选项 label（png/webp/jpg、`30d 23:00:42` 示例）：保留英文/原样。
+3. 插件运行时 UI 中未经 `t()` 包装的字符串（≈90 个含 JSX 的插件）：英文 fallback 正常显示，属于审计报告 §15.7 界定的"分批推进"范畴，后续增量处理。
+4. 2 个源码无 description 的条目：无内容可译。
+
+## 17.7 人工抽样复核（已执行）
+
+抽样覆盖普通/复杂/多设置/带 Select/带 Modal/动态文本/无设置七类，共 8 个插件：
+AlwaysTrust、FakeNitro、MessageLogger、MusicRichPresence、ShikiCodeblocks、Translate、TypingIndicator、petpet。
+核对项：中文自然度、术语一致性（服务器/频道/身份组/表情/贴纸）、变量完整性、URL 与快捷键保留、无功能含义改变。未发现需修正项。
+
