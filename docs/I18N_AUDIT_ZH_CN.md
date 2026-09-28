@@ -821,3 +821,42 @@ NoTrack 的 mock HTTP 响应体 ×2、_core deprecated customSections 的动态�
 
 **运行时验证限制**：本环境无法启动 Discord，点击级语言切换验证仍需发布前人工执行（Phase 3.5 §18.8 清单）。
 
+---
+
+# 20. Phase 5.1 — 实机测试漏译修复（2026-09-28）
+
+> 背景：Phase 5 RC 的真实 Chrome 测试发现 4 个设置页仍为英文。根因：Phase 3.5 的公共 UI
+> 覆盖只做了 Cloud 的一部分与在线主题说明，本地主题页、Backup & Restore 整页、
+> Patch Helper 整页、Cloud 的 4 个按钮从未包装。本阶段针对性修复并复验。
+
+## 20.1 发现 → 修复对照
+
+| 区域 | 发现 | 修复 |
+| --- | --- | --- |
+| 主题（Themes） | Tab 栏、性能警告卡、本地主题页（寻找主题/外部资源/快捷操作）、ThemeCard 页脚链接与 Toast、CSP 错误卡全部英文 | 32 处包装（index/LocalThemesTab/ThemeCard/CspErrorCard） |
+| 云同步（Cloud） | 主体已汉化，但 Reauthorise / Upload Settings / Download Settings / Delete your Cloud Account 4 个按钮英文 | 4 处补齐 |
+| 备份与恢复（Backup & Restore） | 整页英文（警告、导出内容清单、导入/导出按钮） | 9 处包装 |
+| 补丁助手（Patch Helper） | 整页英文（标题/查找/匹配/代码/复制按钮/错误消息/预览标题） | 17 处包装；正则替换语法提示表保留英文（开发者参考，键为代码记号） |
+| 通知日志（Notification Log） | 实机确认已汉化 ✅ | 无需修改 |
+
+## 20.2 数据与质量
+
+- 新增 key：**61**（ui 命名空间 145 → 206，总计 1358 → **1419**）
+- 术语检查器新增白名单机制："Stylus 扩展"为浏览器扩展语境的合法用法（非插件术语漂移）
+- KEEP-ENGLISH 判定：ReplacementInput 的正则替换语法提示表（代码记号键）、Experiments 的
+  patch find 匹配器字符串
+- 九项门禁全绿：checkI18n / checkI18nTerms / qaI18n / testI18n / testTsc / lint / build / buildWeb / test
+
+## 20.3 RC 版本更新（zh.1 → zh.2）
+
+- zh.1（commit `e1adb6da`）因 4 页漏译被 zh.2 取代，校验和已从 RELEASE_CHECKSUMS.md 移除
+- zh.2 构建 commit `9f009d2d`，产物 SHA256 已更新至 `docs/RELEASE_CHECKSUMS.md`
+- 产物内容验证：全部产物包含 zh.2 新增 key（`ui.themes.localTab` / `ui.patchHelper.fullPatch` /
+  `ui.backup.exportSettings` / `ui.cloud.reauthorise`）
+
+## 20.4 待人工验证
+
+- Chrome 复验 4 个修复页面 + 语言往返（用户侧）
+- Desktop：`pnpm inject` 注入后按 `docs/GUI_TEST_CHECKLIST.md` 完整执行（用户侧）
+- 两项都通过后，RC zh.2 方可升级为 Stable Release 并创建 GitHub Release
+

@@ -1,35 +1,43 @@
 # Vencord zh-CN Release Candidate — 校验和
 
+> **当前有效版本：zh.2**（zh.1 为首次 RC，实机 Chrome 测试发现 4 个设置页漏译后已由 zh.2 取代，勿混用）
+>
 > 构建时间：2026-09-28（本地时间）
-> 构建 commit：`e1adb6da6418422ef224590c4c1fa13d11484ec5`（zh-CN 分支）
+> 构建 commit：`9f009d2d`（zh-CN 分支，Phase 5.1 修复后）
 > 基于 upstream：`90aea0ddbbfbee16ce052b2c7ab610ffe957b4ca`（Vendicated/Vencord main，package.json version 1.15.7）
 > 构建环境：Node v22.22.1 / pnpm 11.22.0 / Windows
-> 状态：**Release Candidate**（实机 GUI 验证完成并确认后方可作为正式 Release 发布）
+> 状态：**Release Candidate zh.2**（实机 GUI 复验完成并确认后方可作为正式 Release 发布）
 
 ## Desktop（注入用构建产物）
 
 | 文件 | 大小 | SHA256 |
 | --- | --- | --- |
-| renderer.js | 839.8 KB | `3b8270269b023253b61bbc55a2d33499554820ea0fbb8310aefcf0fd99ef6d14` |
+| renderer.js | 846.8 KB | `562f6c3242fad6e5aa8816c3a49d21c996cac87a13fe653d29bfc1551609499e` |
 | renderer.css | 41.7 KB | `861f40ea0556d6fb31f992f97173485441d57dbc8a90ed7be7c4ae797c8d7ed1` |
-| patcher.js | 38.8 KB | `de74512b541dd4ee299533646938ea37d2db4a8baa701769845861d0f066e3bf` |
-| preload.js | 2.3 KB | `fb2c346fefc7a820e8d3466e11cc5030d33b2d250171029a27078369effb8f79` |
-| vencordDesktopMain.js | 34.9 KB | `ec4ca0410cd12b988e190de1bbfa8c618d9885bf9d557ce2b25a681e5112e9a9` |
-| vencordDesktopPreload.js | 2.3 KB | `94be2f0df99e8866fe5982462f61ef9c453b2e7e827a1a601bf29707d3a3eb4b` |
-| vencordDesktopRenderer.js | 847.1 KB | `518ab1eb13883a15bcae0ea93ff232ee581be5cedff7ed0f2527eaa0d6c8bf78` |
+| patcher.js | 38.8 KB | `cebe1a64f6aacf65bbb7c1514cef7ac205638654a71fd48509d972646e6c0f89` |
+| preload.js | 2.3 KB | `8fa7f31d38a957f3c273b190c5cc2133e55b6cd6ec8c263432fcd7e075620ed1` |
+| vencordDesktopMain.js | 34.9 KB | `a70016758de47f3db3d2fd3f6281b5e8bd96186dc0c0069418a0ae6cfefba7f8` |
+| vencordDesktopPreload.js | 2.3 KB | `0d11235b4ca83db1d366e9f0498ca18691d4f457177708717a89bf4669094abd` |
+| vencordDesktopRenderer.js | 854.1 KB | `000ab45dc82f45feb3a6d1c8aed6ad3a5cad4e11ac3d6d66c2f2224104f220ad` |
 | vencordDesktopRenderer.css | 41.7 KB | `861f40ea0556d6fb31f992f97173485441d57dbc8a90ed7be7c4ae797c8d7ed1` |
 
 ## Browser
 
 | 文件 | 大小 | SHA256 |
 | --- | --- | --- |
-| extension-chrome.zip | 1787.4 KB | `b8ee1f897e2f024278384f69408276e07b30d7156c83fe228b68eb8194e59d32` |
-| extension-firefox.zip | 1787.0 KB | `b5aaf6a23a99f28005bfbe605cd6287d801144f25bd2673cea5ea7d4f2dcd1b2` |
-| Vencord.user.js（用户脚本） | 911.0 KB | `515392cf3e2eff1d37e996bc83165b9c5c2d910db0d8bc30869a14b6d170608b` |
+| extension-chrome.zip | 1789.5 KB | `01cec39f5a96e0bcf57176b1343584bfd87e4aadb35e8416b80a664eeb62a025` |
+| extension-firefox.zip | 1788.2 KB | `fa5f7ffbc151896e5fb16c60fee346adc9dbe81a76b37310638ca91951983d8e` |
+| Vencord.user.js（用户脚本） | 917.7 KB | `8e16624e4daa896f1bc6258efc362a27235f87ac14e2856a88b9e9c41658a58c` |
+
+## zh.1（历史，已被 zh.2 取代）
+
+zh.1 构建 commit `e1adb6da`，Chrome 实机测试发现 Themes / Cloud / Backup & Restore / Patch Helper
+四页漏译，由 Phase 5.1（commit `9f009d2d`）修复。zh.1 校验和已从本表移除，不要分发。
 
 ## 产物内容验证
 
-以下产物已验证包含完整 zh-CN 翻译数据（以 `plugin.VoiceMessages.name` 等 key 抽查）：
+以下产物已验证包含完整 zh-CN 翻译数据（抽查 `plugin.VoiceMessages.name` 与
+zh.2 新增 key `ui.themes.localTab` / `ui.patchHelper.fullPatch` / `ui.backup.exportSettings` / `ui.cloud.reauthorise`）：
 
 - `chromium-unpacked/dist/Vencord.js` ✅
 - `firefox-unpacked/dist/Vencord.js` ✅
