@@ -5,6 +5,7 @@
  */
 
 import { Link } from "@components/Link";
+import { t } from "@i18n";
 import { settings } from "@plugins/decor/settings";
 import { DecorationModalClasses, requireAvatarDecorationModal } from "@plugins/decor/ui";
 import { RenderModalProps } from "@vencord/discord-types";
@@ -16,7 +17,7 @@ function GuidelinesModal(props: RenderModalProps) {
     return (
         <ConfirmModal
             {...props}
-            title="Hold on"
+            title={t("plugin.Decor.modal.holdOn", "Hold on")}
             confirmText="Continue"
             variant="primary"
             onConfirm={() => {

@@ -6,6 +6,7 @@
 
 import ErrorBoundary from "@components/ErrorBoundary";
 import { Link } from "@components/Link";
+import { t } from "@i18n";
 import { GUILD_ID, INVITE_KEY, RAW_SKU_ID } from "@plugins/decor/lib/constants";
 import { useCurrentUserDecorationsStore } from "@plugins/decor/lib/stores/CurrentUserDecorationsStore";
 import { cl, DecorationModalClasses, requireAvatarDecorationModal, requireCreateStickerModal } from "@plugins/decor/ui";
@@ -60,7 +61,7 @@ function CreateDecorationModal(props: RenderModalProps) {
     return <Modal
         {...props}
         size="lg"
-        title="Create Decoration"
+        title={t("plugin.Decor.modal.createDecoration", "Create Decoration")}
         actions={[
             {
                 text: "Cancel",
@@ -68,7 +69,7 @@ function CreateDecorationModal(props: RenderModalProps) {
                 onClick: props.onClose
             },
             {
-                text: "Submit for Review",
+                text: t("plugin.Decor.modal.submitForReview", "Submit for Review"),
                 variant: "primary",
                 onClick: () => {
                     setSubmitting(true);
@@ -95,7 +96,7 @@ function CreateDecorationModal(props: RenderModalProps) {
                             <Forms.FormTitle tag="h5">File</Forms.FormTitle>
                             <FileUpload
                                 filename={file?.name}
-                                placeholder="Choose a file"
+                                placeholder={t("plugin.Decor.modal.chooseFile", "Choose a file")}
                                 buttonText="Browse"
                                 filters={[{ name: "Decoration file", extensions: ["png", "apng"] }]}
                                 onFileSelect={setFile}
@@ -107,7 +108,7 @@ function CreateDecorationModal(props: RenderModalProps) {
                         <section>
                             <Forms.FormTitle tag="h5">Name</Forms.FormTitle>
                             <TextInput
-                                placeholder="Companion Cube"
+                                placeholder={t("plugin.Decor.modal.namePlaceholder", "Companion Cube")}
                                 value={name}
                                 onChange={setName}
                             />

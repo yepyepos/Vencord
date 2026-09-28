@@ -22,6 +22,7 @@ import { Flex } from "@components/Flex";
 import { CopyIcon, ImageIcon, LinkIcon, OpenExternalIcon } from "@components/Icons";
 import { Paragraph } from "@components/Paragraph";
 import { Span } from "@components/Span";
+import { t } from "@i18n";
 import { debounce } from "@shared/debounce";
 import { classNameFactory } from "@utils/css";
 import { copyWithToast, openImageModal } from "@utils/discord";
@@ -204,7 +205,7 @@ function SpotifySeekBar() {
                 size="xs"
                 weight="medium"
                 className={cl("progress-time") + " " + cl("time-right")}
-                aria-label="Total Duration"
+                aria-label={t("plugin.SpotifyControls.player.totalDuration", "Total Duration")}
             >
                 {formatDuration(duration)}
             </Span>
@@ -225,7 +226,7 @@ function AlbumContextMenu({ track }: { track: Track; }) {
             <Menu.MenuItem
                 key="open-album"
                 id="open-album"
-                label="Open Album"
+                label={t("plugin.SpotifyControls.player.openAlbum", "Open Album")}
                 action={() => SpotifyStore.openExternal(`/album/${track.album.id}`)}
                 icon={OpenExternalIcon}
                 leadingAccessory={{ type: "icon", icon: OpenExternalIcon }}
@@ -233,7 +234,7 @@ function AlbumContextMenu({ track }: { track: Track; }) {
             <Menu.MenuItem
                 key="view-cover"
                 id="view-cover"
-                label="View Album Cover"
+                label={t("plugin.SpotifyControls.player.viewAlbumCover", "View Album Cover")}
                 // trolley
                 action={() => openImageModal(track.album.image)}
                 icon={ImageIcon}

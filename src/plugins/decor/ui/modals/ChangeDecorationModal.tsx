@@ -6,6 +6,7 @@
 
 import { Button as NewButton } from "@components/Button";
 import { Flex } from "@components/Flex";
+import { t } from "@i18n";
 import { Decoration, getPresets, Preset } from "@plugins/decor/lib/api";
 import { GUILD_ID, INVITE_KEY } from "@plugins/decor/lib/constants";
 import { useAuthorizationStore } from "@plugins/decor/lib/stores/AuthorizationStore";
@@ -120,8 +121,8 @@ function ChangeDecorationModal(props: RenderModalProps) {
 
     const data = [
         {
-            title: "Your Decorations",
-            subtitle: "You can delete your own decorations by right clicking on them.",
+            title: t("plugin.Decor.modal.yourDecorations", "Your Decorations"),
+            subtitle: t("plugin.Decor.modal.yourDecorations.subtitle", "You can delete your own decorations by right clicking on them."),
             sectionKey: "ownDecorations",
             items: ["none", ...ownDecorations, "create"]
         },
@@ -136,7 +137,7 @@ function ChangeDecorationModal(props: RenderModalProps) {
 
     return <Modal
         {...props}
-        title="Change Decoration"
+        title={t("plugin.Decor.modal.changeDecoration", "Change Decoration")}
         size="lg"
         actions={[
             {
@@ -180,7 +181,7 @@ function ChangeDecorationModal(props: RenderModalProps) {
                     onClick={() => openModal(modalProps => (
                         <ConfirmModal
                             {...modalProps}
-                            title="Log Out"
+                            title={t("plugin.Decor.modal.logOut", "Log Out")}
                             subtitle="Are you sure you want to log out of Decor?"
                             confirmText="Log Out"
                             cancelText="Cancel"
@@ -209,7 +210,7 @@ function ChangeDecorationModal(props: RenderModalProps) {
                                     onSelect={() => setTryingDecoration(null)}
                                 />;
                             case "create":
-                                return <Tooltip text="You already have a decoration pending review" shouldShow={hasDecorationPendingReview}>
+                                return <Tooltip text={t("plugin.Decor.modal.pendingReview", "You already have a decoration pending review")} shouldShow={hasDecorationPendingReview}>
                                     {tooltipProps => <DecorationGridCreate
                                         className={cl("change-decoration-modal-decoration")}
                                         {...tooltipProps}

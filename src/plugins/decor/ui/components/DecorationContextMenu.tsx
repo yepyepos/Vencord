@@ -5,6 +5,7 @@
  */
 
 import { CopyIcon, DeleteIcon } from "@components/Icons";
+import { t } from "@i18n";
 import { Decoration } from "@plugins/decor/lib/api";
 import { useCurrentUserDecorationsStore } from "@plugins/decor/lib/stores/CurrentUserDecorationsStore";
 import { cl } from "@plugins/decor/ui";
@@ -17,11 +18,11 @@ export default function DecorationContextMenu({ decoration }: { decoration: Deco
     return <Menu.Menu
         navId={cl("decoration-context-menu")}
         onClose={ContextMenuApi.closeContextMenu}
-        aria-label="Decoration Options"
+        aria-label={t("plugin.Decor.menu.decorationOptions", "Decoration Options")}
     >
         <Menu.MenuItem
             id={cl("decoration-context-menu-copy-hash")}
-            label="Copy Decoration Hash"
+            label={t("plugin.Decor.menu.copyHash", "Copy Decoration Hash")}
             icon={CopyIcon}
             leadingAccessory={{ type: "icon", icon: CopyIcon }}
             action={() => copyToClipboard(decoration.hash)}
@@ -29,14 +30,14 @@ export default function DecorationContextMenu({ decoration }: { decoration: Deco
         {decoration.authorId === UserStore.getCurrentUser().id &&
             <Menu.MenuItem
                 id={cl("decoration-context-menu-delete")}
-                label="Delete Decoration"
+                label={t("plugin.Decor.menu.deleteDecoration", "Delete Decoration")}
                 color="danger"
                 icon={DeleteIcon}
                 leadingAccessory={{ type: "icon", icon: DeleteIcon }}
                 action={() => openModal(props => (
                     <ConfirmModal
                         {...props}
-                        title="Delete Decoration"
+                        title={t("plugin.Decor.menu.deleteDecoration", "Delete Decoration")}
                         subtitle={`Are you sure you want to delete ${decoration.alt}?`}
                         confirmText="Delete"
                         cancelText="Cancel"

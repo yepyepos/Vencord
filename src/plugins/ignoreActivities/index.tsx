@@ -12,6 +12,7 @@ import ErrorBoundary from "@components/ErrorBoundary";
 import { Flex } from "@components/Flex";
 import { Heading } from "@components/Heading";
 import { Paragraph } from "@components/Paragraph";
+import { t } from "@i18n";
 import CustomRpcPlugin from "@plugins/customRPC";
 import { Devs } from "@utils/constants";
 import { Margins } from "@utils/margins";
@@ -135,7 +136,7 @@ function IdsListComponent(props: { setValue: (value: string) => void; }) {
 
     return (
         <section>
-            <Heading tag="h3">Filter List</Heading>
+            <Heading tag="h3">{t("plugin.IgnoreActivities.ui.filterList", "Filter List")}</Heading>
             <Paragraph className={Margins.bottom8}>Comma separated list of activity IDs to filter (Useful for filtering specific RPC activities and CustomRPC</Paragraph>
             <TextArea
                 type="text"
@@ -191,7 +192,7 @@ const registeredGameOverflowContextMenuPatch: NavContextMenuPatchCallback = (chi
     children.push(
         <Menu.MenuCheckboxItem
             id="ignore-activities-toggle-activity"
-            label="Enable Activity"
+            label={t("plugin.IgnoreActivities.menu.enableActivity", "Enable Activity")}
             checked={!isCurrentlyIgnored}
             action={handleToggleActivity}
         />

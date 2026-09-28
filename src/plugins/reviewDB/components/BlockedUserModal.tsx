@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import { t } from "@i18n";
 import { Auth } from "@plugins/reviewDB/auth";
 import { ReviewDBUser } from "@plugins/reviewDB/entities";
 import { fetchBlocks, unblockUser } from "@plugins/reviewDB/reviewDbApi";
@@ -14,7 +15,7 @@ import { Forms, Modal,openModal, Tooltip, useState } from "@webpack/common";
 
 function UnblockButton(props: { onClick?(): void; }) {
     return (
-        <Tooltip text="Unblock user">
+        <Tooltip text={t("plugin.ReviewDB.tooltip.unblockUser", "Unblock user")}>
             {tooltipProps => (
                 <div
                     {...tooltipProps}
@@ -66,7 +67,7 @@ function BlockedUsersList() {
     if (error)
         return <Forms.FormText>Failed to fetch blocks: ${String(error)}</Forms.FormText>;
     if (!blocks.length)
-        return <Forms.FormText>No blocked users.</Forms.FormText>;
+        return <Forms.FormText>{t("plugin.ReviewDB.modal.noBlockedUsers", "No blocked users.")}</Forms.FormText>;
 
     return (
         <>
@@ -86,10 +87,10 @@ export function openBlockModal() {
     openModal(modalProps => (
         <Modal
             {...modalProps}
-            title="Blocked Users"
+            title={t("plugin.ReviewDB.modal.blockedUsers", "Blocked Users")}
         >
             <div className={cl("block-modal")}>
-                {Auth.token ? <BlockedUsersList /> : <Forms.FormText>You are not logged into ReviewDB!</Forms.FormText>}
+                {Auth.token ? <BlockedUsersList /> : <Forms.FormText>{t("plugin.ReviewDB.modal.notLoggedIn", "You are not logged into ReviewDB!")}</Forms.FormText>}
             </div>
         </Modal>
     ));

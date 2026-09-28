@@ -19,6 +19,7 @@
 import { definePluginSettings } from "@api/Settings";
 import { disableStyle, enableStyle } from "@api/Styles";
 import ErrorBoundary from "@components/ErrorBoundary";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
 
@@ -103,7 +104,7 @@ export default definePlugin({
                     fallback={() => (
                         <div className="vc-spotify-fallback">
                             <p>Failed to render Spotify Modal :(</p>
-                            <p >Check the console for errors</p>
+                            <p >{t("plugin.SpotifyControls.ui.checkConsole", "Check the console for errors")}</p>
                         </div>
                     )}
                 >

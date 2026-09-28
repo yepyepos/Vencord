@@ -5,6 +5,7 @@
  */
 
 import { ErrorCard } from "@components/ErrorCard";
+import { t } from "@i18n";
 import { relativeLuminance } from "@plugins/clientTheme/utils/colorUtils";
 import { createOrUpdateThemeColorVars } from "@plugins/clientTheme/utils/styleUtils";
 import { classNameFactory } from "@utils/css";
@@ -67,8 +68,8 @@ export function ThemeSettingsComponent() {
         <div className={cl("settings")}>
             <div className={cl("container")}>
                 <div className={cl("settings-labels")}>
-                    <Forms.FormTitle tag="h3">Theme Color</Forms.FormTitle>
-                    <Forms.FormText>Add a color to your Discord client theme</Forms.FormText>
+                    <Forms.FormTitle tag="h3">{t("plugin.ClientTheme.ui.themeColor", "Theme Color")}</Forms.FormTitle>
+                    <Forms.FormText>{t("plugin.ClientTheme.ui.themeColor.description", "Add a color to your Discord client theme")}</Forms.FormText>
                 </div>
                 <ColorPicker
                     color={parseInt(settings.store.color, 16)}
@@ -79,7 +80,7 @@ export function ThemeSettingsComponent() {
             </div>
             {(contrastWarning || nitroThemeEnabled) && (<>
                 <ErrorCard className={Margins.top8}>
-                    <Forms.FormTitle tag="h2">Your theme won't look good!</Forms.FormTitle>
+                    <Forms.FormTitle tag="h2">{t("plugin.ClientTheme.ui.wontLookGood", "Your theme won't look good!")}</Forms.FormTitle>
 
                     {contrastWarning && <Forms.FormText>{">"} Selected color won't contrast well with text</Forms.FormText>}
                     {nitroThemeEnabled && <Forms.FormText>{">"} Nitro themes aren't supported</Forms.FormText>}
@@ -97,7 +98,7 @@ export function ThemeSettingsComponent() {
 export function ResetThemeColorComponent() {
     return (
         <Button onClick={() => onPickColor(0x313338)}>
-            Reset Theme Color
+            {t("plugin.ClientTheme.ui.resetColor", "Reset Theme Color")}
         </Button>
     );
 }

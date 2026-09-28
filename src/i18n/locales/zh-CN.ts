@@ -1473,6 +1473,45 @@ const translations = {
 
     "plugin.VencordToolbox.menu.manageThemes": "管理主题",
     "plugin.VencordToolbox.menu.openNotificationLog": "打开通知日志",
+    // ---- Phase 4: dynamic ui, P0 batch 2 ----
+    "plugin.Decor.menu.decorationOptions": "头像装饰操作",
+    "plugin.Decor.menu.copyHash": "复制装饰哈希",
+    "plugin.Decor.menu.deleteDecoration": "删除头像装饰",
+    "plugin.Decor.modal.yourDecorations": "你的头像装饰",
+    "plugin.Decor.modal.yourDecorations.subtitle": "右键点击自己的头像装饰即可删除。",
+    "plugin.Decor.modal.changeDecoration": "更换头像装饰",
+    "plugin.Decor.modal.logOut": "退出登录",
+    "plugin.Decor.modal.pendingReview": "你已有一个待审核的头像装饰",
+    "plugin.Decor.modal.createDecoration": "创建头像装饰",
+    "plugin.Decor.modal.submitForReview": "提交审核",
+    "plugin.Decor.modal.chooseFile": "选择文件",
+    "plugin.Decor.modal.namePlaceholder": "同伴方块",
+    "plugin.Decor.modal.holdOn": "请注意",
+
+    "plugin.ClientTheme.ui.themeColor": "主题颜色",
+    "plugin.ClientTheme.ui.themeColor.description": "为你的 Discord 客户端主题添加颜色",
+    "plugin.ClientTheme.ui.wontLookGood": "你的主题效果可能不佳！",
+    "plugin.ClientTheme.ui.resetColor": "重置主题颜色",
+
+    "plugin.ReviewDB.tooltip.unblockUser": "解除屏蔽",
+    "plugin.ReviewDB.modal.noBlockedUsers": "没有被屏蔽的用户。",
+    "plugin.ReviewDB.modal.blockedUsers": "被屏蔽的用户",
+    "plugin.ReviewDB.modal.notLoggedIn": "你尚未登录 ReviewDB！",
+    "plugin.ReviewDB.tooltip.deleteReview": "删除评价",
+    "plugin.ReviewDB.tooltip.reportReview": "举报评价",
+    "plugin.ReviewDB.modal.areYouSure": "你确定吗？",
+    "plugin.ReviewDB.menu.viewReviews": "查看评价",
+    "plugin.ReviewDB.heading.userReviews": "用户评价",
+
+    "plugin.SpotifyControls.ui.checkConsole": "查看控制台了解错误",
+    "plugin.SpotifyControls.player.totalDuration": "总时长",
+    "plugin.SpotifyControls.player.openAlbum": "打开专辑",
+    "plugin.SpotifyControls.player.viewAlbumCover": "查看专辑封面",
+
+    "plugin.Experiments.modal.holdOn": "请注意！",
+
+    "plugin.IgnoreActivities.ui.filterList": "筛选列表",
+    "plugin.IgnoreActivities.menu.enableActivity": "启用活动",
 } satisfies Record<string, string>;
 
 export default translations;

@@ -23,6 +23,7 @@ import ErrorBoundary from "@components/ErrorBoundary";
 import { OpenExternalIcon } from "@components/Icons";
 import { Paragraph } from "@components/Paragraph";
 import { Span } from "@components/Span";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import { classes } from "@utils/misc";
 import { useAwaiter } from "@utils/react";
@@ -47,7 +48,7 @@ const guildPopoutPatch: NavContextMenuPatchCallback = (children, { guild }: { gu
     if (!guild) return;
     children.push(
         <Menu.MenuItem
-            label="View Reviews"
+            label={t("plugin.ReviewDB.menu.viewReviews", "View Reviews")}
             id="vc-rdb-server-reviews"
             icon={OpenExternalIcon}
             leadingAccessory={{ type: "icon", icon: OpenExternalIcon }}
@@ -60,7 +61,7 @@ const userContextPatch: NavContextMenuPatchCallback = (children, { user }: { use
     if (!user) return;
     children.push(
         <Menu.MenuItem
-            label="View Reviews"
+            label={t("plugin.ReviewDB.menu.viewReviews", "View Reviews")}
             id="vc-rdb-user-reviews"
             icon={OpenExternalIcon}
             leadingAccessory={{ type: "icon", icon: OpenExternalIcon }}
@@ -180,7 +181,7 @@ export default definePlugin({
                             onClick={() => !reviewData?.hasOptedOut && openReviewsModal(user.id, user.username, ReviewType.User)}
                         >
                             <div className={classes(ProfileCardOverlayClasses.overlay, ProfileCardContainerClasses.innerContainer, ProfileCardClasses.card)}>
-                                <Paragraph size={isSideBar ? "sm" : "xs"} weight="medium">User Reviews</Paragraph>
+                                <Paragraph size={isSideBar ? "sm" : "xs"} weight="medium">{t("plugin.ReviewDB.heading.userReviews", "User Reviews")}</Paragraph>
                                 {!!reviewData?.reviewCount
                                     ? (
                                         <div className={ProfileCardContainerClasses.icons}>

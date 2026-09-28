@@ -16,6 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import { t } from "@i18n";
 import { Auth, getToken } from "@plugins/reviewDB/auth";
 import { Review, ReviewType } from "@plugins/reviewDB/entities";
 import { blockUser, deleteReview, deleteReviewVote, reportReview, unblockUser, voteReview } from "@plugins/reviewDB/reviewDbApi";
@@ -57,7 +58,7 @@ export default function ReviewComponent({ review, refetch, profileId }: { review
         openVencordModal(props => (
             <ConfirmModal
                 {...props}
-                title="Are you sure?"
+                title={t("plugin.ReviewDB.modal.areYouSure", "Are you sure?")}
                 subtitle="Do you really want to delete this review?"
                 confirmText="Delete"
                 cancelText="Nevermind"
@@ -76,7 +77,7 @@ export default function ReviewComponent({ review, refetch, profileId }: { review
         openVencordModal(props => (
             <ConfirmModal
                 {...props}
-                title="Are you sure?"
+                title={t("plugin.ReviewDB.modal.areYouSure", "Are you sure?")}
                 subtitle="Do you really want to report this review?"
                 confirmText="Report"
                 cancelText="Nevermind"
@@ -99,7 +100,7 @@ export default function ReviewComponent({ review, refetch, profileId }: { review
         openVencordModal(props => (
             <ConfirmModal
                 {...props}
-                title="Are you sure?"
+                title={t("plugin.ReviewDB.modal.areYouSure", "Are you sure?")}
                 subtitle="Do you really want to block this user? They will be unable to leave further reviews on your profile. You can unblock users in the plugin settings."
                 confirmText="Block"
                 cancelText="Nevermind"
