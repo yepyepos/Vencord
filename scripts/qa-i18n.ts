@@ -256,6 +256,67 @@ function keys_get(key: string): string | undefined {
     return (table as Record<string, string>)[key];
 }
 
+// ---- 6. core settings tabs: every file with user-visible strings must use t() ----
+// Catches "whole page never localized" regressions (Themes/Cloud/Backup/PatchHelper
+// were all missed in Phase 3-4 because nothing scanned src/components).
+console.log(`\n== core settings coverage ==`);
+const coreDir = join(ROOT, "src", "components", "settings", "tabs");
+const keepCoverage = new Set([
+    "themes/LocalThemesTab.tsx", // remaining visible strings are brand link labels
+]);
+
+const coreVisibleRe = [
+    />([A-Z][a-z][^<>{}]*?)</,
+    /\b(label|title|tooltip|placeholder|text|description)="([A-Z][a-z][^"]*)"/,
+    /(title|label|text|placeholder|description):\s*"([A-Z][a-z][^"]*)"/,
+];
+
+let coreFilesChecked = 0;
+const coreUnwrapped: Array<{ file: string; line: number; text: string; }> = [];
+function scanCore(dir: string) {
+    for (const n of readdirSync(dir)) {
+        const p = join(dir, n);
+        if (statSync(p).isDirectory()) { scanCore(p); continue; }
+        if (!/\.tsx$/.test(n)) continue;
+        const rel = p.slice(coreDir.length + 1).replace(/\\/g, "/");
+        const code = readFileSync(p, "utf8");
+        if (!coreVisibleRe.some(re => re.test(code))) continue;
+        coreFilesChecked++;
+        if (!code.includes('t("') && !code.includes("t(`")) {
+            coreUnwrapped.push({ file: rel, line: 0, text: "(file has visible strings but no t() usage)" });
+            continue;
+        }
+        const lines = code.split("\n");
+        lines.forEach((line, i) => {
+            if (line.includes('t("')) return;
+            for (const re of coreVisibleRe) {
+                const m = line.match(re);
+                if (m) { coreUnwrapped.push({ file: rel, line: i + 1, text: m[1] ?? m[2] ?? m[0] }); break; }
+            }
+        });
+    }
+}
+scanCore(coreDir);
+{
+    const logCode = readFileSync(join(ROOT, "src", "api", "Notifications", "notificationLog.tsx"), "utf8");
+    coreFilesChecked++;
+    logCode.split("\n").forEach((line, i) => {
+        if (line.includes('t("')) return;
+        const m = line.match(/text:\s*"([A-Z][a-z][^"]*)"/) ?? line.match(/title="([A-Z][a-z][^"]*)"/);
+        if (m) coreUnwrapped.push({ file: "api/Notifications/notificationLog.tsx", line: i + 1, text: m[1] });
+    });
+}
+
+const realUnwrapped = coreUnwrapped.filter(u => !keepCoverage.has(u.file));
+console.log(`   checked ${coreFilesChecked} core settings files, ${coreUnwrapped.length} unwrapped hit(s)`);
+if (coreUnwrapped.length)
+    for (const u of coreUnwrapped) console.log(`   unwrapped: ${u.file}:${u.line} ${u.text}`);
+if (realUnwrapped.length) {
+    fail(`${realUnwrapped.length} unwrapped user-visible string(s) in core settings tabs`);
+} else {
+    console.log("   all core settings files with visible strings are t()-covered");
+}
+
 console.log(`\n${failures} failure(s)`);
 if (failures > 0) process.exit(1);
 console.log("QA checks passed");

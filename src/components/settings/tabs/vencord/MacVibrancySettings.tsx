@@ -26,54 +26,54 @@ export function MacOSVibrancySettings() {
                 options={[
                     // Sorted from most opaque to most transparent
                     {
-                        label: "No vibrancy", value: undefined
+                        label: t("ui.vencord.macVibrancy.noVibrancy", "No vibrancy"), value: undefined
                     },
                     {
-                        label: "Under Page (window tinting)",
+                        label: t("ui.vencord.macVibrancy.underPage", "Under Page (window tinting)"),
                         value: "under-page"
                     },
                     {
-                        label: "Content",
+                        label: t("ui.vencord.macVibrancy.content", "Content"),
                         value: "content"
                     },
                     {
-                        label: "Window",
+                        label: t("ui.vencord.macVibrancy.window", "Window"),
                         value: "window"
                     },
                     {
-                        label: "Selection",
+                        label: t("ui.vencord.macVibrancy.selection", "Selection"),
                         value: "selection"
                     },
                     {
-                        label: "Titlebar",
+                        label: t("ui.vencord.macVibrancy.titlebar", "Titlebar"),
                         value: "titlebar"
                     },
                     {
-                        label: "Header",
+                        label: t("ui.vencord.macVibrancy.header", "Header"),
                         value: "header"
                     },
                     {
-                        label: "Sidebar",
+                        label: t("ui.vencord.macVibrancy.sidebar", "Sidebar"),
                         value: "sidebar"
                     },
                     {
-                        label: "Tooltip",
+                        label: t("ui.vencord.macVibrancy.tooltip", "Tooltip"),
                         value: "tooltip"
                     },
                     {
-                        label: "Menu",
+                        label: t("ui.vencord.macVibrancy.menu", "Menu"),
                         value: "menu"
                     },
                     {
-                        label: "Popover",
+                        label: t("ui.vencord.macVibrancy.popover", "Popover"),
                         value: "popover"
                     },
                     {
-                        label: "Fullscreen UI (transparent but slightly muted)",
+                        label: t("ui.vencord.macVibrancy.fullscreen", "Fullscreen UI (transparent but slightly muted)"),
                         value: "fullscreen-ui"
                     },
                     {
-                        label: "HUD (Most transparent)",
+                        label: t("ui.vencord.macVibrancy.hud", "HUD (Most transparent)"),
                         value: "hud"
                     },
                 ]}

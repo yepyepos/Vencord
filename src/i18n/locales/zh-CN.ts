@@ -1756,6 +1756,19 @@ const translations = {
     "ui.updater.retrieveFailed": "获取失败——请查看控制台",
     "ui.updater.unknownErrorRetry": "发生了未知错误。\n请重试或查看控制台了解更多信息。",
     "ui.updater.oops": "哎呀！",
+    "ui.vencord.macVibrancy.noVibrancy": "无鲜活度",
+    "ui.vencord.macVibrancy.underPage": "页面之下（窗口着色）",
+    "ui.vencord.macVibrancy.content": "内容",
+    "ui.vencord.macVibrancy.window": "窗口",
+    "ui.vencord.macVibrancy.selection": "选区",
+    "ui.vencord.macVibrancy.titlebar": "标题栏",
+    "ui.vencord.macVibrancy.header": "头部",
+    "ui.vencord.macVibrancy.sidebar": "侧边栏",
+    "ui.vencord.macVibrancy.tooltip": "提示",
+    "ui.vencord.macVibrancy.menu": "菜单",
+    "ui.vencord.macVibrancy.popover": "悬浮面板",
+    "ui.vencord.macVibrancy.fullscreen": "全屏界面（透明但略微变暗）",
+    "ui.vencord.macVibrancy.hud": "HUD（最透明）",
 } satisfies Record<string, string>;
 
 export default translations;
