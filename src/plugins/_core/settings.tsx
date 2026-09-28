@@ -68,8 +68,12 @@ interface SettingsLayoutNode {
 
 interface EntryOptions {
     key: string,
+    /** English fallback title; always passed through, even when titleKey is set */
     title: string,
+    /** translation key for the sidebar title (see src/i18n) */
+    titleKey?: string,
     panelTitle?: string,
+    panelTitleKey?: string,
     Component: ComponentType<{}>,
     Icon: ComponentType<IconProps>;
 }
@@ -132,12 +136,18 @@ export default definePlugin({
     ],
 
     buildEntry(options: EntryOptions): SettingsLayoutNode {
-        const { key, title, panelTitle = title, Component, Icon } = options;
+        const { key, title, titleKey, panelTitle = title, panelTitleKey, Component, Icon } = options;
+
+        // localization happens inside the getters so a Discord language change
+        // is picked up whenever the layout re-renders, instead of being baked
+        // in when buildEntry runs
+        const resolveTitle = () => (titleKey ? t(titleKey, title) : title);
+        const resolvePanelTitle = () => (panelTitleKey ? t(panelTitleKey, panelTitle) : panelTitle);
 
         const panel: SettingsLayoutNode = {
             key: key + "_panel",
             type: LayoutTypes.PANEL,
-            useTitle: () => panelTitle,
+            useTitle: () => resolvePanelTitle(),
             buildLayout: () => [{
                 type: LayoutTypes.CATEGORY,
                 key: key + "_category",
@@ -153,7 +163,7 @@ export default definePlugin({
         return ({
             key,
             type: LayoutTypes.SIDEBAR_ITEM,
-            useTitle: () => title,
+            useTitle: () => resolveTitle(),
             icon: () => <Icon width={20} height={20} />,
             buildLayout: () => [panel]
         });
@@ -171,46 +181,56 @@ export default definePlugin({
         const vencordEntries: SettingsLayoutNode[] = [
             buildEntry({
                 key: "vencord_main",
-                title: t("ui.settings.section.vencord", "Vencord"),
-                panelTitle: t("ui.settings.section.vencordSettings", "Vencord Settings"),
+                title: "Vencord",
+                titleKey: "ui.settings.section.vencord",
+                panelTitle: "Vencord Settings",
+                panelTitleKey: "ui.settings.section.vencordSettings",
                 Component: VencordTab,
                 Icon: MainSettingsIcon
             }),
             buildEntry({
                 key: "vencord_plugins",
-                title: t("ui.settings.section.plugins", "Plugins"),
+                title: "Plugins",
+                titleKey: "ui.settings.section.plugins",
                 Component: PluginsTab,
                 Icon: PluginsIcon
             }),
             buildEntry({
                 key: "vencord_themes",
-                title: t("ui.settings.section.themes", "Themes"),
+                title: "Themes",
+                titleKey: "ui.settings.section.themes",
                 Component: ThemesTab,
                 Icon: PaintbrushIcon
             }),
             !IS_UPDATER_DISABLED && UpdaterTab && buildEntry({
                 key: "vencord_updater",
-                title: t("ui.settings.section.updater", "Updater"),
-                panelTitle: t("ui.settings.section.vencordUpdater", "Vencord Updater"),
+                title: "Updater",
+                titleKey: "ui.settings.section.updater",
+                panelTitle: "Vencord Updater",
+                panelTitleKey: "ui.settings.section.vencordUpdater",
                 Component: UpdaterTab,
                 Icon: UpdaterIcon
             }),
             buildEntry({
                 key: "vencord_cloud",
-                title: t("ui.settings.section.cloud", "Cloud"),
-                panelTitle: t("ui.settings.section.vencordCloud", "Vencord Cloud"),
+                title: "Cloud",
+                titleKey: "ui.settings.section.cloud",
+                panelTitle: "Vencord Cloud",
+                panelTitleKey: "ui.settings.section.vencordCloud",
                 Component: CloudTab,
                 Icon: CloudIcon
             }),
             buildEntry({
                 key: "vencord_backup_restore",
-                title: t("ui.settings.section.backupRestore", "Backup & Restore"),
+                title: "Backup & Restore",
+                titleKey: "ui.settings.section.backupRestore",
                 Component: BackupAndRestoreTab,
                 Icon: BackupRestoreIcon
             }),
             !IS_STANDALONE && PatchHelperTab && buildEntry({
                 key: "vencord_patch_helper",
-                title: t("ui.settings.section.patchHelper", "Patch Helper"),
+                title: "Patch Helper",
+                titleKey: "ui.settings.section.patchHelper",
                 Component: PatchHelperTab,
                 Icon: PatchHelperIcon
             }),

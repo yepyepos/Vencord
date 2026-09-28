@@ -27,7 +27,7 @@ import ErrorBoundary from "@components/ErrorBoundary";
 import { HeadingTertiary } from "@components/Heading";
 import { Paragraph } from "@components/Paragraph";
 import { SettingsTab, wrapTab } from "@components/settings/tabs/BaseTab";
-import { pluginMatchesTranslatedQueryLocal,t, tTag } from "@i18n";
+import { pluginMatchesQuery, t, tTag, useVencordLocale } from "@i18n";
 import { ChangeList } from "@utils/ChangeList";
 import { classNameFactory } from "@utils/css";
 import { isTruthy } from "@utils/guards";
@@ -119,6 +119,7 @@ function ExcludedPluginsList({ search }: { search: string; }) {
 }
 
 function PluginSettings() {
+    useVencordLocale();
     const settings = useSettings();
     const changeRef = useRef<ChangeList<string>>(null);
     const changes = changeRef.current ??= new ChangeList<string>();
@@ -207,7 +208,7 @@ function PluginSettings() {
             plugin.name.match(/[A-Z]/g)?.join("").toLowerCase().includes(search) || // acronyms like BF for BetterFolders
             plugin.description.toLowerCase().includes(search) ||
             plugin.searchTerms?.some(t => t.toLowerCase().includes(search)) ||
-            pluginMatchesTranslatedQueryLocal(plugin, search) // translated name/description (e.g. Chinese)
+            pluginMatchesQuery(plugin, search) // translated name/description (e.g. Chinese)
         );
     };
 

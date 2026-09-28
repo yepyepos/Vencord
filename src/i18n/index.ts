@@ -23,7 +23,7 @@
  * settings page re-open (or app restart) picks up the new language.
  */
 
-import { LocaleStore } from "@webpack/common";
+import { LocaleStore, useStateFromStores } from "@webpack/common";
 
 import { pluginMatchesTranslatedQuery, type SettingDefStrings, translate, translatePluginMeta, translateSettingDef, type TranslationTable } from "./core";
 import zhCN from "./locales/zh-CN";
@@ -47,6 +47,19 @@ export function getTranslationTable(): TranslationTable | undefined {
     } catch {
         return undefined;
     }
+}
+
+/**
+ * React hook: subscribes the calling component to Discord's LocaleStore so it
+ * re-renders when the user changes Discord's language. Call it once in every
+ * component that renders `t(...)` strings; the plain `t` function then picks
+ * up the new locale during that re-render.
+ *
+ * Reuses Discord's own useStateFromStores hook (the same pattern Vencord uses
+ * for other stores) instead of inventing a custom reactivity system.
+ */
+export function useVencordLocale(): string {
+    return useStateFromStores([LocaleStore], () => getCurrentLocale());
 }
 
 /**
@@ -103,6 +116,6 @@ export function tSettingDef<S>(pluginName: string, settingKey: string, setting: 
  * Callers combine this with the original English matching, so plugins stay
  * searchable in both languages.
  */
-export function pluginMatchesTranslatedQueryLocal(plugin: MinimalPlugin, search: string): boolean {
+export function pluginMatchesQuery(plugin: MinimalPlugin, search: string): boolean {
     return pluginMatchesTranslatedQuery(getTranslationTable(), plugin.name, plugin, search);
 }
