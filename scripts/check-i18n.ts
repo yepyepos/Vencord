@@ -102,6 +102,12 @@ for (const [key, value] of Object.entries(table)) {
         continue;
     }
 
+    // option value segments may contain dashes (e.g. option.deepl-pro)
+    if (!/^(?:ui|tag|plugin)\.[\w-]+(?:\.[\w-]+)*$/.test(key)) {
+        error(`malformed key (expected dotted identifiers): ${key}`);
+        continue;
+    }
+
     let match: RegExpMatchArray | null;
 
     if ((match = key.match(PLUGIN_KEY_RE))) {
@@ -158,12 +164,48 @@ for (const [key, value] of Object.entries(table)) {
     }
 }
 
-// ---- summary ----
+// ---- summary / reconciliation ----
 const keys = Object.keys(table);
-const pluginKeyCount = keys.filter(k => k.startsWith("plugin.")).length;
-console.log(`\nchecked ${keys.length} keys (${pluginKeyCount} plugin.* keys) against ${pluginNames.size} plugins and ${realTags.size} tags`);
+const byNamespace: Record<string, number> = {};
+for (const key of keys) {
+    const ns = key.split(".")[0];
+    byNamespace[ns] = (byNamespace[ns] ?? 0) + 1;
+}
+const parts = Object.entries(byNamespace).map(([ns, n]) => `${ns}=${n}`).join(" + ");
+console.log(`\nchecked ${keys.length} keys (${parts}) against ${pluginNames.size} plugins and ${realTags.size} tags`);
+
+// static cross-check: the sum of namespace counts must equal the total
+const sum = Object.values(byNamespace).reduce((a, b) => a + b, 0);
+if (sum !== keys.length) {
+    error(`namespace counts (${parts}) do not add up to total ${keys.length}`);
+}
+
+// ---- unused ui.* key detection (literal occurrence in src) ----
+// keys referenced dynamically (template literals) cannot be found and will
+// be reported as unused: check the report before acting on a warning
+let unusedUiKeys = 0;
+if (byNamespace.ui) {
+    const srcDir = join(ROOT, "src");
+    const srcFiles: string[] = [];
+    (function walk(dir: string) {
+        for (const name of readdirSync(dir)) {
+            const p = join(dir, name);
+            if (statSync(p).isDirectory()) walk(p);
+            else if (/\.(ts|tsx)$/.test(name)) srcFiles.push(p);
+        }
+    })(srcDir);
+
+    const srcCode = srcFiles.map(f => readFileSync(f, "utf8")).join("\n");
+    for (const key of keys.filter(k => k.startsWith("ui."))) {
+        if (!srcCode.includes(key)) {
+            console.warn(`WARN   unused ui.* key (not referenced in src): ${key}`);
+            unusedUiKeys++;
+        }
+    }
+}
+
 if (errors > 0) {
     console.error(`${errors} error(s)`);
     process.exit(1);
 }
-console.log("zh-CN locale data is consistent");
+console.log(`zh-CN locale data is consistent${unusedUiKeys ? ` (${unusedUiKeys} unused ui.* key warning(s))` : ""}`);

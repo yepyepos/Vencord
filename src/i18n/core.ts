@@ -87,7 +87,13 @@ export function translateSettingDef(table: TranslationTable | undefined | null, 
         const prefix = `plugin.${pluginName}.settings.${settingKey}`;
         const translated: SettingDefStrings = { ...original };
 
-        translated.description = translate(table, `${prefix}.description`, original.description ?? "");
+        // only touch fields the def actually has (or the table provides for
+        // displayName/description), so defs without a description/displayName
+        // keep their exact shape
+        if (typeof original.description === "string")
+            translated.description = translate(table, `${prefix}.description`, original.description);
+        else if (typeof table[`${prefix}.description`] === "string")
+            translated.description = table[`${prefix}.description`];
         if (typeof original.displayName === "string")
             translated.displayName = translate(table, `${prefix}.displayName`, original.displayName);
         else if (typeof table[`${prefix}.displayName`] === "string")
