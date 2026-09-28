@@ -422,3 +422,138 @@ Desktop 与 Browser 共用同一 renderer 产物路径，一套 zh-CN 同时服�
 3. 分批推进插件运行时 UI 的 `t()` 包装（先稳定插件后高 churn 插件）；
 4. 引入 LocaleStore 订阅解决语言切换响应性；
 5. 每批次跑 `pnpm test && pnpm testI18n && pnpm checkI18n && pnpm build && pnpm buildWeb`。
+
+---
+
+# 16. Phase 2.5 — 架构加固、稳定性验证与 Upstream 兼容性测试（2026-09-28）
+
+> 本章回答：**当前架构是否足够稳定，可以开始约 1140 条规模的全量翻译？**
+> 结论：**是**。所有验证均为实际实验结果，非理论推断。
+
+## 16.0 Git 提交
+
+| Commit | 内容 |
+| --- | --- |
+| `2e6a221f` fix(i18n): harden translation key stability | translateSettingDef 形状守卫；checkI18n 格式校验/未用 key 检测/命名空间对账 |
+| `81531d8d` fix(i18n): react to Discord locale changes | `useVencordLocale()` hook；中央组件接入；_core/settings.tsx getter 化 |
+| `345c8253` test(i18n): expand localization regression coverage | 回归测试扩展至 **32 项断言** |
+| 本提交 | 本文档更新 |
+
+注：本阶段结束时 `git fetch upstream` 因网络故障（连接重置）未能获取新数据；
+upstream/main 仍为上次成功抓取的 `90aea0dd`。§16.6 的 rebase 实验采用"模拟上游演化"方式（任务书允许的替代路径）。
+
+## 16.1 Translation key 对账（任务 1）
+
+**总 key 数 = 166 = ui 46 + tag 21 + plugin 99。**
+Phase 2 报告中"ui = 45"为笔误（实际 46），三数相加 165 的歧义已消除。
+checkI18n 现在直接输出对账行：`checked 166 keys (ui=46 + tag=21 + plugin=99)`，
+并在脚本内静态校验命名空间计数之和 = 总数。
+
+## 16.2 Key 稳定性（任务 2/7/20）
+
+**结论：key 依赖稳定标识符，不依赖英文文本，无需迁移。**
+
+- `plugin.<PluginName>.*` — 插件 `name` 字段同时是用户设置存储键（`plugins.<name>.enabled`），
+  上游无法随意重命名；
+- `plugin.<N>.settings.<settingKey>.*` — 设置字段名即持久化配置键，同理稳定；
+- `option.<value>` — value 是持久化设置值；`deepl-pro` 等带连字符 value、数字 value（`0`/`1`）均已支持。
+
+**模拟实验**（临时分支 `test/upstream-rename-sim2`，已删除）：对 VoiceMessages 插件模拟上游演化——
+A) `Noise Suppression` → `Noise Reduction`；B) 描述扩写；C) 设置项顺序颠倒；D) settings.ts 删除、定义内联进
+index.tsx（并更新全部导入方）。结果：**A/B/C/D 四种场景下中文翻译全部仍然命中**
+（运行时实测：`噪声抑制`/`回声消除`/元数据全部正确），tsc/lint/build/buildWeb 全部通过。
+E) 插件改名 `VoiceMessages` → `VoiceMessage`：checkI18n **精确报告 6 个 orphan key 错误**（exit 1），
+运行时优雅回退英文，人工修复 = 重命名 6 个 key（约 5 分钟）。
+
+## 16.3 Locale 响应式更新（任务 3/24）
+
+新增 `useVencordLocale()`（`src/i18n/index.ts`）：基于 Discord 自己的 `useStateFromStores`
+hook（Vencord 对其他 Store 的既有惯用模式），订阅 `LocaleStore`，返回当前 locale。
+接入点：`PluginSettings`（插件列表）、`PluginCard`、`PluginModal`。
+**语言切换行为**：Discord 内切换语言 → LocaleStore 触发 → 已订阅组件重渲染 → `t()` 读到新 locale
+→ 无需重启 Discord/Vencord。 English→Chinese→English 往返切换由同一机制对称保证。
+
+已修复的隐患：`_core/settings.tsx` 原实现把 `t()` 结果**固化在 buildEntry 运行时刻**
+（闭包 `useTitle: () => title` 烤死语言）。现改为 `EntryOptions` 新增 `titleKey`/`panelTitleKey`
+（纯增量接口），翻译移入 `useTitle` getter 内部，布局重渲染时实时求值；`useSearchTerms` 保持英文原文。
+
+诚实记录的边界：未订阅 hook 的组件树（插件自有运行时 UI 中的 `t()` 调用）依赖父组件重渲染传播；
+若上游未来在中间插入 memo 化组件，需在对应组件补一行 `useVencordLocale()`。
+
+## 16.4 Fallback / 插值 / 定义不变性（任务 4/5/8/9/12/13）
+
+32 项回归测试（`pnpm testI18n`，node:assert，无测试框架）锁定以下行为：
+
+- **t() 八种边界**（Cases 1-8）：key 命中→中文；缺 key/空 value/null/undefined/损坏表→英文 fallback；
+  空 fallback 不崩溃（返回空串）；模板变量缺失保留 `{count}` 可读占位；多余变量忽略。
+- **原定义不突变**：浅拷贝 + JSON 快照断言；options 数组为新分配（原件零改动）；
+  `displayName/description/placeholder` 在原定义缺失时**不会被凭空造出**（COMPONENT 型定义形状保持不变）。
+- **复杂定义**：SELECT/NUMBER/SLIDER/COMPONENT 的 `default/componentProps/isValid/onChange/restartNeeded/markers`
+  引用保持不变，只有 label/description/placeholder 变化。
+- **value 永不翻译**：字符串/数字/枚举型 option value 身份（`===`/`Object.is`）锁定为测试。
+- **插值精度**：`"{count} messages"` ↔ `"{count} 条消息"` 替换无丢失/重复。
+- **性能**：100,000 次 translate + 332 次搜索查找 ≈ **4ms**（Node 实测）；每次查找为 O(1) 属性访问，
+  无需 memoization，保持代码简单。
+
+## 16.5 搜索 / 筛选 / 使用边界（任务 10/11/15/16/17/18）
+
+- 搜索：中文命中（"语音"/"语音消息"）、英文命中、大小写不敏感、 translated 匹配不越权
+  （英文匹配仍由原有逻辑负责）——测试锁定。
+- 标签筛选：`SearchableSelect` 的 label 中文、value 恒为英文原值，筛选语义与上游一致；
+  两种语言下筛选同一标签结果相同。无需改上游筛选代码。
+- `t()` 使用点审计（`rg '\bt\(' src` 去除误报后）：**7 个文件导入 `@i18n`** ——
+  CENTRAL：plugins/index.tsx、PluginCard.tsx、PluginModal.tsx、_core/settings.tsx；
+  PLUGIN：imageZoom、translate、newGuildSettings（示范包装）。
+  脚本侧：test-i18n 仅依赖 core（纯逻辑），check-i18n 仅读取 locale 数据文件——
+  **无 renderer 代码泄漏进 node 脚本，无循环依赖**（@webpack/common 不反向依赖 @i18n）。
+- 共存原则确认：中央覆盖层管元数据/设置/列表/分区；插件自有动态 UI（菜单/弹窗/浮层）在插件内 `t()`。
+  两种模式已在 ImageZoom/Translate/NewGuildSettings 上并存验证。
+
+## 16.6 Upstream rebase 冲突实测（任务 14/16/17/21）
+
+由于本阶段 GitHub 网络不可达且 upstream/main 无新提交，实验采用任务书允许的模拟方式：
+在 `test/fake-upstream`（基于 90aea0dd）上以**上游真实风格**制造 3 个提交——
+U1 重写插件页空状态文案 + 新增筛选选项；U2 重构 `renderSettings` 区域；U3 修改依赖失败提示写法——
+然后从 zh-CN（7 个提交）rebase（分支 `test/upstream-rebase-poc`，实验后已删除）。
+
+**实测结果**：
+
+| 指标 | 数值 |
+| --- | --- |
+| 重放提交数 | 7 |
+| 冲突文件 | **2**（PluginCard.tsx、plugins/index.tsx） |
+| 冲突 hunk | **3**（1 + 2） |
+| 冲突集中度 | 全部位于中央覆盖层提交 `eb3de98f`；i18n 基础设施/测试/文档提交 **0 冲突** |
+| `src/i18n/locales/zh-CN.ts` | **0 冲突**（上游不存在该路径，纯新增文件，结构性免疫） |
+| 解决耗时 | ≈5 分钟（保留 t() 包装并吸收上游新文案/新选项） |
+| 解决后验证 | 32 测试、checkI18n（167 key，含新增 `ui.plugins.showRecentlyUsed`）、lint、tsc、build 全绿 |
+
+`@i18n` 相关配置改动（tsconfig/eslint/package.json 各 1-2 行）在实验中 0 冲突。
+
+## 16.7 Browser / Desktop 回归（任务 23）
+
+最终状态全绿：`pnpm test`（standalone+tsc+lint+lint-styles+pluginJson）✅、
+`pnpm buildWeb`（Chrome/Firefox 扩展）✅、`pnpm checkI18n` ✅。
+`dist/renderer.js` 含全部 key 与译文（esbuild 默认 ASCII 输出，中文以 `\uXXXX` 存储，
+运行时等价；charset 优化留待全量阶段）。
+
+## 16.8 遗留风险清单
+
+1. **插件改名**：key 以插件 name 为命名空间 → 改名产生 orphan key（checkI18n 报错、运行时回退英文）。
+   已被工具完整覆盖，属"低成本人工修复"而非架构缺陷。
+2. **memo 化组件**：如上游在中央组件与渲染文本之间插入 React.memo，对应组件需补 `useVencordLocale()`。
+3. **动态拼接 key**（若有）无法被未用 key 检测覆盖——当前代码全部使用字面量 key，规范写入文档。
+4. **网络受限期间无法获取真实新 upstream 提交**——下次网络恢复后应执行一次真实
+   `git rebase upstream/main` 演练，验证 §16.6 的模拟结论。
+
+## 16.9 最终判定
+
+**允许进入 Phase 3 全量翻译。** 关键指标全部达成：
+
+```text
+✅ key 稳定性（A-D 场景实测命中）      ✅ 原定义不突变 + value 永不翻译
+✅ locale 响应式（hook + getter 化）   ✅ 英文/中文搜索 + 标签筛选
+✅ fallback 8 边界测试锁定            ✅ rebase 实测: locale 0 冲突 / 中央 3 hunk
+✅ checkI18n 对账+orphan 检测         ✅ pnpm test / build / buildWeb 全绿
+✅ 4ms/10 万次查找,无需复杂优化        ✅ 32 项回归测试
+```
