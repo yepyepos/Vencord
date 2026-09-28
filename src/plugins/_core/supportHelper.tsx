@@ -24,6 +24,7 @@ import ErrorBoundary from "@components/ErrorBoundary";
 import { Flex } from "@components/Flex";
 import { Link } from "@components/Link";
 import { openSettingsTabModal, UpdaterTab } from "@components/settings";
+import { t } from "@i18n";
 import { CONTRIB_ROLE_ID, Devs, DONOR_ROLE_ID, KNOWN_ISSUES_CHANNEL_ID, REGULAR_ROLE_ID, SUPPORT_CATEGORY_ID, SUPPORT_CHANNEL_ID, VENBOT_USER_ID, VENCORD_GUILD_ID } from "@utils/constants";
 import { sendMessage } from "@utils/discord";
 import { Logger } from "@utils/Logger";
@@ -142,8 +143,8 @@ function DevBuildConfirmModal(props: RenderModalProps) {
     return (
         <ConfirmModal
             {...props}
-            title="Hold on!"
-            confirmText="Understood"
+            title={t("plugin.SupportHelper.modal.holdOn", "Hold on!")}
+            confirmText={t("plugin.SupportHelper.modal.understood", "Understood")}
             variant="primary"
             checkboxProps={{
                 checked: s.dismissedDevBuildWarning === true,
@@ -212,7 +213,7 @@ export default definePlugin({
                         <ConfirmModal
                             {...props}
                             variant="primary"
-                            title="Hold on!"
+                            title={t("plugin.SupportHelper.modal.holdOn", "Hold on!")}
                             confirmText="Update & Restart Now"
                             cancelText="View Updates"
                             onConfirm={forceUpdate}
@@ -240,7 +241,7 @@ export default definePlugin({
                 openModal(props => (
                     <ConfirmModal
                         {...props}
-                        title="Hold on!"
+                        title={t("plugin.SupportHelper.modal.holdOn", "Hold on!")}
                         confirmText="OK"
                         variant="primary"
                     >

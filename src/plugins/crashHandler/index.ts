@@ -19,6 +19,7 @@
 import { DataStore } from "@api/index";
 import { showNotification } from "@api/Notifications";
 import { definePluginSettings } from "@api/Settings";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import { Logger } from "@utils/Logger";
 import definePlugin, { OptionType } from "@utils/types";
@@ -99,7 +100,7 @@ export default definePlugin({
                     try {
                         showNotification({
                             color: "#eed202",
-                            title: "Discord has crashed!",
+                            title: t("plugin.CrashHandler.modal.discordCrashed", "Discord has crashed!"),
                             body: "Awn :( Discord has crashed two times rapidly, not attempting to recover.",
                             noPersist: true
                         });
@@ -134,7 +135,7 @@ export default definePlugin({
         try {
             showNotification({
                 color: "#eed202",
-                title: "Discord has crashed!",
+                title: t("plugin.CrashHandler.modal.discordCrashed", "Discord has crashed!"),
                 body: "Attempting to recover...",
                 noPersist: true
             });

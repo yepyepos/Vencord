@@ -221,7 +221,7 @@ function AlbumContextMenu({ track }: { track: Track; }) {
         <Menu.Menu
             navId="spotify-album-menu"
             onClose={() => FluxDispatcher.dispatch({ type: "CONTEXT_MENU_CLOSE" })}
-            aria-label="Spotify Album Menu"
+            aria-label={t("plugin.SpotifyControls.player.albumMenu", "Spotify Album Menu")}
         >
             <Menu.MenuItem
                 key="open-album"

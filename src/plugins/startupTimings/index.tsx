@@ -17,6 +17,7 @@
 */
 
 import { ClockIcon } from "@components/Icons";
+import { t } from "@i18n";
 import SettingsPlugin from "@plugins/_core/settings";
 import { Devs } from "@utils/constants";
 import { removeFromArray } from "@utils/misc";
@@ -32,7 +33,7 @@ export default definePlugin({
     start() {
         SettingsPlugin.customEntries.push({
             key: "vencord_startup_timings",
-            title: "Startup Timings",
+            title: t("plugin.StartupTimings.section.title", "Startup Timings"),
             Component: StartupTimingPage,
             Icon: ClockIcon
         });

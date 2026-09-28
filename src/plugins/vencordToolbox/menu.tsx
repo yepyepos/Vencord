@@ -213,7 +213,7 @@ export function buildThemeMenuEntries() {
             />
             <Menu.MenuItem
                 id="edit-quickcss"
-                label="Edit QuickCSS"
+                label={t("plugin.VencordToolbox.menu.editQuickCss", "Edit QuickCSS")}
                 action={() => VencordNative.quickCss.openEditor()}
             />
             <Menu.MenuItem

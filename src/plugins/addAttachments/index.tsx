@@ -6,6 +6,7 @@
 
 import { ChatBarButton } from "@api/ChatButtons";
 import { UploadIcon } from "@components/Icons";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import { pluralise } from "@utils/misc";
 import definePlugin from "@utils/types";
@@ -132,7 +133,7 @@ export default definePlugin({
             if (!channel.isPrivate() && !PermissionStore.can(PermissionsBits.SEND_MESSAGES, channel)) return null;
 
             return {
-                label: "Add Attachments",
+                label: t("plugin.AddAttachments.menu.addAttachments", "Add Attachments"),
                 icon: UploadIcon,
                 message: msg,
                 channel: ChannelStore.getChannel(msg.channel_id),
@@ -151,7 +152,7 @@ export default definePlugin({
 
             return (
                 <ChatBarButton
-                    tooltip="Add Attachments"
+                    tooltip={t("plugin.AddAttachments.menu.addAttachments", "Add Attachments")}
                     onClick={() => chooseAttachments(msg.channel_id, msg.id, msg.attachments.length)}
                 >
                     <UploadIcon height={18} width={18} />

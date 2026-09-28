@@ -18,6 +18,7 @@
 
 import { popNotice, showNotice } from "@api/Notices";
 import { Link } from "@components/Link";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import definePlugin, { ReporterTestable } from "@utils/types";
 import { findByCodeLazy } from "@webpack";
@@ -47,9 +48,9 @@ export default definePlugin({
 
     settingsAboutComponent: () => (
         <>
-            <Forms.FormTitle tag="h3">How to use arRPC</Forms.FormTitle>
+            <Forms.FormTitle tag="h3">{t("plugin.WebRichPresence (arRPC).ui.howToUse", "How to use arRPC")}</Forms.FormTitle>
             <Forms.FormText>
-                <Link href="https://github.com/OpenAsar/arrpc/tree/main#server">Follow the instructions in the GitHub repo</Link> to get the server running, and then enable the plugin.
+                <Link href="https://github.com/OpenAsar/arrpc/tree/main#server">{t("plugin.WebRichPresence (arRPC).ui.followInstructions", "Follow the instructions in the GitHub repo")}</Link> to get the server running, and then enable the plugin.
             </Forms.FormText>
         </>
     ),
@@ -90,7 +91,7 @@ export default definePlugin({
         }
 
         Toasts.show({ // show toast on success
-            message: "Connected to arRPC",
+            message: t("plugin.WebRichPresence (arRPC).ui.connected", "Connected to arRPC"),
             type: Toasts.Type.SUCCESS,
             id: Toasts.genId(),
             options: {

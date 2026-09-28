@@ -22,6 +22,7 @@ import { Divider } from "@components/Divider";
 import { ErrorCard } from "@components/ErrorCard";
 import { Flex } from "@components/Flex";
 import { Link } from "@components/Link";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import { isTruthy } from "@utils/guards";
 import { Margins } from "@utils/margins";
@@ -261,7 +262,7 @@ export default definePlugin({
 
                 <Flex flexDirection="column" gap=".5em" className={Margins.top16}>
                     <Forms.FormText>
-                        Go to the <Link href="https://discord.com/developers/applications">Discord Developer Portal</Link> to create an application and
+                        Go to the <Link href="https://discord.com/developers/applications">{t("plugin.CustomRPC.ui.developerPortal", "Discord Developer Portal")}</Link> to create an application and
                         get the application ID.
                     </Forms.FormText>
                     <Forms.FormText>

@@ -6,6 +6,7 @@
 
 import "./style.css";
 
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
@@ -30,7 +31,7 @@ export default definePlugin({
                 className="vc-voice-download"
                 href={src}
                 onClick={e => e.stopPropagation()}
-                aria-label="Download voice message"
+                aria-label={t("plugin.VoiceDownload.menu.download", "Download voice message")}
                 {...IS_DISCORD_DESKTOP
                     ? { target: "_blank" } // open externally
                     : { download: "voice-message.ogg" } // download directly (not supported on discord desktop)

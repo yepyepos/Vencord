@@ -8,6 +8,7 @@ import "./styles.css";
 
 import { definePluginSettings } from "@api/Settings";
 import ErrorBoundary from "@components/ErrorBoundary";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import { Logger } from "@utils/Logger";
 import definePlugin, { OptionType } from "@utils/types";
@@ -119,7 +120,7 @@ function DearrowButton({ component }: { component: Component<Props>; }) {
                         width="24px"
                         height="24px"
                         viewBox="0 0 36 36"
-                        aria-label="Toggle Dearrow"
+                        aria-label={t("plugin.Dearrow.menu.toggleDearrow", "Toggle Dearrow")}
                         className="vc-dearrow-icon"
                     >
                         <path

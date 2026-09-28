@@ -19,6 +19,7 @@
 import { ChatBarButton, ChatBarButtonFactory } from "@api/ChatButtons";
 import { generateId, sendBotMessage } from "@api/Commands";
 import { EyeIcon } from "@components/Icons";
+import { t } from "@i18n";
 import { Devs } from "@utils/constants";
 import definePlugin, { IconComponent, StartAt } from "@utils/types";
 import { CloudUpload, MessageAttachment } from "@vencord/discord-types";
@@ -97,7 +98,7 @@ const PreviewButton: ChatBarButtonFactory = ({ isAnyChat, isEmpty, type: { attac
 
     return (
         <ChatBarButton
-            tooltip="Preview Message"
+            tooltip={t("plugin.PreviewMessage.tooltip.preview", "Preview Message")}
             onClick={async () => {
                 const attachments = hasAttachments ? await getAttachments(channelId) : undefined;
                 const message = sendBotMessage(

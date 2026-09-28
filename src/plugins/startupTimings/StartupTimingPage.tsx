@@ -18,6 +18,7 @@
 
 import ErrorBoundary from "@components/ErrorBoundary";
 import { Flex } from "@components/Flex";
+import { t } from "@i18n";
 import { findByPropsLazy } from "@webpack";
 import { Forms, React } from "@webpack/common";
 
@@ -119,7 +120,7 @@ function ServerTrace({ trace }: ServerTraceProps) {
 
     return (
         <section>
-            <Forms.FormTitle tag="h3">Server Trace</Forms.FormTitle>
+            <Forms.FormTitle tag="h3">{t("plugin.StartupTimings.page.serverTrace", "Server Trace")}</Forms.FormTitle>
             <code>
                 <Flex flexDirection="column" gap="5px" style={{ color: "var(--text-strong)", userSelect: "text" }}>
                     {lines.map((line, idx) => (
@@ -139,7 +140,7 @@ function StartupTimingPage() {
     return (
         <React.Fragment>
             <TimingSection
-                title="Startup Timings"
+                title={t("plugin.StartupTimings.page.title", "Startup Timings")}
                 logs={AppStartPerformance.logs}
                 traceEnd={AppStartPerformance.endTime_}
             />

@@ -20,6 +20,7 @@ import { isPluginEnabled } from "@api/PluginManager";
 import { definePluginSettings } from "@api/Settings";
 import { getUserSettingLazy } from "@api/UserSettings";
 import ErrorBoundary from "@components/ErrorBoundary";
+import { t } from "@i18n";
 import VencordToolboxPlugin from "@plugins/vencordToolbox";
 import { Devs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
@@ -133,7 +134,7 @@ function GameActivityToggleButton(props: { nameplate?: any; }) {
                 <Menu.Menu navId="vc-gameActivityToggle-menu" onClose={closePopout}>
                     <Menu.MenuCheckboxItem
                         id="vc-toggle-spotify"
-                        label="Share Spotify Activity"
+                        label={t("plugin.GameActivityToggle.menu.shareSpotifyActivity", "Share Spotify Activity")}
                         checked={shareSpotifyActivity}
                         action={async () => {
                             ConnectedAccountActions.setShowActivity(spotifyAccount.type, spotifyAccount.id, !shareSpotifyActivity);
@@ -183,7 +184,7 @@ export default definePlugin({
         return (
             <Menu.MenuCheckboxItem
                 id="game-activity-toggle-toolbox"
-                label="Enable Game Activity"
+                label={t("plugin.GameActivityToggle.menu.enableGameActivity", "Enable Game Activity")}
                 checked={showCurrentGame}
                 action={() => ShowCurrentGame.updateSetting(old => !old)}
             />
