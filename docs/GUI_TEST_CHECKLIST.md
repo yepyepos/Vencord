@@ -60,6 +60,8 @@
 - [ ] ServerInfo Owner 四态：缓存命中立即显示 / 未缓存 fetch 成功 / 失败→显示
       "用户 ID：xxx"+复制 ID+重试 / 无 ownerId→不可用；复制 ID 进剪贴板且提示"已复制！"
 - [ ] ServerInfo 重试：失败态点重试→短暂加载→成功升级或保持 fallback，无并发请求
+- [ ] ServerInfo Open Profile：失败态点"打开用户资料"→Discord 资料弹窗打开（UserStore
+      填充后卡片自动升级为完整 Owner）；完全无法解析时弹明确失败 toast，无静默
 
 ## 7. Modal / Toast / Tooltip（抽 5+5+10）
 
