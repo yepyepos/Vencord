@@ -91,6 +91,7 @@
 .vc-gp-scroller [class*="row"] {
     margin: 1px 0;
 }
+
 .vc-gp-owner-error {
     color: var(--text-danger);
 }
