@@ -15,7 +15,7 @@ import { Guild, RenderModalProps, User } from "@vencord/discord-types";
 import { findComponentByCodeLazy, findCssClassesLazy } from "@webpack";
 import { FluxDispatcher, Forms, GuildChannelStore, GuildMemberStore, GuildRoleStore, IconUtils, Modal,openModal, Parser, PresenceStore, RelationshipStore, ScrollerThin, showToast, SnowflakeUtils, TabBar, Timestamp, Toasts, useEffect, UserStore, UserUtils, useState, useStateFromStores } from "@webpack/common";
 
-import { fetchOwnerWithTimeout, type OwnerFetchResult,resolveOwnerDisplay } from "./ownerFetcher";
+import { getServerOwner, type OwnerFetchResult,resolveOwnerDisplay } from "./ownerFetcher";
 
 const IconClasses = findCssClassesLazy("icon", "acronym", "childWrapper");
 const FriendRow = findComponentByCodeLazy("discriminatorClass:", ".isMobileOnline", "avatarSrc:");
@@ -235,7 +235,7 @@ function ServerInfoTab({ guild }: GuildProps) {
         if (!needsFetch || !ownerId) return;
 
         let cancelled = false;
-        fetchOwnerWithTimeout<User>(userId => UserUtils.getUser(userId), ownerId).then(result => {
+        getServerOwner<User>(userId => UserUtils.getUser(userId), ownerId).then(result => {
             if (!cancelled) setFetchResult(result);
         });
 

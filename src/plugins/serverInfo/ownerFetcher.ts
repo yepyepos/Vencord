@@ -88,3 +88,42 @@ export function resolveOwnerDisplay<T>(
     // the owner id itself is still a certain, useful piece of information
     return { kind: "fallback", ownerId };
 }
+
+export interface OwnerFetchOptions {
+    /** Per-attempt deadline in ms (default 8s). */
+    timeoutMs?: number;
+    /** Total attempts including the first (default 2: one automatic retry). */
+    maxAttempts?: number;
+    /** Delay between attempts in ms (default 1s). */
+    retryDelayMs?: number;
+}
+
+const sleep = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms));
+
+/**
+ * Full owner acquisition: bounded attempts on top of fetchOwnerWithTimeout.
+ *
+ * Only immediate rejections are retried automatically — they are the
+ * transient-failure signature. Timeouts already consumed their whole deadline
+ * (retrying would double user-visible latency for an uncertain gain), and
+ * not-found / missing-id are deterministic results. Never retries more than
+ * maxAttempts - 1 times, never throws.
+ */
+export async function getServerOwner<T>(
+    getUser: (userId: string) => Promise<T>,
+    ownerId: string | undefined,
+    opts?: OwnerFetchOptions
+): Promise<OwnerFetchResult<T>> {
+    const { timeoutMs = OWNER_FETCH_TIMEOUT_MS, maxAttempts = 2, retryDelayMs = 1000 } = opts ?? {};
+
+    let result = await fetchOwnerWithTimeout(getUser, ownerId, timeoutMs);
+    let attempt = 1;
+
+    while (result.status === "error" && result.reason === "rejected" && attempt < maxAttempts) {
+        await sleep(retryDelayMs);
+        result = await fetchOwnerWithTimeout(getUser, ownerId, timeoutMs);
+        attempt++;
+    }
+
+    return result;
+}

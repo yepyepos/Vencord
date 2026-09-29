@@ -5,7 +5,7 @@
 
 import assert from "node:assert";
 
-import { fetchOwnerWithTimeout, resolveOwnerDisplay } from "../src/plugins/serverInfo/ownerFetcher";
+import { fetchOwnerWithTimeout, getServerOwner, resolveOwnerDisplay } from "../src/plugins/serverInfo/ownerFetcher";
 
 interface FakeUser {
     id: string;
@@ -125,6 +125,61 @@ async function main() {
     await test("display: missing ownerId -> unavailable even after fetch error (Case E)", async () => {
         assertDisplay(resolveOwnerDisplay(undefined, null, { status: "error", reason: "rejected" }), "unavailable");
         assertDisplay(resolveOwnerDisplay(undefined, null, null), "unavailable");
+    });
+
+    // ---- bounded automatic retry (getServerOwner) ----
+
+    await test("retry: immediate rejection is retried once and succeeds", async () => {
+        let calls = 0;
+        const result = await getServerOwner(
+            () => {
+                calls++;
+                return calls === 1 ? Promise.reject(new Error("transient")) : Promise.resolve(fakeUser);
+            },
+            "42",
+            { retryDelayMs: 10 }
+        );
+        assert.deepStrictEqual(result, { status: "success", user: fakeUser });
+        assert.strictEqual(calls, 2);
+    });
+
+    await test("retry: persistent rejection stops at maxAttempts (no infinite loop)", async () => {
+        let calls = 0;
+        const result = await getServerOwner(
+            () => {
+                calls++;
+                return Promise.reject(new Error("down"));
+            },
+            "42",
+            { retryDelayMs: 10, maxAttempts: 2 }
+        );
+        assert.deepStrictEqual(result, { status: "error", reason: "rejected" });
+        assert.strictEqual(calls, 2);
+    });
+
+    await test("retry: timeout is NOT auto-retried (hanging getUser called exactly once)", async () => {
+        let calls = 0;
+        const result = await getServerOwner(
+            () => {
+                calls++;
+                return new Promise<FakeUser>(() => { /* hangs */ });
+            },
+            "42",
+            { timeoutMs: 40, maxAttempts: 3, retryDelayMs: 5 }
+        );
+        assert.deepStrictEqual(result, { status: "error", reason: "timeout" });
+        assert.strictEqual(calls, 1);
+    });
+
+    await test("retry: missing ownerId never calls getUser", async () => {
+        let calls = 0;
+        const result = await getServerOwner(
+            () => { calls++; return Promise.resolve(fakeUser); },
+            undefined,
+            { maxAttempts: 3 }
+        );
+        assert.deepStrictEqual(result, { status: "error", reason: "missing-id" });
+        assert.strictEqual(calls, 0);
     });
 
     console.log(`\n${passed} passed, ${failed} failed`);
