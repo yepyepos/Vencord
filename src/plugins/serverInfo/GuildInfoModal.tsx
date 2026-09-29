@@ -207,7 +207,18 @@ function OwnerFallback({ ownerId, onRetry }: { ownerId: string; onRetry(): void;
             {t("plugin.ServerInfo.owner.unavailable", "Unable to load the user information.")}
             <br />
             {t("plugin.ServerInfo.owner.userId", "User ID:")}{" "}
-            <code className={cl("owner-id")}>{ownerId}</code>{" "}
+            <code className={cl("owner-id")}>{ownerId}</code>
+            <br />
+            <a
+                role="button"
+                onClick={() => openUserProfile(ownerId).catch(() => showToast(
+                    t("plugin.ServerInfo.owner.openProfileFailed", "Discord could not load this user's profile."),
+                    Toasts.Type.FAILURE
+                ))}
+            >
+                {t("plugin.ServerInfo.owner.openProfile", "Open Profile")}
+            </a>
+            {" · "}
             <a role="button" onClick={copyId}>
                 {copied ? t("plugin.ServerInfo.owner.copied", "Copied!") : t("plugin.ServerInfo.owner.copyId", "Copy ID")}
             </a>

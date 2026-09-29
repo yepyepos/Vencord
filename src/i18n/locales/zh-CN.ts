@@ -1776,6 +1776,8 @@ const translations = {
     "plugin.ServerInfo.owner.copyId": "复制 ID",
     "plugin.ServerInfo.owner.copied": "已复制！",
     "plugin.ServerInfo.owner.copyFailed": "复制用户 ID 失败。",
+    "plugin.ServerInfo.owner.openProfile": "打开用户资料",
+    "plugin.ServerInfo.owner.openProfileFailed": "Discord 无法加载该用户的资料。",
 } satisfies Record<string, string>;
 
 export default translations;
