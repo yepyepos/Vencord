@@ -1046,7 +1046,43 @@ guild.ownerId
 - **Git 安全标记**：`backup/server-info-owner-before-fix` tag（= 修复前 `4ee4d8ae`，一键回滚点）+
   `fix/server-info-owner` 分支（= 当前修复态指针）。开发仍按既有流程在 zh-CN 进行。
 
-## 24.2 验证
+## 24.2 Git 历史核验（任务 A）
+
+- `git merge-base --is-ancestor` 实测：`a9223010` ✅ YES、`5a8700f3` ✅ YES
+  （均为 zh-CN HEAD 祖先；`branch --contains` 两提交均在 zh-CN 上）
+- `backup/server-info-owner-before-fix` tag 保留（= 修复前 4ee4d8ae）；未新建额外 backup tag
+- ServerInfo 修复链完整：02388cb1（Loading 修复）→ 9114b917（Owner ID 兜底）→
+  a9223010（有限自动重试）→ 5a83afcb（Open Profile 入口）
+
+## 24.3 未知 Owner 解析能力调查（任务 B，基于源码与既有证据）
+
+**结论：Discord 客户端内 ID→User 对象的唯一合法解析入口就是 `UserUtils.getUser`（=
+`findByCodeLazy(".USER(")`，Discord 内部用户拉取动作，走客户端自己的 /users/{id} 通道并填充
+UserStore）。不存在第二个可直接返回 User 对象的客户端机制。**
+
+证据链：
+
+1. `src/webpack/common/utils.ts`：`UserUtils.getUser = findByCodeLazy(".USER(")` —— 这就是
+   Discord 内部的用户拉取动作（含 REST 获取 + UserStore 填充副作用）
+2. `packages/discord-types`：UserStore 仅提供同步 `getUser`（读缓存）；无独立 `fetchUser` 类型的
+   对象返回 API
+3. **成熟复用模式核实**：decor 插件 `UserStore.getUser(id) ?? await UserUtils.getUser(id)
+   .catch(() => null)`；relationshipNotifier 以 fire-and-forget getUser 预热缓存——均与我们
+   现有实现同构
+4. `openUserProfile(id)`（@utils/discord）内部同样 `await UserUtils.getUser(id)`，**未知用户时
+   抛出 "No such user"** ——证实资料弹窗也无法绕过同一拉取机制（本轮实现已加失败 toast）
+5. GuildMemberStore：GuildMember 类型仅含 userId（无 user 字段）——不构成 User 兜底（§24.1）
+
+**对"查看过的 Owner 能显示、完全未知的只能显示 ID"的解释**：任何 Discord 界面查看某用户都会
+把该用户填入 UserStore；我们的 useStateFromStores 订阅在缓存填充时自动把 fallback 卡片升级为
+完整 Owner（无需重开弹窗）。因此"未知 Owner"不是 ServerInfo 的缺陷，而是客户端数据边界：
+拉取失败（用户注销/隐私/网络）时客户端确实无法提供 User 对象。
+
+**本轮落地**：fallback UI 增加 **Open Profile** 入口——调用 Discord 自带资料弹窗流程；
+成功打开时用户资料被客户端拉取并填充 UserStore，我们的响应式订阅自动升级为完整 Owner 显示；
+失败（同一 getUser 失败）时弹 FAILURE toast 明示，不静默。
+
+## 24.4 验证
 
 - `pnpm testServerOwner` 扩展至 **17 项**：新增瞬时 reject 重试成功（getUser 恰好调用 2 次）、
   持续 reject 在 maxAttempts 处停止（无无限循环）、超时不自动重试（恰好调用 1 次）、

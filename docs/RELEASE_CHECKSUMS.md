@@ -5,7 +5,7 @@
 > Owner 永久 Loading，由 Phase 5.2.1 功能修复→zh.4。勿分发旧版）
 >
 > 构建时间：2026-09-29（本地时间）
-> 构建 commit：`4d0da22d`（zh-CN 分支，ServerInfo fallback 增加 Open Profile 入口后）
+> 构建 commit：`5a83afcb`（zh-CN 分支，ServerInfo fallback 增加 Open Profile 入口后）
 > 基于 upstream：`90aea0ddbbfbee16ce052b2c7ab610ffe957b4ca`（Vendicated/Vencord main，package.json version 1.15.7）
 > 构建环境：Node v22.22.1 / pnpm 11.22.0 / Windows
 > 状态：**Release Candidate zh.4**（实机复验通过并确认后方可作为正式 Release 发布）
