@@ -10,10 +10,11 @@ import { t } from "@i18n";
 import { classNameFactory } from "@utils/css";
 import { getGuildAcronym, openImageModal, openUserProfile } from "@utils/discord";
 import { classes } from "@utils/misc";
-import { useAwaiter } from "@utils/react";
 import { Guild, RenderModalProps, User } from "@vencord/discord-types";
 import { findComponentByCodeLazy, findCssClassesLazy } from "@webpack";
 import { FluxDispatcher, Forms, GuildChannelStore, GuildMemberStore, GuildRoleStore, IconUtils, Modal,openModal, Parser, PresenceStore, RelationshipStore, ScrollerThin, SnowflakeUtils, TabBar, Timestamp, useEffect, UserStore, UserUtils, useState, useStateFromStores } from "@webpack/common";
+
+import { fetchOwnerWithTimeout, type OwnerFetchResult } from "./ownerFetcher";
 
 const IconClasses = findCssClassesLazy("icon", "acronym", "childWrapper");
 const FriendRow = findComponentByCodeLazy("discriminatorClass:", ".isMobileOnline", "avatarSrc:");
@@ -186,13 +187,47 @@ function Owner(guildId: string, owner: User) {
 }
 
 function ServerInfoTab({ guild }: GuildProps) {
-    const [owner] = useAwaiter(() => UserUtils.getUser(guild.ownerId), {
-        deps: [guild.ownerId],
-        fallbackValue: null
-    });
+    const { ownerId } = guild;
+
+    // Cache-first: re-renders the moment the owner user appears in UserStore,
+    // no matter who populated it (our fetch, another plugin, Discord itself)
+    const cachedOwner = useStateFromStores([UserStore], () => (ownerId ? UserStore.getUser(ownerId) : null));
+
+    const [fetchResult, setFetchResult] = useState<OwnerFetchResult<User> | null>(null);
+    const [attempt, setAttempt] = useState(0);
+
+    const needsFetch = !cachedOwner;
+    useEffect(() => {
+        setFetchResult(null);
+        if (!needsFetch || !ownerId) return;
+
+        let cancelled = false;
+        fetchOwnerWithTimeout<User>(userId => UserUtils.getUser(userId), ownerId).then(result => {
+            if (!cancelled) setFetchResult(result);
+        });
+
+        return () => { cancelled = true; };
+    }, [ownerId, needsFetch, attempt]);
+
+    const owner = cachedOwner ?? (fetchResult?.status === "success" ? fetchResult.user : null);
+    const ownerError = !owner && (fetchResult?.status === "error" || !ownerId);
 
     const Fields = {
-        [t("plugin.ServerInfo.fields.serverOwner", "Server Owner")]: owner ? Owner(guild.id, owner) : t("ui.common.loading", "Loading..."),
+        [t("plugin.ServerInfo.fields.serverOwner", "Server Owner")]: owner
+            ? Owner(guild.id, owner)
+            : ownerError
+                ? (
+                    <span className={cl("owner-error")}>
+                        {t("plugin.ServerInfo.owner.error", "Failed to load the server owner.")}{" "}
+                        <a
+                            role="button"
+                            onClick={() => setAttempt(a => a + 1)}
+                        >
+                            {t("plugin.ServerInfo.owner.retry", "Retry")}
+                        </a>
+                    </span>
+                )
+                : t("ui.common.loading", "Loading..."),
         [t("plugin.ServerInfo.fields.createdAt", "Created At")]: renderTimestamp(SnowflakeUtils.extractTimestamp(guild.id)),
         [t("plugin.ServerInfo.fields.joinedAt", "Joined At")]: guild.joinedAt ? renderTimestamp(guild.joinedAt.getTime()) : "-", // Not available in lurked guild
         [t("plugin.ServerInfo.fields.vanityLink", "Vanity Link")]: guild.vanityURLCode ? (<a>{`discord.gg/${guild.vanityURLCode}`}</a>) : "-", // Making the anchor href valid would cause Discord to reload

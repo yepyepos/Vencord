@@ -1769,6 +1769,8 @@ const translations = {
     "ui.vencord.macVibrancy.popover": "悬浮面板",
     "ui.vencord.macVibrancy.fullscreen": "全屏界面（透明但略微变暗）",
     "ui.vencord.macVibrancy.hud": "HUD（最透明）",
+    "plugin.ServerInfo.owner.error": "无法获取服务器拥有者。",
+    "plugin.ServerInfo.owner.retry": "重试",
 } satisfies Record<string, string>;
 
 export default translations;
