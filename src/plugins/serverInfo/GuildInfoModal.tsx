@@ -13,9 +13,9 @@ import { getGuildAcronym, openImageModal, openUserProfile } from "@utils/discord
 import { classes } from "@utils/misc";
 import { Guild, RenderModalProps, User } from "@vencord/discord-types";
 import { findComponentByCodeLazy, findCssClassesLazy } from "@webpack";
-import { FluxDispatcher, Forms, GuildChannelStore, GuildMemberStore, GuildRoleStore, IconUtils, Modal,openModal, Parser, PresenceStore, RelationshipStore, ScrollerThin, showToast, SnowflakeUtils, TabBar, Toasts, Timestamp, useEffect, UserStore, UserUtils, useState, useStateFromStores } from "@webpack/common";
+import { FluxDispatcher, Forms, GuildChannelStore, GuildMemberStore, GuildRoleStore, IconUtils, Modal,openModal, Parser, PresenceStore, RelationshipStore, ScrollerThin, showToast, SnowflakeUtils, TabBar, Timestamp, Toasts, useEffect, UserStore, UserUtils, useState, useStateFromStores } from "@webpack/common";
 
-import { fetchOwnerWithTimeout, resolveOwnerDisplay, type OwnerFetchResult } from "./ownerFetcher";
+import { fetchOwnerWithTimeout, type OwnerFetchResult,resolveOwnerDisplay } from "./ownerFetcher";
 
 const IconClasses = findCssClassesLazy("icon", "acronym", "childWrapper");
 const FriendRow = findComponentByCodeLazy("discriminatorClass:", ".isMobileOnline", "avatarSrc:");
