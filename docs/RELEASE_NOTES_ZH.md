@@ -9,14 +9,16 @@
 | --- | --- |
 | 基于 upstream | https://github.com/Vendicated/Vencord |
 | Upstream commit | `90aea0dd`（"fix modals"，package.json version **1.15.7**） |
-| Fork 分支 / commit | `zh-CN` @ `e1adb6da` |
-| 建议发布 tag | `v1.15.7-zh.1` |
+| Fork 分支 / commit | `zh-CN` @ `02388cb1` |
+| 建议发布 tag | `v1.15.7-zh.4` |
 
 ## 中文化范围
 
 - **Vencord 自有 UI**：设置界面（插件/主题/更新器/云同步/Vencord 主设置）、全部 166 个插件的
   名称与描述、271 个可见设置项（标题/描述/占位符）、下拉选项 label、分区标题、公共组件文案；
 - **插件运行时 UI**：右键菜单、弹窗、通知条、提示、悬浮面板等 210 处（源自动态 UI 审计清单逐项处理）；
+- **核心设置页**：主题/云同步/备份与恢复/补丁助手/通知日志/背景材质/macOS 鲜活度等全部设置页；
+- **功能修复**：服务器信息插件在大型服务器中"服务器所有者"永久加载的问题（缓存优先 + 超时 + 重试）；
 - **翻译数据**：1358 条，集中于 `src/i18n/locales/zh-CN.ts` 纯数据文件，
   随 Discord 语言自动切换，缺失 key 自动回退英文原文（永不空白/崩溃）。
 

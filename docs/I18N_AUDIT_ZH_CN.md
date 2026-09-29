@@ -911,8 +911,53 @@ NoTrack 的 mock HTTP 响应体 ×2、_core deprecated customSections 的动态�
 
 ## 21.5 待人工复验（发布 Stable 的前置条件）
 
-1. Desktop：重启 Discord（dev 注入自动加载 zh.3 dist），复验 Cloud / Notification Log /
+1. Desktop：重启 Discord（dev 注入自动加载 zh.4 dist），复验 Cloud / Notification Log /
    Background Material / Server Info / Themes / Backup & Restore / Patch Helper + 语言往返
-2. Chrome：重新加载 zh.3 扩展，复验 §21.1 四项 + 语言往返
-3. 两项通过 → 按 `docs/GUI_TEST_CHECKLIST.md` 命令发布 `v1.15.7-zh.3` Stable
+2. Chrome：重新加载 zh.4 扩展，复验 §21.1 四项 + 语言往返
+3. 两项通过 → 按 `docs/GUI_TEST_CHECKLIST.md` 命令发布 `v1.15.7-zh.4` Stable
+
+---
+
+# 22. ServerInfo Owner 永久 Loading 修复（Phase 5.2.1，2026-09-29）
+
+> Desktop 实机测试发现：大型服务器打开"服务器信息"时，"服务器所有者"字段永久显示"加载中"。
+> 本节为**独立功能稳定性修复**记录（非汉化任务）。
+
+## 22.1 根因（基于源码诊断 + upstream 对照）
+
+两层叠加缺陷，且 **upstream 最新 a581197a 同样存在**（已对照，无可移植的官方修复）：
+
+1. **Promise 永不 settle**：`UserUtils.getUser(ownerId)` 在静默拉取失败时可能永远不 resolve
+   （典型场景：大型服务器 Owner 不在本机成员缓存中，拉取请求无响应）。
+   `useAwaiter` 只在 promise settle 时更新状态 → pending 永真 → 永久 Loading。
+2. **错误被丢弃**：即使 promise reject，`useAwaiter` 三元组中的 `error` 被组件忽略，
+   渲染逻辑只有 `owner ? Owner(...) : "Loading..."` → 拒绝态同样显示 Loading。
+3. 无缓存优先路径、无超时、无重试、无失败状态。
+
+## 22.2 修复
+
+新增 `src/plugins/serverInfo/ownerFetcher.ts`（纯逻辑，零 webpack 依赖，Node 可测）：
+
+- `fetchOwnerWithTimeout(getUser, ownerId, timeoutMs=8000)`：超时保护（Promise 竞速），
+  settle-once 语义，处理 reject / null 用户 / 缺失 ownerId 四种失败；
+- 组件层：**缓存优先**——`useStateFromStores([UserStore])` 订阅，Owner 出现在缓存即立即渲染
+  （O(1) 查找，不扫成员列表）；仅缓存未命中时发起一次带超时的 fetch；
+  fetch 成功本身也会填充 UserStore，双通道收敛到同一渲染；
+- 失败态显示本地化错误文案 + 内联 **Retry**（重跑 fetch，不刷新 Discord）；
+- `useEffect` 以 ownerId/needsFetch/attempt 为依赖，ownerId 不变时不会因普通重渲染重复请求。
+
+## 22.3 验证
+
+- 单元测试 `pnpm testServerOwner`（8 项全过）：缓存命中 / 延迟成功 / 成功 / reject /
+  永不 settle（超时按时限触发）/ 缺失 id / null 用户 / settle-once（迟到的 reject 不覆盖结果）
+- 十项门禁全绿：checkI18n / checkI18nTerms / qaI18n / testI18n / testServerOwner / testTsc /
+  lint / build / buildWeb / test（exit 0）
+- ServerInfo 其余字段（Created At/Joined At/Vanity Link/Preferred Locale/Verification Level/
+  Server Boosts/Channels/Roles）与 Friends/Blocked/Ignored 标签页零改动
+- 大型服务器实机复测由用户执行（小型/大型/Owner 未缓存三场景），结果待记录
+
+## 22.4 RC 版本更新（zh.3 → zh.4）
+
+- zh.4 构建 commit `02388cb1`，产物 SHA256 已更新至 `docs/RELEASE_CHECKSUMS.md`（zh.1/zh.2/zh.3 弃用记录保留）
+- 新增用户可见文案 2 条（`plugin.ServerInfo.owner.error` / `.retry`），走现有 t() 管道
 
