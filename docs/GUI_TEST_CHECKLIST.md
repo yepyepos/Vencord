@@ -57,6 +57,9 @@
       ViewRaw（查看原始内容）、ViewIcons（查看图标）、ReviewDB（查看评价）、
       PermissionsViewer（查看权限）、CopyStickerLinks
 - [ ] 菜单文案中文，点击后功能正常
+- [ ] ServerInfo Owner 四态：缓存命中立即显示 / 未缓存 fetch 成功 / 失败→显示
+      "用户 ID：xxx"+复制 ID+重试 / 无 ownerId→不可用；复制 ID 进剪贴板且提示"已复制！"
+- [ ] ServerInfo 重试：失败态点重试→短暂加载→成功升级或保持 fallback，无并发请求
 
 ## 7. Modal / Toast / Tooltip（抽 5+5+10）
 

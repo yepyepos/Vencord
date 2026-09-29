@@ -961,3 +961,54 @@ NoTrack 的 mock HTTP 响应体 ×2、_core deprecated customSections 的动态�
 - zh.4 构建 commit `02388cb1`，产物 SHA256 已更新至 `docs/RELEASE_CHECKSUMS.md`（zh.1/zh.2/zh.3 弃用记录保留）
 - 新增用户可见文案 2 条（`plugin.ServerInfo.owner.error` / `.retry`），走现有 t() 管道
 
+---
+
+# 23. ServerInfo Owner Fallback 增强（Phase 5.2.2，2026-09-29）
+
+> 在 §22 修复的基础上增强：**当 `guild.ownerId` 已确定但 Discord 客户端无法提供完整 User 时**，
+> 不再只显示"无法获取"，而是降级展示确定的 Owner ID + 复制 ID + 重试。
+
+## 23.1 Owner 展示状态机（`resolveOwnerDisplay`，纯函数，Node 可测）
+
+```text
+guild.ownerId
+   │
+   ├─ UserStore 命中 ──────────────► success（Owner 卡片，立即显示）
+   │
+   ├─ 缓存未命中 → getUser(8s 超时)
+   │        ├─ 成功 ───────────────► success
+   │        └─ reject / 超时 / null
+   │                └─ ownerId 存在 ► fallback（显示 ownerId + 复制 ID + 重试）
+   │
+   └─ ownerId 缺失/无效 ──────────► unavailable（"无法获取服务器拥有者"）
+```
+
+- **Retry 防并发**：点击重试 → attempt++ → 效应重跑并把状态置回 loading（重试按钮消失）→
+  拿到结果前不可能再次点击 → 天然杜绝并发请求；迟到的 settle 被 settle-once 丢弃，不覆盖新结果。
+- **原始 ID 不进翻译串**：UI 为 `用户 ID：`（可译）+ `<code>{ownerId}</code>`（原样数字，可选中复制），
+  翻译串不含 ID 本体。
+- **复制 ID**：复用 `@utils/clipboard` 的 `copyToClipboard`（Desktop 走 DiscordNative，Web 走
+  navigator.clipboard），成功显示"已复制！"（2 秒后复位），失败弹 FAILURE toast，不静默。
+
+## 23.2 验证
+
+- `pnpm testServerOwner` 扩展至 **13 项**：新增 display 状态机断言（Case A–H 全覆盖：
+  缓存命中 / fetch 成功 / reject→fallback / 超时→fallback / not-found→fallback / 缺失 id→unavailable /
+  原始 ID 逐字携带 / pending→loading）
+- 十一项门禁全绿（九项 + testServerOwner + lint-styles）
+- 产物验证：全部 5 个渲染产物包含 fallback key（`plugin.ServerInfo.owner.unavailable` / `.copyId`）
+
+## 23.3 RC 更新（zh.4 RC 增量）
+
+- 本增强并入尚未发布的 zh.4 RC：构建 commit `ed2da7e5`，全部产物 SHA256 已更新
+  （`docs/RELEASE_CHECKSUMS.md` 含更新说明）
+- 新增 i18n key 5 条：`owner.unavailable` / `owner.userId` / `owner.copyId` / `owner.copied` /
+  `owner.copyFailed`（总 key 1490 → **1495**）
+
+## 23.4 未来 upstream 同步注意事项
+
+- 修复集中在 `ownerFetcher.ts`（纯逻辑）+ `GuildInfoModal.tsx` 的 ServerInfoTab/OwnerFallback 两个组件，
+  便于整体摘除
+- 若 upstream 日后提供等价/更完善的 Owner 获取机制（缓存+超时+错误态全覆盖），删除本地 fetcher
+  与状态机、保留 zh-CN key 即可完成跟随
+
