@@ -1012,3 +1012,46 @@ guild.ownerId
 - 若 upstream 日后提供等价/更完善的 Owner 获取机制（缓存+超时+错误态全覆盖），删除本地 fetcher
   与状态机、保留 zh-CN key 即可完成跟随
 
+---
+
+# 24. ServerInfo Owner 有限自动重试（Phase 5.2.3，2026-09-29）
+
+> 补齐任务规格中的"有限次数 retry"：瞬时失败自动重试 1 次，确定性失败直接进入 fallback/error。
+
+## 24.1 获取链路（最终形态）
+
+```text
+guild.ownerId
+   │
+   ├─ UserStore 缓存命中 ──────────────────► success（立即）
+   │
+   └─ getServerOwner(getUser, ownerId)
+        │  attempt 1（8s 超时竞速）
+        ├─ success ─────────────────────► success
+        ├─ rejected ── 等待 1s ── attempt 2
+        │        ├─ success ────────────► success
+        │        └─ 仍失败 ─────────────► fallback（ownerId + 复制 ID + 手动重试）
+        ├─ timeout ─────────────────────► fallback（不再自动重试：已耗满等待窗口）
+        ├─ not-found ───────────────────► fallback（确定性结果）
+        └─ ownerId 缺失 ────────────────► unavailable（getUser 不被调用）
+```
+
+- 自动重试**仅针对瞬时 reject**（1 次）：reject 是瞬时失败的信号；超时已耗满整个等待窗口
+  （自动重试会让用户可见等待翻倍），not-found / missing-id 是确定性结果。
+  上限 maxAttempts=2，无无限循环。
+- **GuildMemberStore 兜底经类型调查不可行**：`GuildMember` 接口只有 `userId`
+  （即我们已持有的 ownerId），不含 User 对象——该兜底只会把同一个 ID 再查一遍。
+  UserStore 本身就是全客户端共享的用户缓存（成员数据与用户数据分离），
+  故 UserStore → UserUtils.getUser 即为正确的两级链路。
+- **Git 安全标记**：`backup/server-info-owner-before-fix` tag（= 修复前 `4ee4d8ae`，一键回滚点）+
+  `fix/server-info-owner` 分支（= 当前修复态指针）。开发仍按既有流程在 zh-CN 进行。
+
+## 24.2 验证
+
+- `pnpm testServerOwner` 扩展至 **17 项**：新增瞬时 reject 重试成功（getUser 恰好调用 2 次）、
+  持续 reject 在 maxAttempts 处停止（无无限循环）、超时不自动重试（恰好调用 1 次）、
+  缺失 id 零调用
+- 十一项门禁全绿：checkI18n / checkI18nTerms / qaI18n / testI18n / testServerOwner / testTsc /
+  lint / lint-styles / build / buildWeb / test（exit 0）
+- 无高频 debug 日志残留（开发诊断未进正式提交）
+
