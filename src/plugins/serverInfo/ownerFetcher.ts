@@ -53,3 +53,38 @@ export function fetchOwnerWithTimeout<T>(
         );
     });
 }
+
+/**
+ * Final display state for the Server Owner field.
+ *
+ * - success:     a full User object is available -> render the Owner card
+ * - fallback:    the owner user could not be fetched (rejected/timeout/not-found),
+ *                but the owner id itself is known -> show the id + Copy ID + Retry
+ * - unavailable: there is no ownerId at all -> nothing reliable to show
+ * - loading:     no user yet and no fetch result yet (fetch in flight)
+ */
+export type OwnerDisplayState<T> =
+    | { kind: "success"; user: T; }
+    | { kind: "fallback"; ownerId: string; }
+    | { kind: "unavailable" }
+    | { kind: "loading" };
+
+/**
+ * Pure state resolution for the Server Owner field. The component passes the
+ * already-resolved display user (cache first, then fetch result); this function
+ * decides which of the four states the UI must render. Pure: Node-testable.
+ */
+export function resolveOwnerDisplay<T>(
+    ownerId: string | undefined,
+    user: T | null | undefined,
+    fetchResult: OwnerFetchResult<T> | null
+): OwnerDisplayState<T> {
+    if (user) return { kind: "success", user };
+    // no ownerId -> nothing reliable to show, even after a fetch attempt
+    if (!ownerId) return { kind: "unavailable" };
+    // fetch still in flight (result not set yet) -> keep the loading state
+    if (!fetchResult) return { kind: "loading" };
+    // fetch attempted and failed (rejected / timeout / not-found):
+    // the owner id itself is still a certain, useful piece of information
+    return { kind: "fallback", ownerId };
+}

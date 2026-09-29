@@ -95,3 +95,16 @@
 .vc-gp-owner-error {
     color: var(--text-danger);
 }
+
+.vc-gp-owner-fallback {
+    color: var(--text-danger);
+}
+
+.vc-gp-owner-fallback [role="button"] {
+    cursor: pointer;
+}
+
+.vc-gp-owner-id {
+    user-select: text;
+    font-family: var(--font-code, monospace);
+}

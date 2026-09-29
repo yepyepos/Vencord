@@ -1771,6 +1771,11 @@ const translations = {
     "ui.vencord.macVibrancy.hud": "HUD（最透明）",
     "plugin.ServerInfo.owner.error": "无法获取服务器拥有者。",
     "plugin.ServerInfo.owner.retry": "重试",
+    "plugin.ServerInfo.owner.unavailable": "无法加载用户信息。",
+    "plugin.ServerInfo.owner.userId": "用户 ID：",
+    "plugin.ServerInfo.owner.copyId": "复制 ID",
+    "plugin.ServerInfo.owner.copied": "已复制！",
+    "plugin.ServerInfo.owner.copyFailed": "复制用户 ID 失败。",
 } satisfies Record<string, string>;
 
 export default translations;

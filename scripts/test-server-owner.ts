@@ -5,7 +5,7 @@
 
 import assert from "node:assert";
 
-import { fetchOwnerWithTimeout } from "../src/plugins/serverInfo/ownerFetcher";
+import { fetchOwnerWithTimeout, resolveOwnerDisplay } from "../src/plugins/serverInfo/ownerFetcher";
 
 interface FakeUser {
     id: string;
@@ -93,6 +93,38 @@ async function main() {
             1000
         );
         assert.deepStrictEqual(result, { status: "success", user: fakeUser });
+    });
+
+    // ---- display state machine (Phase 5.2.2: owner id fallback) ----
+
+    function assertDisplay(state: ReturnType<typeof resolveOwnerDisplay<unknown>>, kind: string) {
+        assert.strictEqual(state.kind, kind);
+    }
+
+    await test("display: user present -> success (Case A/B)", async () => {
+        assertDisplay(resolveOwnerDisplay("42", fakeUser, null), "success");
+        assertDisplay(resolveOwnerDisplay("42", fakeUser, { status: "error", reason: "timeout" }), "success");
+    });
+
+    await test("display: fetch error + ownerId exists -> fallback (Case C/D)", async () => {
+        assertDisplay(resolveOwnerDisplay("42", null, { status: "error", reason: "rejected" }), "fallback");
+        assertDisplay(resolveOwnerDisplay("42", null, { status: "error", reason: "timeout" }), "fallback");
+        assertDisplay(resolveOwnerDisplay("42", null, { status: "error", reason: "not-found" }), "fallback");
+    });
+
+    await test("display: fallback carries the raw owner id verbatim", async () => {
+        const raw = "123456789012345678";
+        const state = resolveOwnerDisplay(raw, null, { status: "error", reason: "timeout" });
+        assert.deepStrictEqual(state, { kind: "fallback", ownerId: raw });
+    });
+
+    await test("display: no fetch result yet -> loading", async () => {
+        assertDisplay(resolveOwnerDisplay("42", null, null), "loading");
+    });
+
+    await test("display: missing ownerId -> unavailable even after fetch error (Case E)", async () => {
+        assertDisplay(resolveOwnerDisplay(undefined, null, { status: "error", reason: "rejected" }), "unavailable");
+        assertDisplay(resolveOwnerDisplay(undefined, null, null), "unavailable");
     });
 
     console.log(`\n${passed} passed, ${failed} failed`);

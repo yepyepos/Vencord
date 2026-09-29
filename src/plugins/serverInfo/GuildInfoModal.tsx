@@ -7,14 +7,15 @@
 import "./styles.css";
 
 import { t } from "@i18n";
+import { copyToClipboard } from "@utils/clipboard";
 import { classNameFactory } from "@utils/css";
 import { getGuildAcronym, openImageModal, openUserProfile } from "@utils/discord";
 import { classes } from "@utils/misc";
 import { Guild, RenderModalProps, User } from "@vencord/discord-types";
 import { findComponentByCodeLazy, findCssClassesLazy } from "@webpack";
-import { FluxDispatcher, Forms, GuildChannelStore, GuildMemberStore, GuildRoleStore, IconUtils, Modal,openModal, Parser, PresenceStore, RelationshipStore, ScrollerThin, SnowflakeUtils, TabBar, Timestamp, useEffect, UserStore, UserUtils, useState, useStateFromStores } from "@webpack/common";
+import { FluxDispatcher, Forms, GuildChannelStore, GuildMemberStore, GuildRoleStore, IconUtils, Modal,openModal, Parser, PresenceStore, RelationshipStore, ScrollerThin, showToast, SnowflakeUtils, TabBar, Toasts, Timestamp, useEffect, UserStore, UserUtils, useState, useStateFromStores } from "@webpack/common";
 
-import { fetchOwnerWithTimeout, type OwnerFetchResult } from "./ownerFetcher";
+import { fetchOwnerWithTimeout, resolveOwnerDisplay, type OwnerFetchResult } from "./ownerFetcher";
 
 const IconClasses = findCssClassesLazy("icon", "acronym", "childWrapper");
 const FriendRow = findComponentByCodeLazy("discriminatorClass:", ".isMobileOnline", "avatarSrc:");
@@ -186,6 +187,38 @@ function Owner(guildId: string, owner: User) {
     );
 }
 
+function OwnerFallback({ ownerId, onRetry }: { ownerId: string; onRetry(): void; }) {
+    const [copied, setCopied] = useState(false);
+
+    function copyId() {
+        copyToClipboard(ownerId)
+            .then(() => {
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+            })
+            .catch(() => showToast(
+                t("plugin.ServerInfo.owner.copyFailed", "Failed to copy the user ID."),
+                Toasts.Type.FAILURE
+            ));
+    }
+
+    return (
+        <span className={cl("owner-fallback")}>
+            {t("plugin.ServerInfo.owner.unavailable", "Unable to load the user information.")}
+            <br />
+            {t("plugin.ServerInfo.owner.userId", "User ID:")}{" "}
+            <code className={cl("owner-id")}>{ownerId}</code>{" "}
+            <a role="button" onClick={copyId}>
+                {copied ? t("plugin.ServerInfo.owner.copied", "Copied!") : t("plugin.ServerInfo.owner.copyId", "Copy ID")}
+            </a>
+            {" · "}
+            <a role="button" onClick={onRetry}>
+                {t("plugin.ServerInfo.owner.retry", "Retry")}
+            </a>
+        </span>
+    );
+}
+
 function ServerInfoTab({ guild }: GuildProps) {
     const { ownerId } = guild;
 
@@ -210,24 +243,20 @@ function ServerInfoTab({ guild }: GuildProps) {
     }, [ownerId, needsFetch, attempt]);
 
     const owner = cachedOwner ?? (fetchResult?.status === "success" ? fetchResult.user : null);
-    const ownerError = !owner && (fetchResult?.status === "error" || !ownerId);
+    const ownerDisplay = resolveOwnerDisplay(ownerId, owner, fetchResult);
 
     const Fields = {
-        [t("plugin.ServerInfo.fields.serverOwner", "Server Owner")]: owner
-            ? Owner(guild.id, owner)
-            : ownerError
-                ? (
-                    <span className={cl("owner-error")}>
-                        {t("plugin.ServerInfo.owner.error", "Failed to load the server owner.")}{" "}
-                        <a
-                            role="button"
-                            onClick={() => setAttempt(a => a + 1)}
-                        >
-                            {t("plugin.ServerInfo.owner.retry", "Retry")}
-                        </a>
-                    </span>
-                )
-                : t("ui.common.loading", "Loading..."),
+        [t("plugin.ServerInfo.fields.serverOwner", "Server Owner")]: ownerDisplay.kind === "success"
+            ? Owner(guild.id, ownerDisplay.user)
+            : ownerDisplay.kind === "fallback"
+                ? <OwnerFallback ownerId={ownerDisplay.ownerId} onRetry={() => setAttempt(a => a + 1)} />
+                : ownerDisplay.kind === "unavailable"
+                    ? (
+                        <span className={cl("owner-error")}>
+                            {t("plugin.ServerInfo.owner.unavailable", "Failed to load the server owner.")}
+                        </span>
+                    )
+                    : t("ui.common.loading", "Loading..."),
         [t("plugin.ServerInfo.fields.createdAt", "Created At")]: renderTimestamp(SnowflakeUtils.extractTimestamp(guild.id)),
         [t("plugin.ServerInfo.fields.joinedAt", "Joined At")]: guild.joinedAt ? renderTimestamp(guild.joinedAt.getTime()) : "-", // Not available in lurked guild
         [t("plugin.ServerInfo.fields.vanityLink", "Vanity Link")]: guild.vanityURLCode ? (<a>{`discord.gg/${guild.vanityURLCode}`}</a>) : "-", // Making the anchor href valid would cause Discord to reload
