@@ -5,7 +5,8 @@
 > Owner 永久 Loading，由 Phase 5.2.1 功能修复→zh.4。勿分发旧版）
 >
 > 构建时间：2026-09-29（本地时间）
-> 构建 commit：`09ab9714`（zh-CN 分支，Stable Release 最终 commit）
+> 构建 commit：`4c73c063`（zh-CN 分支 Stable 定稿态；产物构建于该提交。
+> 注：bundle 内嵌构建时 git hash，本文件的哈希记录随之定稿于其后的文档提交，属正常现象）
 > 基于 upstream：`90aea0ddbbfbee16ce052b2c7ab610ffe957b4ca`（Vendicated/Vencord main，package.json version 1.15.7）
 > 构建环境：Node v22.22.1 / pnpm 11.22.0 / Windows
 > 状态：**Stable Release v1.15.7-zh.4**
@@ -18,22 +19,22 @@
 
 | 文件 | 大小 | SHA256 |
 | --- | --- | --- |
-| renderer.js | 894.0 KB | `cb0e68c8bfaed944532ef47e265ab197fc5ada7d81f9abfd08d4bede6c1cff2d` |
+| renderer.js | 894.0 KB | `03a36ebf1d461c6ad7ea8720e11337dd2178bd0ffe58ec9f7d27aeb7673feb7c` |
 | renderer.css | 41.8 KB | `b65982ec769e8de2a0bd06c92a7d398d1cafaa840723ba56cbebd6733613c6fd` |
-| patcher.js | 38.3 KB | `5c26fb88bfeb238e17774afbe17ddf8a4d340db807fc25b5aec47332af8ee02c` |
-| preload.js | 2.3 KB | `619eb94e7b78e249c070f01bc83b63be309e183f8afb3ba2a20a4908069e73ef` |
-| vencordDesktopMain.js | 34.7 KB | `07d93e877f8b8e6ea71e03e578d6260e9366374752fa81ebdd5a7702442744db` |
-| vencordDesktopPreload.js | 2.3 KB | `61aa67a99a010fec6b3fb06667ad198c9563679cc952300d0dce1e91807e2a01` |
-| vencordDesktopRenderer.js | 901.3 KB | `f20c36f5964bc417320793e74eef1616fa704bdf7512bfd15b97f485a4f7011f` |
+| patcher.js | 38.3 KB | `2f2e15e07b6af292bc45cb28379e76f7f1327c542569dfe7742c69f822119d03` |
+| preload.js | 2.3 KB | `db9a63ca766a53537562735d7bbeccdd7be122aecf0c13cc7dada1b1f9ad7cb2` |
+| vencordDesktopMain.js | 34.7 KB | `299a0a0f2a6117ec717a12c773f89d4b0fc4926d73c7cddaf7245d5a336d6a1b` |
+| vencordDesktopPreload.js | 2.3 KB | `32d5028f5a11296eded5e8ceec8b893bbe3c3bf6d3bcfcda0a8557b44e253c47` |
+| vencordDesktopRenderer.js | 901.3 KB | `1de297b0474be25e34e5d061a90e3bd1ec112c07507a266bf9f412be2dd6b1f5` |
 | vencordDesktopRenderer.css | 41.8 KB | `b65982ec769e8de2a0bd06c92a7d398d1cafaa840723ba56cbebd6733613c6fd` |
 
 ## Browser
 
 | 文件 | 大小 | SHA256 |
 | --- | --- | --- |
-| extension-chrome.zip | 1792.1 KB | `6c340fbd6decbc33c8094253b06044071ec46fa6af9647f32cddfb88969a8a59` |
-| extension-firefox.zip | 1790.8 KB | `6c1db67285e2ccfc74394c2a1ab58bde50a1ecc1934d6f9bd2532a9a9eb8da04` |
-| Vencord.user.js（用户脚本） | 928.5 KB | `8bd01528f889a152c0e22aa83f847889a218700ed826c427ccb0fb6045f4c4fa` |
+| extension-chrome.zip | 1792.1 KB | `c18d59771d66674e05fade5fb17cb74755c0238429e6bb560de28975cefe4472` |
+| extension-firefox.zip | 1790.8 KB | `adb83073125410c88189d0cf85b6c01d59216bf3d83da6aa2a333a267cd9fb8f` |
+| Vencord.user.js（用户脚本） | 928.5 KB | `919047412adcaa83b841aa97660617a777754669fb7aacf273643d608acb1112` |
 
 ## 历史候选（已被取代，勿分发）
 
