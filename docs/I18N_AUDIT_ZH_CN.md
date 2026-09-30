@@ -1091,3 +1091,44 @@ UserStore）。不存在第二个可直接返回 User 对象的客户端机制�
   lint / lint-styles / build / buildWeb / test（exit 0）
 - 无高频 debug 日志残留（开发诊断未进正式提交）
 
+---
+
+# 25. Stable Release v1.15.7-zh.4（2026-09-30）
+
+> **Vencord zh-CN 第一个正式可用版本已发布。**
+
+## 25.1 发布信息
+
+| 项 | 值 |
+| --- | --- |
+| Release URL | https://github.com/yepyepos/Vencord/releases/tag/v1.15.7-zh.4 |
+| Tag / 构建基线 | `v1.15.7-zh.4` = `685c1914`（产物构建于 `4c73c063`，两者源码内容一致，仅校验和定稿差异） |
+| 基于 upstream | `90aea0dd`（v1.15.7）；发布时 upstream 已前进至 `7f0c10cc`（v1.15.9），未混入，留待下一同步周期 |
+| 总翻译 key | 1495 |
+| 发布 Assets | extension-chrome.zip / extension-firefox.zip / Vencord.user.js（SHA256 见 RELEASE_CHECKSUMS，已与 GitHub 下载件比对一致） |
+| Desktop | 注入式分发（Vencord 安装器 / `pnpm inject`），产物哈希同表 |
+
+## 25.2 发布前核验（全部通过）
+
+- ServerInfo 修复链核验：02388cb1 / a9223010 / 5a83afcb 均为 zh-CN HEAD 祖先（merge-base 实测）
+- upstream 对照：发布基线后 upstream 新增 6 提交（v1.15.8→v1.15.9），**零触及 serverInfo**——本地 Owner 修复保留
+- 十一项门禁：checkI18n / checkI18nTerms / qaI18n / testI18n / testServerOwner（17）/
+  testTsc / lint / lint-styles / build / buildWeb / test（exit 0）
+- 产物中文数据抽查：Chrome/Firefox unpacked、user.js、Desktop renderer 全部命中
+- 构建顺序教训（已记录）：`pnpm test` 内含 buildStandalone 会改写 Desktop dist——
+  发布产物必须在 test 之后以 `pnpm build && pnpm buildWeb` 重新生成
+
+## 25.3 已知限制（与 Release Notes 一致）
+
+1. 品牌/技术术语/命令 ID/URL/代码按规范保留英文；_api 插件保留英文
+2. 少量动态拼接文案英文回退（DYNAMIC_UI_AUDIT 台账）
+3. Discord 原生 UI 由 Discord 官方 zh-CN 提供（不在本项目范围）
+4. 语言跟随 Discord 设置，已打开界面需重开刷新
+5. Fork 构建的"检查更新"无官方更新源可用（已知运行限制）
+6. ServerInfo 未知 Owner：客户端无法提供 User 对象时显示确定的 Owner ID + 复制/重试/打开资料（§24.3）
+
+## 25.4 后续维护（Stable 后）
+
+- upstream 更新 → 同步 main（ff-only）→ zh-CN rebase → 十一门禁 → 翻译新增 UI → 新 tag（zh.5…）
+- 若 upstream 官方修复 ServerInfo Owner：对照 §24.1 链路覆盖面，覆盖则删本地 fetcher、保留 zh-CN key
+- 不热修已发布 Release；任何变更走新版本号
