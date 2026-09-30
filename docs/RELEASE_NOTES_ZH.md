@@ -1,4 +1,4 @@
-# Vencord 1.15.7 — 简体中文本地化版（Release Candidate）
+# Vencord 1.15.7 — 简体中文本地化版（Stable Release）
 
 > 这是 [Vencord](https://github.com/Vendicated/Vencord) 的**社区中文化 Fork**，
 > 不是 Discord 官方发行物，也与 Vencord 官方无关。请遵守上游 LICENSE（GPL-3.0-or-later）。
@@ -9,8 +9,9 @@
 | --- | --- |
 | 基于 upstream | https://github.com/Vendicated/Vencord |
 | Upstream commit | `90aea0dd`（"fix modals"，package.json version **1.15.7**） |
-| Fork 分支 / commit | `zh-CN` @ `02388cb1` |
-| 建议发布 tag | `v1.15.7-zh.4` |
+| Release tag | `v1.15.7-zh.4` |
+| Release commit | `685c1914`（tag 所指最终提交） |
+| 构建 commit | `4c73c063`（产物内嵌此 git 标识；两者相差一个校验和定稿文档提交，源码内容一致——详见 RELEASE_CHECKSUMS 说明） |
 
 ## 中文化范围
 
@@ -18,8 +19,10 @@
   名称与描述、271 个可见设置项（标题/描述/占位符）、下拉选项 label、分区标题、公共组件文案；
 - **插件运行时 UI**：右键菜单、弹窗、通知条、提示、悬浮面板等 210 处（源自动态 UI 审计清单逐项处理）；
 - **核心设置页**：主题/云同步/备份与恢复/补丁助手/通知日志/背景材质/macOS 鲜活度等全部设置页；
-- **功能修复**：服务器信息插件在大型服务器中"服务器所有者"永久加载的问题（缓存优先 + 超时 + 重试）；
-- **翻译数据**：1358 条，集中于 `src/i18n/locales/zh-CN.ts` 纯数据文件，
+- **功能修复**：服务器信息插件在大型服务器中"服务器所有者"永久加载的问题——缓存优先 +
+  8 秒超时 + 瞬时失败自动重试 1 次 + Owner ID 兜底（复制 ID / 重试）+ 打开用户资料入口；
+  当 Discord 客户端无法取得 User 对象时，显示确定的 Owner ID 并保留重试/资料入口；
+- **翻译数据**：1499 条（checkI18n 实测），集中于 `src/i18n/locales/zh-CN.ts` 纯数据文件，
   随 Discord 语言自动切换，缺失 key 自动回退英文原文（永不空白/崩溃）。
 
 ## Discord 原生 UI

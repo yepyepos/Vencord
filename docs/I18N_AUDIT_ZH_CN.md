@@ -1104,7 +1104,7 @@ UserStore）。不存在第二个可直接返回 User 对象的客户端机制�
 | Release URL | https://github.com/yepyepos/Vencord/releases/tag/v1.15.7-zh.4 |
 | Tag / 构建基线 | `v1.15.7-zh.4` = `685c1914`（产物构建于 `4c73c063`，两者源码内容一致，仅校验和定稿差异） |
 | 基于 upstream | `90aea0dd`（v1.15.7）；发布时 upstream 已前进至 `7f0c10cc`（v1.15.9），未混入，留待下一同步周期 |
-| 总翻译 key | 1495 |
+| 总翻译 key | 1499（checkI18n 实测：ui=259 + tag=21 + plugin=1219） |
 | 发布 Assets | extension-chrome.zip / extension-firefox.zip / Vencord.user.js（SHA256 见 RELEASE_CHECKSUMS，已与 GitHub 下载件比对一致） |
 | Desktop | 注入式分发（Vencord 安装器 / `pnpm inject`），产物哈希同表 |
 

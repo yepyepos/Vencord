@@ -191,7 +191,7 @@ for (const [key, value] of Object.entries(table)) {
         continue;
     }
 
-    if ((match = key.match(/^plugin\.([^.]+)\.(?:menu|popover|ui|modal|tooltip|button|heading|player|notification|toast|badge|badges|section|page|preview|lockScreen|details|fields|verification|icon)\./))) {
+    if ((match = key.match(/^plugin\.([^.]+)\.(?:menu|popover|ui|modal|tooltip|button|heading|player|notification|toast|badge|badges|section|page|preview|lockScreen|details|fields|verification|owner|icon)\./))) {
         const [, pluginName] = match;
         if (!pluginNames.has(pluginName)) error(`plugin not found for ${key}`);
         continue;

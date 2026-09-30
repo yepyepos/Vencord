@@ -1,4 +1,4 @@
-# Vencord zh-CN Release Candidate — 校验和
+# Vencord zh-CN v1.15.7-zh.4 — Stable Release 校验和
 
 > **当前有效版本：zh.4**（zh.1/zh.2/zh.3 为历史候选：zh.1 四页漏译→zh.2；zh.2 Desktop 实机发现
 > Cloud/NotificationLog/BackgroundMaterial/ServerInfo 漏译→zh.3；zh.3 Desktop 实机发现 ServerInfo
