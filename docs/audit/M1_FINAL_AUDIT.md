@@ -114,3 +114,13 @@
 P0=0，P1=0，Vencord build=PASS，Installer build=PASS，SHA256=PASS，GUI=PASS，
 CLI=PASS，Install=PASS，Repair=PASS，Uninstall=PASS，汉化核心=PASS
 → **AUDIT_BUILD_READY**
+
+## 15. 环境受限项（如实标注）
+
+- DPI 125% / 150% = **NOT TESTED**（切换需系统级注销，无法安全自动化；当前 100% 下
+  GUI 布局实拍正常。高 DPI 行为依赖系统 DPI 感知 manifest + giu 运行时缩放，留待
+  人工验收/后续任务）
+- Administrator 提升 = **NOT TESTED**（UAC 交互无法自动化；Installer 全部功能均为
+  用户级目录操作且无提升相关代码分支，Standard User 已完整回归）
+- ServerInfo Owner 大服务器人工确认 = 待用户在真实 Discord 中执行（修复已通过
+  17 项确定性测试证明三类失败均不永久 Loading；详见 ServerInfo 任务报告）
